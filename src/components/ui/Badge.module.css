@@ -1,0 +1,15 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.success { background: var(--color-growth-light); color: var(--color-growth-hover); }
+.info    { background: var(--color-trust-light);  color: var(--color-trust-hover);  }
+.warning { background: var(--color-warmth-light); color: #b36a1a; }
+.muted   { background: var(--color-border);       color: var(--color-text-muted);   }
+.error   { background: var(--color-error-light);  color: var(--color-error);        }

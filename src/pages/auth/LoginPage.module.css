@@ -1,0 +1,112 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: linear-gradient(160deg, var(--color-trust-light) 0%, var(--color-bg) 60%);
+}
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.logo {
+  display: inline-block;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-trust);
+  margin-bottom: var(--space-2);
+}
+
+.title {
+  font-size: var(--text-xl);
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-trust);
+  box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.12);
+}
+
+.input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.submitBtn {
+  width: 100%;
+  margin-top: var(--space-1);
+}
+
+.errorBanner {
+  padding: 10px 14px;
+  background: var(--color-error-light);
+  color: var(--color-error);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+}
+
+.footer {
+  text-align: center;
+  margin-top: var(--space-4);
+}
+
+.resetLink {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.attribution {
+  margin-top: var(--space-6);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  text-align: center;
+}

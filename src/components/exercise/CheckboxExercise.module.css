@@ -1,0 +1,63 @@
+.container { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.prompt {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: var(--leading-normal);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  background: var(--color-surface);
+}
+
+.option:hover:not(.readOnly) {
+  background: var(--color-bg);
+  border-color: var(--color-trust);
+}
+
+.checked {
+  background: var(--color-trust-light);
+  border-color: var(--color-trust);
+}
+
+.readOnly { cursor: default; }
+
+.input {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--color-trust);
+  width: 16px;
+  height: 16px;
+}
+
+.label {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: var(--leading-normal);
+}
+
+.savedIndicator {
+  font-size: var(--text-xs);
+  color: var(--color-growth);
+  font-weight: var(--weight-medium);
+  animation: fadeIn var(--transition-base);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

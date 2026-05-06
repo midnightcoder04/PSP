@@ -1,0 +1,38 @@
+.ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.track {
+  stroke: var(--color-border);
+}
+
+.progress {
+  stroke: var(--color-growth);
+  transition: stroke-dashoffset var(--transition-slow);
+}
+
+.complete {
+  stroke: var(--color-growth);
+  animation: bloom 0.5s ease-out;
+}
+
+.label {
+  position: absolute;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+@keyframes bloom {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.15); opacity: 0.9; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress { transition: none; }
+  .complete { animation: none; }
+}

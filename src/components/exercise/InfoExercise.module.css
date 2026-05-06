@@ -1,0 +1,22 @@
+.container {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-left: 3px solid var(--color-trust);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.text {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: var(--leading-relaxed);
+}
+
+.text p { margin-bottom: var(--space-2); }
+.text p:last-child { margin-bottom: 0; }
+
+.attribution {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-faint);
+  font-style: italic;
+}

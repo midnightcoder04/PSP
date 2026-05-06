@@ -1,0 +1,33 @@
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { Spinner } from './Spinner'
+import styles from './Button.module.css'
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
+  size?: 'sm' | 'md' | 'lg'
+  loading?: boolean
+  children: ReactNode
+}
+
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  loading = false,
+  disabled,
+  children,
+  className,
+  ...rest
+}: ButtonProps) {
+  return (
+    <button
+      className={[styles.btn, styles[variant], styles[size], className].filter(Boolean).join(' ')}
+      disabled={disabled || loading}
+      aria-busy={loading}
+      {...rest}
+    >
+      {loading && <Spinner size="sm" />}
+      <span className={loading ? styles.hiddenText : undefined}>{children}</span>
+      {loading && <span className={styles.loadingLabel}>Loading…</span>}
+    </button>
+  )
+}
