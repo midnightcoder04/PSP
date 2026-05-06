@@ -34,6 +34,10 @@ dependencies. WS-A is bug-fix work. WS-B is tooling + scripts. WS-C adds one JSO
 This section is intentionally exploratory. The technical sections that follow lock in only
 the parts of these ideas that survived a Constitution Check.
 
+> **⚠️ These framing drafts are frozen for context only. The source of truth for what gets
+> seeded into `sections.framing` is `framing-content.md`. If you need to change framing
+> language, edit that file — not this brainstorm.** *(analysis L8, 2026-05-07)*
+
 ### Why each section needs framing
 
 The PSP™ workbook is dense. A participant clicking into "Personality" sees a D.I.S.C.

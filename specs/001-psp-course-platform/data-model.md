@@ -47,8 +47,8 @@ A workshop session run by a facilitator.
 | `facilitator_id` | `uuid` | NOT NULL, FK → `profiles.id` | Assigned facilitator |
 | `title` | `text` | NOT NULL | e.g., "Batch 7 — May 2026" |
 | `description` | `text` | | Optional notes for the session |
-| `scheduled_start` | `date` | | Planned start date |
-| `scheduled_end` | `date` | | Planned end date |
+| `scheduled_start` | `date` | NULL allowed | Planned start date — **nullable by design** to support open-ended / rolling-cohort sessions that don't have a fixed start |
+| `scheduled_end` | `date` | NULL allowed | Planned end date — **nullable by design**; when NULL, the session never archives (Realtime stays on indefinitely per T076) |
 | `is_active` | `boolean` | NOT NULL DEFAULT true | False when archived |
 | `created_by` | `uuid` | NOT NULL, FK → `profiles.id` | Admin who created it |
 | `created_at` | `timestamptz` | NOT NULL DEFAULT now() | |

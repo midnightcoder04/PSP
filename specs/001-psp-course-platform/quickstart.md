@@ -103,13 +103,17 @@ WHERE email = 'admin@example.com';
 ### Path C — UI-only dev bypass (no database, no Docker)
 
 For frontend-only work where you don't need real persistence. The bypass is dev-mode only
-and never ships to production.
+and never ships to production (verified by T132 — `npm run check:no-bypass` greps `dist/`
+to confirm no bypass code lands in builds).
 
 ```env
 VITE_SUPABASE_URL=https://placeholder.supabase.co
 VITE_SUPABASE_ANON_KEY=placeholder-anon-key
 VITE_DEV_BYPASS=true
 ```
+
+> The placeholder Supabase URL/key are never contacted — `lib/devAuth.ts` short-circuits
+> before any network call when `VITE_DEV_BYPASS=true`.
 
 ```bash
 npm run dev

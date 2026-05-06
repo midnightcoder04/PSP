@@ -133,7 +133,7 @@ facilitator → enroll participant → view AdminDashboard and confirm participa
 
 - [X] T060 [US2] Implement `AdminDashboard` in `src/pages/admin/AdminDashboard.tsx` + `AdminDashboard.module.css` (calls `get_admin_overview` RPC, renders stat cards and a Recharts `BarChart` of per-section avg completion %)
 - [X] T061 [US2] Implement `UsersPage` in `src/pages/admin/UsersPage.tsx` + `UsersPage.module.css` (table of all profiles with role badge, is_active toggle, and "Add User" button)
-- [X] T062 [P] [US2] Implement `UserCreateModal` in `src/pages/admin/UserCreateModal.tsx` + `UserCreateModal.module.css` (email, display name, role picker; creates auth user via Supabase Admin API using service role key; then updates profiles.role)
+- [ ] T062 [P] [US2] **REOPENED (analysis C1)** Implement `UserCreateModal` — the file is missing on disk AND the original task spec used `service_role` in the browser (credential leak). Replace with one of: (a) a Supabase Edge Function `create-user` invoked via `supabase.functions.invoke('create-user', { body: { email, display_name, role } })` that uses `service_role` server-side; (b) the email-invite flow via `supabase.auth.signInWithOtp({ email })` then `UPDATE profiles SET role`. Land in `src/pages/admin/UserCreateModal.tsx` + `UserCreateModal.module.css`. NEVER expose the service_role key in any `VITE_*` env var.
 - [X] T063 [US2] Implement `SessionsPage` in `src/pages/admin/SessionsPage.tsx` + `SessionsPage.module.css` (table of sessions with facilitator name, scheduled dates, enrollment count, and "New Session" button)
 - [X] T064 [P] [US2] Implement `SessionCreateModal` in `src/pages/admin/SessionCreateModal.tsx` + `SessionCreateModal.module.css` (title, description, scheduled start/end date pickers, facilitator dropdown from profiles where role=facilitator)
 - [X] T065 [US2] Implement `AdminSessionDetailPage` in `src/pages/admin/AdminSessionDetailPage.tsx` + `AdminSessionDetailPage.module.css` (enrolled participants list with completion %, add participant dropdown, remove participant button)
@@ -355,7 +355,7 @@ supabase.com. Cross-cutting infrastructure work — no `[USx]` labels.
 `admin@local.dev` / `admin123` and see all 6 sections seeded with exercises.
 
 - [ ] T095 Create `scripts/sync-migrations.sh`: a bash script that copies each `db/migrations/<NNN>_*.sql` into `supabase/migrations/<14-digit-timestamp>_<NNN>_*.sql` (Supabase CLI naming convention); idempotent (skips files already present)
-- [ ] T096 [P] Create `supabase/seed.sql`: SQL that calls `auth.admin_create_user` (or inserts directly into `auth.users` with bcrypt password hash) to create `admin@local.dev` / `admin123`, then `UPDATE public.profiles SET role='admin', display_name='Local Admin' WHERE email='admin@local.dev'`
+- [ ] T096 [P] **CORRECTED (analysis C4)** Create `supabase/seed.sql`. There is no `auth.admin_create_user` SQL function in Supabase Auth (per Supabase docs — "Local Development → Seeding your database"). The correct pattern uses `pgcrypto`: `INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at) VALUES (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin@local.dev', crypt('admin123', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}'::jsonb, '{}'::jsonb, now(), now());`. The `on_auth_user_created` trigger from migration 001 will create the matching `public.profiles` row. Then: `UPDATE public.profiles SET role='admin', display_name='Local Admin' WHERE email='admin@local.dev';`
 - [ ] T097 [P] Verify `supabase/config.toml` has `[auth.email] enable_signup = false, enable_confirmations = false` (already present per Iteration 1 — confirm and add comment marking it intentional for local dev)
 - [ ] T098 Add npm scripts to `package.json`: `"db:start": "supabase start"`, `"db:stop": "supabase stop"`, `"db:reset": "supabase db reset"`, `"db:status": "supabase status"`
 - [ ] T099 [P] Update `scripts/seed.ts` to support a `--local` flag: when present, default `VITE_SUPABASE_URL` to `http://127.0.0.1:54321` and read the anon key from `supabase status --output env` output if not in process.env; print which mode it's running in
@@ -424,6 +424,43 @@ satisfied. Cross-cutting — no `[USx]` labels.
 - [ ] T121 Update `specs/001-psp-course-platform/bundle-report.md` with an Iteration 2 section showing the new chunk sizes and a delta vs Iteration 1
 - [ ] T122 Re-verify Constitution Check in `specs/001-psp-course-platform/plan.md`: mark "Post-Phase 1 re-check" lines confirmed and add a "Post-Iteration 2 re-check: all gates passing" line near the gate block
 - [ ] T123 [P] Update Iteration 1 tasks T021, T022, T085 in this file (line-level edit): change `[ ]` → `[X]` and append `(satisfied via local Supabase stack — see T101)` since the local path now exercises them end-to-end
+
+---
+
+---
+
+## Phase 12 — Analysis-Driven Additions (post-/speckit-analyze 2026-05-07)
+
+**Purpose**: Close the CRITICAL/HIGH/MEDIUM coverage gaps surfaced by the analysis pass.
+Each task references its analysis finding ID for traceability.
+
+### Constitution & Security Gates (CRITICAL)
+
+- [ ] T124 **[analysis C2]** Add automated RLS integration tests in `src/tests/integration/rls.test.ts` against the local Supabase stack (requires WS-B's T101). Test matrix: for each of (`profiles`, `sessions`, `enrollments`, `responses`, `progress`), log in as each role (admin / facilitator / participant / unauthenticated) and assert that SELECT/INSERT/UPDATE/DELETE either succeed or are blocked per the RLS Policies in `data-model.md`. Use `@supabase/supabase-js` with the anon key from `supabase status --output json`. Run before merge, not in CI initially (Docker dependency).
+- [ ] T125 **[analysis C3]** Add `scripts/bench-rpcs.ts`: hits `get_session_stats(p_session_id)`, `get_admin_overview()`, and `get_resume_position(p_participant_id, null)` 100× each against the seeded local stack and asserts p99 ≤ 500 ms (per Constitution §IV / SC-PERF-3). Add npm script `"bench:rpc": "tsx scripts/bench-rpcs.ts"`. Document baseline in `specs/001-psp-course-platform/rpc-bench.md`.
+
+### Coverage Gaps (HIGH)
+
+- [ ] T126 **[analysis H2]** Add a SQL test (in `db/tests/004_progress_trigger.sql`, runnable via `psql`) that: creates a fixture participant, exercise, and section; inserts a `responses` row with `is_complete=true`; asserts the corresponding `progress` row has `completed_exercises` incremented and `last_exercise_id` set; updates `is_complete=false` and asserts the count decremented. Document run instructions in `db/tests/README.md`.
+- [ ] T127 **[analysis H4]** Add `scripts/seed.test.ts` (vitest, tagged `// @vitest-environment node`): runs `npm run db:seed -- --local` against a freshly-reset local DB; asserts `sections` has exactly 6 rows; asserts `exercises` row count matches `course-content.json` length; samples 3 random exercises and verifies `attribution` text matches `db/seeds/ip-review.md`.
+- [ ] T128 **[analysis H3]** Update `tasks.md` T064 description to reflect the actual implementation: the `SessionCreateModal` is **inlined** as a function inside `src/pages/admin/SessionsPage.tsx` (lines 113–129), not a separate file. Either: (a) keep inlined and amend T064; (b) extract to `src/pages/admin/SessionCreateModal.tsx`. Pick (b) for symmetry with the corrected T062.
+
+### Coverage Gaps (MEDIUM)
+
+- [ ] T129 **[analysis M1]** When updating `src/types/database.ts` in T107, also add a top-level export `export interface SectionFraming { opening_quote: { text: string; attribution: string }; opening_question: string; facilitator_says: string; why_it_matters: string; closing_reflection: string; bridge_to_next: string | null }`. Use this in the `framing` JSONB column type (`framing: SectionFraming | null`) and as the prop type for `SectionOpening` / `SectionClosing` in T113/T114.
+- [ ] T130 **[analysis M2]** Replace `tasks.md` T085 with timing-aware quickstart validation: each step in the manual walkthrough gets a timing checkbox — log in → reach last position (≤ 10 s, SC-001), admin onboarding (≤ 3 min, SC-003), participant complete-exercise → facilitator dashboard reflects update (≤ 5 s, SC-004). Record measurements in `specs/001-psp-course-platform/timing-results.md`.
+- [ ] T131 **[analysis M3]** Add a unit test in `src/pages/facilitator/FacilitatorSessionDetailPage.test.tsx` that verifies: when `scheduled_end < now()`, the `useRealtimeSession` hook is NOT called and a "Session Archived" badge appears. Currently T076 is marked `[X]` but no test guards the regression.
+- [ ] T132 **[analysis M5]** Add `scripts/check-no-bypass.sh`: builds with `unset VITE_DEV_BYPASS && npm run build`, then `grep -r "__dev_auth_role__" dist/` and asserts zero matches. Add npm script `"check:no-bypass": "bash scripts/check-no-bypass.sh"`. Run before any production deploy (CI gate when CI exists).
+- [ ] T133 **[analysis M8]** Update T099 to use `supabase status --output json | jq -r '.API_URL,.ANON_KEY'` instead of `--output env` parsing. Per Supabase CLI v2.x docs, `--output json` is the stable, machine-readable format; `env` parsing differs across CLI versions.
+- [ ] T134 **[analysis M4]** Add a note at the top of `specs/001-psp-course-platform/framing-content.md` flagging that the Steve Jobs quote in Section 5 carries elevated IP risk (Apple has historically defended Jobs quotations even in fair-use contexts). Bijo decision: keep with explicit signoff, or replace. Pre-stage two alternates: a Cal Newport craft quote and a Mary Oliver "what is it you plan to do with your one wild and precious life" line.
+
+### Style/Process (LOW)
+
+- [ ] T135 **[analysis L3]** Update T119 in this file: append "current baseline (per pre-WS-A run): 56 passing / 18 failing → target: ≥74 passing / 0 failing".
+- [ ] T136 **[analysis L6]** When implementing T087, first verify whether jsdom v24.1.1 still needs the `matchMedia` stub by running the failing tests with only the `ResizeObserver` polyfill — if green, drop the `matchMedia` stub and link to the relevant jsdom changelog entry in the commit message.
+- [ ] T137 **[analysis L8]** Add a sentence to `plan.md` "Brainstorm" section: "**These drafts are frozen for context only — `framing-content.md` is the source of truth for what gets seeded.**" so future readers don't accidentally edit the plan instead of the content file.
+
+**Checkpoint**: All findings from the 2026-05-07 analysis pass have either a corrective task here or are explicitly accepted (LOW L1, L2, L4, L5, L7 deferred to general code review).
 
 ---
 
