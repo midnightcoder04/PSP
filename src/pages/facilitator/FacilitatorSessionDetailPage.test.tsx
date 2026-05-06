@@ -51,7 +51,7 @@ const makeSessionChain = () => ({
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: vi.fn(() => makeSessionChain()),
-    rpc: vi.fn().mockResolvedValue({ data: mockStats, error: null }),
+    rpc: vi.fn().mockImplementation(() => Promise.resolve({ data: mockStats, error: null })),
   },
 }))
 

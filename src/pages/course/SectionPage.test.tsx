@@ -29,7 +29,7 @@ const mockExercises = [
     title: 'D.I.S.C. Overview',
     type: 'info',
     order_index: 1,
-    content_json: { prompt: 'Read about D.I.S.C.', body: 'The D.I.S.C. model...' },
+    content_json: { content: 'The D.I.S.C. model describes four primary behavioural styles.' },
     attribution: 'Adapted from Bill Bonnstetter / Target Training International',
   },
   {

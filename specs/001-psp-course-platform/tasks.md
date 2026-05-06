@@ -332,14 +332,14 @@ no `[USx]` labels.
 **Independent Test**: `npm test -- --run` exits zero with all tests passing and zero
 unhandled errors in the output.
 
-- [ ] T087 Add `ResizeObserver`, `IntersectionObserver`, and `matchMedia` polyfills to `src/vitest.setup.ts` as in-file class stubs (no new packages); fixes Recharts crash in `AdminDashboard.test.tsx`
-- [ ] T088 [P] Fix `vi.mock` hoisting bug in `src/pages/facilitator/FacilitatorDashboard.test.tsx`: replace `vi.fn().mockResolvedValue({ data: mockStats, error: null })` with `vi.fn().mockImplementation(() => Promise.resolve({ data: mockStats, error: null }))` so `mockStats` is read at test-time (not at hoist-time)
-- [ ] T089 [P] Apply the same `mockImplementation` fix in `src/pages/facilitator/FacilitatorSessionDetailPage.test.tsx`
-- [ ] T090 [P] Fix the `info`-type exercise mock in `src/pages/course/SectionPage.test.tsx`: change `content_json` from `{ prompt, body }` to `{ content: '...' }` so `InfoExercise` doesn't crash on `undefined.split('\n')`
-- [ ] T091 [P] Tighten the activate-button selector in `src/pages/admin/UsersPage.test.tsx` (test "shows Activate button for inactive users"): use `getByRole('button', { name: /^activate$/i })` so the regex doesn't also match "Deactivate"
-- [ ] T092 [P] Rewrite the failing `useProgress` chain mocks in `src/hooks/useProgress.test.ts` (tests "filters by sessionId when provided" and "surfaces error when fetch fails"): use a single `makeChain(data, error)` helper instead of overloaded `mockReturnValueOnce` chains; ensure the terminal `is()` / `eq()` resolves with the right tuple
-- [ ] T093 [P] Diagnose and fix `src/pages/course/CourseHistoryPage.test.tsx` failures ("PSP Batch 7" not found, "Facilitator Bob" not found, etc.): inspect what the component actually renders during the test (likely a Spinner that never resolves) and correct the chain mock to terminate cleanly so `setLoading(false)` runs
-- [ ] T094 Run `npm test -- --run` and confirm zero failures and zero unhandled exceptions; record final pass count in commit message
+- [X] T087 Add `ResizeObserver`, `IntersectionObserver`, and `matchMedia` polyfills to `src/vitest.setup.ts` as in-file class stubs (no new packages); fixes Recharts crash in `AdminDashboard.test.tsx`
+- [X] T088 [P] Fix `vi.mock` hoisting bug in `src/pages/facilitator/FacilitatorDashboard.test.tsx`: replace `vi.fn().mockResolvedValue({ data: mockStats, error: null })` with `vi.fn().mockImplementation(() => Promise.resolve({ data: mockStats, error: null }))` so `mockStats` is read at test-time (not at hoist-time)
+- [X] T089 [P] Apply the same `mockImplementation` fix in `src/pages/facilitator/FacilitatorSessionDetailPage.test.tsx`
+- [X] T090 [P] Fix the `info`-type exercise mock in `src/pages/course/SectionPage.test.tsx`: change `content_json` from `{ prompt, body }` to `{ content: '...' }` so `InfoExercise` doesn't crash on `undefined.split('\n')`
+- [X] T091 [P] Tighten the activate-button selector in `src/pages/admin/UsersPage.test.tsx` (test "shows Activate button for inactive users"): use `getByRole('button', { name: /^activate$/i })` so the regex doesn't also match "Deactivate"
+- [X] T092 [P] Rewrite the failing `useProgress` chain mocks in `src/hooks/useProgress.test.ts` (tests "filters by sessionId when provided" and "surfaces error when fetch fails"): use a single `makeChain(data, error)` helper instead of overloaded `mockReturnValueOnce` chains; ensure the terminal `is()` / `eq()` resolves with the right tuple
+- [X] T093 [P] Diagnose and fix `src/pages/course/CourseHistoryPage.test.tsx` failures ("PSP Batch 7" not found, "Facilitator Bob" not found, etc.): inspect what the component actually renders during the test (likely a Spinner that never resolves) and correct the chain mock to terminate cleanly so `setLoading(false)` runs
+- [X] T094 Run `npm test -- --run` and confirm zero failures and zero unhandled exceptions; record final pass count in commit message
 
 **Checkpoint**: Test suite green. Constitution §II re-affirmed end-to-end.
 
