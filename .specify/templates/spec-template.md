@@ -114,6 +114,12 @@
 - **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
 - **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
 
+*Performance baselines (per Constitution v1.0.0 — override if feature-specific targets differ):*
+
+- **SC-PERF-1**: Page/view initial load p95 ≤ 2 000 ms (4G simulated)
+- **SC-PERF-2**: Time to Interactive p95 ≤ 3 500 ms
+- **SC-PERF-3**: API read responses p99 ≤ 500 ms under expected load
+
 ## Assumptions
 
 <!--

@@ -31,7 +31,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Code Quality**: Complexity justified in Complexity Tracking table (if applicable)
+- [ ] **Test-First**: Tests for all public interfaces identified; will be written before implementation
+- [ ] **UX Consistency**: Any new UI components sourced from shared library or amendment filed
+- [ ] **Performance**: p95 load ≤ 2 000 ms, TTI ≤ 3 500 ms, API p99 ≤ 500 ms targets confirmed
+- [ ] **IP Compliance**: If feature touches PSP™ content, IP review task added to tasks.md
 
 ## Project Structure
 
