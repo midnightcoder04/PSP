@@ -1,0 +1,28 @@
+# Supabase local development configuration
+# Reference: https://supabase.com/docs/guides/local-development
+
+[api]
+port = 54321
+
+[db]
+port = 54322
+
+[studio]
+port = 54323
+
+[inbucket]
+port = 54324
+
+[storage]
+file_size_limit = "50MiB"
+
+[auth]
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173"]
+
+[auth.email]
+enable_signup = false
+enable_confirmations = false
+
+[analytics]
+enabled = false
