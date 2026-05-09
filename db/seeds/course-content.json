@@ -7,6 +7,17 @@
       "description": "Discover your Personal Behavioural Design using the D.I.S.C. model. Understanding your personality preferences helps you work with your natural tendencies, improve relationships, and reduce stress in every area of life.",
       "order_index": 1,
       "icon_name": "user",
+      "framing": {
+        "opening_quote": {
+          "text": "Until you make the unconscious conscious, it will direct your life and you will call it fate.",
+          "attribution": "— Carl Jung"
+        },
+        "opening_question": "If we asked the five people closest to you to describe how you make decisions, would they all give the same answer?",
+        "facilitator_says": "D.I.S.C. isn't a label — it's a mirror. Today we're going to look at how you naturally show up, before we look at how you choose to show up.",
+        "why_it_matters": "Strategy starts with self-knowledge. You can't plan a life you don't understand. Your D.I.S.C. style shapes how you make decisions, who energises you, and what kind of work feels effortless. Knowing it doesn't lock you in — it gives you a starting point.",
+        "closing_reflection": "What is one D.I.S.C. trait that helps you, and one that gets in your way?",
+        "bridge_to_next": "Knowing your style is one filter. Now we look at the lenses you see through it: your attitudes."
+      },
       "exercises": [
         {
           "slug": "disc-introduction",
@@ -237,6 +248,17 @@
       "description": "Explore the six attitude types identified by Eduard Spranger and discover how your unique world view shapes your values, motivations, and the choices you make in life.",
       "order_index": 2,
       "icon_name": "eye",
+      "framing": {
+        "opening_quote": {
+          "text": "Between stimulus and response there is a space. In that space is our power to choose our response.",
+          "attribution": "— Viktor Frankl"
+        },
+        "opening_question": "What is one belief you hold about yourself that you have never actually questioned?",
+        "facilitator_says": "Attitudes are the lenses we look through. We rarely notice them — but they shape every decision we make.",
+        "why_it_matters": "Even with the right personality and the right skills, the wrong attitude will sabotage you. The good news: attitudes can be examined, named, and chosen. We're going to surface yours so you can decide which to keep, which to soften, and which to retire.",
+        "closing_reflection": "Which one attitude — if you changed it tomorrow — would change the most about your life?",
+        "bridge_to_next": "Attitudes are HOW you see. Values are WHAT you protect. Let's go there next."
+      },
       "exercises": [
         {
           "slug": "attitudes-introduction",
@@ -374,6 +396,17 @@
       "description": "Uncover what truly matters to you through the Values Shopping Spree exercise. Your values form the background of your conscious and unconscious goals and propel your actions — whether you recognize it or not.",
       "order_index": 3,
       "icon_name": "heart",
+      "framing": {
+        "opening_quote": {
+          "text": "It's not hard to make decisions when you know what your values are.",
+          "attribution": "— Roy Disney"
+        },
+        "opening_question": "If you had to give up everything you own except five things — and not material things, but five values — what would you protect?",
+        "facilitator_says": "Values aren't what we say we believe. They are what we spend on — time, energy, attention. Today we make that visible.",
+        "why_it_matters": "Your values are your compass. The Goal Setting section later in this course only works if you have named which direction is north. Most people inherit their values from family, school, or workplace and never audit them. The Values Shopping Spree exercise is your audit.",
+        "closing_reflection": "Which of your top five values is currently underfed?",
+        "bridge_to_next": "You know your style, your lenses, your compass. Now: what hats are you actually wearing day-to-day?"
+      },
       "exercises": [
         {
           "slug": "values-shopping-spree",
@@ -478,6 +511,17 @@
       "description": "Examine the roles you play in life and the demands they make upon you. Whether or not you are happy with them, your roles are a driving force — consciously or unconsciously impacting every aspect of your daily life.",
       "order_index": 4,
       "icon_name": "users",
+      "framing": {
+        "opening_quote": {
+          "text": "You can do anything, but not everything.",
+          "attribution": "— David Allen"
+        },
+        "opening_question": "If someone made a documentary of your last 30 days, how many different characters would you play in it?",
+        "facilitator_says": "We all wear multiple hats. The question isn't whether — it's whether each hat is one we still want to wear, or one we just inherited.",
+        "why_it_matters": "Roles consume your hours. If you don't audit them, they will consume your life. The Life Line and Past Experience Inventory in this section help you see the shape of your time, not just the content of it. That shape is what your goals will have to fit inside.",
+        "closing_reflection": "Which role on your list deserves more time than it currently gets — and which one secretly deserves less?",
+        "bridge_to_next": "Roles are demands on your time. Skills are what travel with you through every role. Let's catalogue them."
+      },
       "exercises": [
         {
           "slug": "life-line-exercise",
@@ -558,6 +602,17 @@
       "description": "Identify your gifts, talents, educational history, work experience, hobbies, interests, and passions. Never underestimate your passions in planning your career and life — they are your most powerful transferable assets.",
       "order_index": 5,
       "icon_name": "zap",
+      "framing": {
+        "opening_quote": {
+          "text": "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work.",
+          "attribution": "— Steve Jobs"
+        },
+        "opening_question": "What is something you do well that other people seem to find difficult?",
+        "facilitator_says": "Skills aren't just job descriptions. They are patterns — and patterns travel with you wherever you go.",
+        "why_it_matters": "Knowing your transferable skills means you are never trapped in one role. They are leverage. They are the answer to 'what could I do if I had to start over tomorrow?' Strategy needs options, and your skills inventory is your option set.",
+        "closing_reflection": "Which skill, if developed, would unlock the most doors for you next year?",
+        "bridge_to_next": "You have your style, lenses, compass, hats, and toolkit. Now we put it all together — into goals."
+      },
       "exercises": [
         {
           "slug": "transferable-skills-with-individuals",
@@ -675,6 +730,17 @@
       "description": "Now that you have completed all five filters, it's time to set your goals. Research shows that people with a comprehensive set of life goals — not just career goals — are more likely to achieve them and find true satisfaction when they do.",
       "order_index": 6,
       "icon_name": "target",
+      "framing": {
+        "opening_quote": {
+          "text": "A goal without a plan is just a wish.",
+          "attribution": "— Antoine de Saint-Exupéry"
+        },
+        "opening_question": "If your future self — five years from now — could send you one sentence, what would it be?",
+        "facilitator_says": "Now we put it together. Personality + Attitudes + Values + Roles + Skills = the lens through which you set goals that are actually yours, not someone else's.",
+        "why_it_matters": "This is where Personal Strategic Planning earns its name. Everything before this was preparation. The Cross-Impact Matrix and Goal Achievement Plan exercises in this section are your blueprint for the next chapter — written by you, in your handwriting, using the self-knowledge you just built.",
+        "closing_reflection": "Which goal on your list scares you the most? That one is probably the most important.",
+        "bridge_to_next": null
+      },
       "exercises": [
         {
           "slug": "life-goal-inventory",

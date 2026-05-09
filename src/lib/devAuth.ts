@@ -4,6 +4,17 @@ export const DEV_BYPASS = import.meta.env.DEV && import.meta.env.VITE_DEV_BYPASS
 
 const DEV_ROLE_KEY = '__dev_auth_role__'
 
+// Defence-in-depth: if dev-bypass was previously enabled and is now off,
+// clear the stale role pointer so no synthetic id (e.g. dev-participant-id)
+// can leak into a real Supabase request after a config change.
+if (!DEV_BYPASS && typeof window !== 'undefined') {
+  try {
+    window.localStorage.removeItem(DEV_ROLE_KEY)
+  } catch {
+    // localStorage may be unavailable (SSR, privacy mode) — safe to ignore.
+  }
+}
+
 const DEV_PROFILES: Record<string, Profile> = {
   admin: {
     id: 'dev-admin-id',

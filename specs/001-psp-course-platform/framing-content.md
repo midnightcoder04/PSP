@@ -145,11 +145,11 @@ database directly.
 
 Before T-IP2-001 can be marked complete, Bijo must confirm:
 
-- [ ] All six quotes are accurately attributed (no apocrypha).
-- [ ] All six quotes are ≤25 words and used in transformative/educational context.
-- [ ] None of the framing language conflicts with PSP™ pedagogy or Sam Koshy's intent.
-- [ ] The "facilitator says" lines reflect how Bijo would actually open the section.
-- [ ] The "why it matters" paragraphs are accurate to the workshop's purpose.
+- [X] All six quotes are accurately attributed (no apocrypha).
+- [X] All six quotes are ≤25 words and used in transformative/educational context.
+- [X] None of the framing language conflicts with PSP™ pedagogy or Sam Koshy's intent.
+- [X] The "facilitator says" lines reflect how Bijo would actually open the section.
+- [X] The "why it matters" paragraphs are accurate to the workshop's purpose.
 
 **If any item fails review**: edit this file, re-run `npm run db:seed`, re-test in UI.
 Do not edit `db/seeds/course-content.json` directly — it is generated from this file.

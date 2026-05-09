@@ -6,6 +6,15 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
+export interface SectionFraming {
+  opening_quote: { text: string; attribution: string }
+  opening_question: string
+  facilitator_says: string
+  why_it_matters: string
+  closing_reflection: string
+  bridge_to_next: string | null
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -133,6 +142,7 @@ export interface Database {
           description: string | null
           order_index: number
           icon_name: string | null
+          framing: SectionFraming | null
         }
         Insert: {
           id?: string
@@ -142,6 +152,7 @@ export interface Database {
           description?: string | null
           order_index: number
           icon_name?: string | null
+          framing?: SectionFraming | null
         }
         Update: {
           title?: string
@@ -149,6 +160,7 @@ export interface Database {
           description?: string | null
           order_index?: number
           icon_name?: string | null
+          framing?: SectionFraming | null
         }
         Relationships: []
       }

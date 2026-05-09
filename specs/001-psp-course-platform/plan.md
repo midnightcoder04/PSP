@@ -202,6 +202,19 @@ These are *seed drafts*. They need Bijo's review before shipping (see Open Quest
   Existing PSP™ attribution lines remain untouched.
 
 *Post-Phase 1 re-check*: All gates remain passing. Complexity Tracking has no entries.
+*Post-Phase 1 re-check (confirmed, 2026-05-07)*: All gates passing — Code Quality,
+Test-First, UX Consistency, Performance, IP Compliance.
+*Post-Iteration 2 re-check (2026-05-07)*: All gates passing.
+- Test-First: 98/98 Vitest cases green (was 84 pre-WS-C; +14 from SectionOpening +
+  SectionClosing + archived-session regressions).
+- Performance: net gzipped delta ≈ 1 kB (well under the 5 kB Iteration 2 budget). See
+  `bundle-report.md` Iteration 2 Update.
+- IP Compliance: Bijo signed off `framing-content.md` IP & attribution checklist; all
+  six sections seeded.
+- Code Quality: SectionOpening/SectionClosing follow existing patterns; SessionCreateModal
+  extracted from inline (analysis H3); no Complexity Tracking entries added.
+- UX Consistency: framing renders consistently across all six sections; readOnly mode
+  hides the Continue button via `showContinue={!readOnly}`.
 
 ## Project Structure
 

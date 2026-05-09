@@ -10,8 +10,9 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
-    "db:seed": "tsx scripts/seed.ts",
-    "type-check": "tsc --noEmit"
+    "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
+    "type-check": "tsc --noEmit",
+    "check:no-bypass": "bash scripts/check-no-bypass.sh"
   },
   "dependencies": {
     "react": "^18.3.1",
