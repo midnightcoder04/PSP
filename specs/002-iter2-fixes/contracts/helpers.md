@@ -1,9 +1,11 @@
 # RLS Helper Contracts (`public.*` — added in migration 008)
 
 These helpers are the load-bearing primitives that every RLS policy now calls. They
-are `SECURITY DEFINER STABLE` with `search_path = public`, and `EXECUTE` is granted
-only to `authenticated` (revoked from `anon`). The contract below pins what each one
-returns for the fixture matrix.
+are `SECURITY DEFINER STABLE` with `search_path = public`. After migration 010, the
+grants pattern is `REVOKE EXECUTE … FROM PUBLIC` followed by `GRANT EXECUTE … TO authenticated`
+— so calls succeed for any signed-in user and fail for `anon`. (Migration 008's
+`REVOKE FROM anon` was a no-op because `anon` inherits from `PUBLIC`; migration 010
+corrects this. The contract assertions below assume migration 010 has landed.)
 
 The helper tests live in the same `scripts/rpc.test.ts` file under
 `describe('helpers', …)`. Each test invokes the helper via
@@ -18,9 +20,9 @@ return.
 |---|---|---|
 | admin | admin.id | `true` |
 | admin | facilitator.id | `false` |
-| admin | inactive.id | `false` (inactive admins must NOT be considered admin) |
+| admin | inactive.id | `false` (proves the role filter; the `is_active` filter for the admin role is documented but not exercised here — the fixture inactive user has role=participant; an "inactive admin" fixture would be needed to exercise the AND clause directly) |
 | facilitator | admin.id | `true` (the helper is purely about the *target* uid; caller doesn't matter — but the function MUST be callable by `authenticated`) |
-| anon | admin.id | error (revoked from anon — supabase-js returns 401/403) |
+| anon | admin.id | error (after migration 010 revokes EXECUTE from PUBLIC and grants only to `authenticated` — supabase-js surfaces this as a 401/403 from PostgREST) |
 
 **Note**: `is_admin` is *not* a "is the *caller* an admin" check; it asks "is `uid` an admin?". It's used inside RLS policies as `is_admin(auth.uid())`. The contract test verifies the function semantics, not the policy semantics.
 

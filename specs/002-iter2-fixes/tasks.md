@@ -27,7 +27,7 @@ before the implementation that makes them pass.
 **Purpose**: Add the npm scripts and one new env var; no source code yet.
 
 - [ ] T001 Add `RPC_TEST_PASSWORD` placeholder to `.env.example` with a comment that it is reused across the four `__rpc_test_*` users and never touches production
-- [ ] T002 Add `"test:rpc": "vitest run scripts/rpc.test.ts --env-file=.env.local"` and `"audit:security": "tsx --env-file=.env.local scripts/audit-security.ts"` to `package.json` `scripts`
+- [ ] T002 Add `"test:rpc": "vitest run scripts/rpc.test.ts"` and `"audit:security": "tsx --env-file=.env.local scripts/audit-security.ts"` to `package.json` `scripts`. **Do not add `--env-file` to the vitest invocation** — vitest doesn't accept it as a flag; vitest loads `.env.local` automatically through Vite's env-loader, exposed to test code via `process.env` (this is the same path `scripts/seed.test.ts` already uses successfully). `--env-file` is genuine on the `tsx` invocation because tsx 4.x does support it natively.
 
 ---
 
@@ -37,7 +37,7 @@ before the implementation that makes them pass.
 
 **⚠️ CRITICAL**: No user-story work starts until Phase 2 is complete.
 
-- [ ] T003 Create `scripts/_rpc_fixtures.ts` exporting `setupFixtures(): Promise<Fixtures>` and `teardownFixtures(f: Fixtures): Promise<void>` per `data-model.md` (creates the four `__rpc_test_*` users via `admin.auth.admin.createUser`, sets roles + `is_active`, inserts the test session/enrollment/two responses, and signs each user in to return one client per role)
+- [ ] T003 Create `scripts/_rpc_fixtures.ts` exporting `setupFixtures(): Promise<Fixtures>` and `teardownFixtures(f: Fixtures): Promise<void>` per `data-model.md` (creates the four `__rpc_test_*` users via `admin.auth.admin.createUser`, sets roles + `is_active`, inserts the test session/enrollment/two responses, and signs each user in to return one client per role). **Determinism (FR-006)**: any test that asserts on a sorted result MUST sort by a stable key (slug or email), not by `created_at` or insertion order. Wrap the `teardownFixtures` body in a top-level `try { … } catch (e) { console.error('teardown failed:', e); }` so a single cleanup hiccup never blocks the rest (FR-003 "guarded by try/catch").
 - [ ] T004 [P] Create `scripts/_rpc_fixtures.types.ts` exporting the `Fixtures`, `RoleClient`, and `TestUser` interfaces consumed by both the RPC test suite and the audit script
 - [ ] T005 Add a best-effort pre-cleanup in `setupFixtures()` that lists `__rpc_test_*@example.invalid` users and `from('sessions').select` titled `__rpc_test_session`, deleting any leftovers before creating fresh ones (per `quickstart.md` failure-mode "Email already in use")
 
@@ -65,7 +65,7 @@ before the implementation that makes them pass.
 
 ### Implementation for US1
 
-- [ ] T015 [US1] Verify all RED tests T007–T014 actually fail on a fresh checkout. Document the failure-output snippet in commit message (Constitution §II)
+- [ ] T015 [US1] Verify each new RED test fails *before* its corresponding implementation/migration lands. Note: helper tests T007–T011 will already pass against the current hosted DB because migration 008 is applied — for those, the RED step is "before migration 008 was applied", which is satisfied by the historical record (the iteration-2 incident logs in this session's commits show 500s before 008). The genuinely-RED tests *now* are: T012's nested-aggregate guard against the pre-009 definition (re-validated by the manual T039 polish step), and T029's `migration_010_post_apply` proacl assertions against the pre-010 grants. Document the failure-output snippets you can capture (T029 vs current DB) in the commit message (Constitution §II).
 - [ ] T016 [US1] Wire `beforeAll(setupFixtures)` and `afterAll(teardownFixtures)` in `scripts/rpc.test.ts`; cache the four role clients in module scope. Tests T007–T014 should now flip Green for the helpers + RPCs that already work (everything except items gated on T020)
 - [ ] T017 [US1] Add the **regression-class assertion** to `describe('rpc/get_admin_overview', …)`: a separate `it('would catch the nested-aggregate regression class', …)` that asserts `error === null AND data !== null AND data.total_sessions !== undefined`. Comment cites SC-002 + migration 009
 - [ ] T018 [US1] Run `npm run test:rpc` end-to-end; record wall-clock in the commit message; confirm ≤ 30 s (SC-001)
@@ -111,14 +111,30 @@ before the implementation that makes them pass.
 
 ### Tests for US3 — Write First, Confirm RED ⚠️
 
-- [ ] T029 [US3] Add `describe('migration_010_post_apply', …)` to `scripts/rpc.test.ts` with two assertions: (1) `pg_proc.proacl` for each in-scope function does NOT include `anon=X` (and for trigger-only functions, does not include `authenticated=X` either); (2) US1's existing helper + RPC tests still pass (re-asserting via re-running a sample of them) **[RED — passes once migration 010 lands]**
+- [ ] T029 [US3] Add `describe('migration_010_post_apply', …)` to `scripts/rpc.test.ts` with two assertions: (1) for each in-scope function (the 3 user-callable RPCs + 2 trigger-only + 5 helpers from migration 008), query `pg_proc.proacl` and assert the result does NOT contain the wildcard `=X/...` ACL entry (which is `PUBLIC`'s default `EXECUTE` grant); for trigger-only functions, additionally assert no `authenticated=X` entry exists; (2) US1's existing helper + RPC tests still pass (re-asserting via re-running a sample of them) **[RED — passes once migration 010 lands]**
 
 ### Implementation for US3
 
-- [ ] T030 [US3] Create `db/migrations/010_lock_security_definer_grants.sql` per `research.md` R7. Body: `REVOKE EXECUTE ON FUNCTION public.get_admin_overview() FROM anon;` and same for `get_session_stats(uuid)`, `get_resume_position(uuid, uuid)`, then `REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon, authenticated;` (trigger-only) and same for `update_progress_on_response()`. Add a header comment listing the advisor IDs being addressed (`0028`, `0029`) and explicitly leaving `rls_auto_enable` alone (Supabase platform internal)
-- [ ] T031 [US3] Mirror the migration to `supabase/migrations/<timestamp>_010_lock_security_definer_grants.sql` per the T105 pattern from Iteration 2 (so contributors using the Supabase CLI's `db push` see it too)
-- [ ] T032 [US3] Apply migration 010 to the hosted project via Supabase MCP `apply_migration`. Capture the success response in commit message
-- [ ] T033 [US3] Re-run `npm run audit:security`; verify Section 1 now shows `resolved-by-010` for every in-scope finding; commit the regenerated `security-audit.md`
+- [ ] T030 [US3] Create `db/migrations/010_lock_security_definer_grants.sql` per `research.md` R7. **Use the `REVOKE FROM PUBLIC + GRANT TO authenticated` pattern** for all in-scope functions; `REVOKE FROM anon` alone is a no-op because anon inherits `EXECUTE` from `PUBLIC`. Body covers three groups:
+  1. User-callable RPCs — for each of `get_admin_overview()`, `get_session_stats(uuid)`, `get_resume_position(uuid, uuid)`:
+     ```sql
+     REVOKE EXECUTE ON FUNCTION public.<fn>(<args>) FROM PUBLIC;
+     GRANT  EXECUTE ON FUNCTION public.<fn>(<args>) TO authenticated;
+     ```
+  2. Trigger-only functions — for each of `handle_new_user()`, `update_progress_on_response()`:
+     ```sql
+     REVOKE EXECUTE ON FUNCTION public.<fn>() FROM PUBLIC;
+     -- no GRANT — triggers fire under the function-owner context
+     ```
+  3. Migration-008 helpers (correcting the no-op REVOKE there) — for each of `is_admin(uuid)`, `is_active_user(uuid)`, `facilitates_session(uuid, uuid)`, `participant_in_session(uuid, uuid)`, `facilitator_has_participant(uuid, uuid)`:
+     ```sql
+     REVOKE EXECUTE ON FUNCTION public.<fn>(<args>) FROM PUBLIC;
+     GRANT  EXECUTE ON FUNCTION public.<fn>(<args>) TO authenticated;
+     ```
+  Add a header comment listing the advisor IDs being addressed (`0028`, `0029`) and explicitly leaving `rls_auto_enable` alone (Supabase platform internal). Note in the comment that this migration also **retroactively fixes migration 008**, whose per-role REVOKE was ineffective.
+- [ ] T031 [US3] Mirror the migration to `supabase/migrations/<timestamp>_010_lock_security_definer_grants.sql` per the established mirror pattern (so contributors using the Supabase CLI's `db push` see it too)
+- [ ] T032 [US3] Apply migration 010 to the hosted project via Supabase MCP `apply_migration`. Then run a verification SQL via `execute_sql`: `SELECT proname, proacl FROM pg_proc WHERE proname IN (<the 10 in-scope names>) AND pronamespace = 'public'::regnamespace;` — assert no row's `proacl` contains the wildcard `=X` entry. Capture both the apply response and the verification result in commit message
+- [ ] T033 [US3] Re-run `npm run audit:security`; verify Section 1 now shows `resolved-by-010` for every in-scope finding (zero `0028` for the user-callable RPCs and the 5 helpers; zero `0029` for the 2 trigger functions); commit the regenerated `security-audit.md`
 - [ ] T034 [US3] Re-run `npm run test:rpc`; confirm `migration_010_post_apply` (T029) flips Green and no US1 test regresses
 
 **Checkpoint**: US3 complete. Advisor warnings closed for the in-scope set; Supabase Studio's `get_advisors` shows the residual findings only for `rls_auto_enable` (platform internal, accepted).
@@ -131,6 +147,7 @@ before the implementation that makes them pass.
 - [ ] T036 [P] Update `specs/001-psp-course-platform/tasks.md` to flip T124 (RLS integration tests) and T125 (RPC bench) to a `superseded by 002-iter2-fixes` note pointing here. (T125 RPC bench remains separately useful but is not blocked.)
 - [ ] T037 Add an Iteration 3 line to `specs/001-psp-course-platform/bundle-report.md` confirming "no bundle change — no client code touched" so the bundle history stays continuous
 - [ ] T038 Run the full `npm test -- --run` and confirm the count is at least `previous (102) + new RPC tests + audit_assertions + migration_010_post_apply`. Record the new total in commit message
+- [ ] T039 [SC-002 manual regression check] In a throwaway local branch, re-apply migration 006's pre-fix `get_admin_overview` definition via `mcp apply_migration` to a personal scratch branch (or the local DB), run `npm run test:rpc`, capture the failure output, and confirm it contains the substring `aggregate function calls cannot be nested`. Then revert by re-applying 009. Document the captured failure snippet in `specs/002-iter2-fixes/regression-evidence.md` (one-paragraph note + the failure log). This task is **manual one-time validation** — it is not part of the CI gate; it proves the suite would have caught the iteration-2 incident.
 
 ---
 

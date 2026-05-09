@@ -70,14 +70,29 @@ A JWT-bearing client routes through PostgREST exactly like the browser does, so 
 
 ## R7 — Hardening migration scope (010)
 
-**Decision**: A single migration that:
-1. Revokes `EXECUTE` from `anon` on user-callable RPCs (`get_admin_overview`, `get_session_stats`, `get_resume_position`) — these always require `auth.uid()` so anon calls are pure noise.
-2. Revokes `EXECUTE` from `anon` AND `authenticated` on trigger-only functions (`handle_new_user`, `update_progress_on_response`) — they're invoked by triggers under `SECURITY DEFINER` and never legitimately called via REST. (`rls_auto_enable` is a Supabase platform internal, leave alone.)
-3. Leaves the 5 helpers from migration 008 as-is (already locked to `authenticated` only).
+**Decision**: A single migration that uses the **`REVOKE FROM PUBLIC` then `GRANT TO authenticated`** pattern for every in-scope function. Specifically:
 
-**Rationale**: Resolves the named advisor warnings (`0028` for the user-callable RPCs, `0029` for the trigger-only ones) without changing the application surface. The audit script re-runs `get_advisors` after the migration to confirm zero residue.
+1. For user-callable RPCs (`get_admin_overview`, `get_session_stats`, `get_resume_position`):
+   ```sql
+   REVOKE EXECUTE ON FUNCTION public.<fn>(<args>) FROM PUBLIC;
+   GRANT  EXECUTE ON FUNCTION public.<fn>(<args>) TO authenticated;
+   ```
+2. For trigger-only functions (`handle_new_user`, `update_progress_on_response`):
+   ```sql
+   REVOKE EXECUTE ON FUNCTION public.<fn>() FROM PUBLIC;
+   -- Intentionally no GRANT to authenticated — triggers fire under the
+   -- function-owner context, so role-level grants are not consulted.
+   ```
+3. **Re-apply the same pattern to the 5 helpers from migration 008** (`is_admin`, `is_active_user`, `facilitates_session`, `participant_in_session`, `facilitator_has_participant`). Migration 008's `REVOKE FROM anon` was a no-op because anon inherits `EXECUTE` from `PUBLIC` (`pg_proc.proacl` shows `=X/postgres` — the `=` prefix means PUBLIC). Until we revoke from `PUBLIC`, the advisor will keep flagging them.
+
+`rls_auto_enable` is a Supabase platform internal — leave it alone.
+
+**Verification step in T032**: query `pg_proc.proacl` for each in-scope function and assert the result does not contain the wildcard `=X/...` ACL entry. If it does, the migration didn't take effect.
+
+**Rationale**: In Postgres, `EXECUTE` on functions is granted to `PUBLIC` by default at function-creation time. Per-role `REVOKE FROM anon` is silently ineffective because `anon` inherits from `PUBLIC`. The `REVOKE FROM PUBLIC + GRANT TO authenticated` pattern is the only way to truly restrict the surface, and is the documented remediation in the Supabase advisor `0028`/`0029` lint pages.
 
 **Alternatives considered**:
+- *`REVOKE FROM anon` only* (the original plan): no-op while `PUBLIC` retains `EXECUTE`. Rejected.
 - *Convert to `SECURITY INVOKER`*: would force every RPC body to manually consult RLS — impractical for the trigger functions. Rejected.
 - *Move trigger functions to a `private` schema*: cleaner but invasive (touches migration 001 and 004); deferred.
 

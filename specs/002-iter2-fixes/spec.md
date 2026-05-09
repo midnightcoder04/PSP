@@ -26,7 +26,7 @@ A maintainer runs `npm run audit:security` and gets a single report listing ever
 - **AC-4 (Idempotent fixtures)**: The RPC test suite creates its own users via `auth.admin.createUser`, sessions, enrollments, and responses in `beforeAll` with a `__rpc_test_*` namespace; `afterAll` removes every fixture so re-runs are stable.
 - **AC-5 (Auto-skip without creds)**: When `VITE_SUPABASE_URL` or `SUPABASE_SECRET_KEY` is not set, the suite skips cleanly (no failures), matching the existing `scripts/seed.test.ts` pattern.
 - **AC-6 (Security audit completeness)**: `npm run audit:security` produces `specs/002-iter2-fixes/security-audit.md` with these sections, each populated:
-  1. Supabase advisor findings (security + performance) by ID, severity, and remediation status (open / fixed-in-this-iteration / accepted with note).
+  1. Supabase advisor findings (security + performance) by ID, severity, and remediation status — exactly one of `open`, `resolved-by-010`, or `accepted` (the last with a one-line justification appended). These three labels are the canonical vocabulary; research.md R7 and tasks.md T021 use the same set.
   2. RLS access matrix: every (table × role × operation) cell either ✓ allowed by a named policy or ✗ blocked, with a test that proves it for at least one fixture row.
   3. Edge Function authorization: `create-user` admin-check verified by an integration test that calls it as participant + facilitator + admin + unauthenticated.
   4. Build-output sentinel scan (existing `scripts/check-no-bypass.sh` extended): assert no `sb_secret_…` and no `dev-(admin|facilitator|participant)-id` strings appear in `dist/`.
@@ -46,7 +46,7 @@ A maintainer runs `npm run audit:security` and gets a single report listing ever
 - **FR-001 (test runtime)**: The RPC suite MUST run inside `vitest` so it shares the existing `npm test -- --run` invocation but in a separate file (`scripts/rpc.test.ts`) marked `@vitest-environment node`.
 - **FR-002 (auth strategy)**: The suite MUST exercise role-gated RPCs by signing the test users in via `signInWithPassword` and calling `client.rpc(...)` with the resulting JWT — not by manipulating `request.jwt.claims` server-side.
 - **FR-003 (fixture isolation)**: Test users, sessions, enrollments, responses MUST be namespaced with `__rpc_test_` prefixes (slug / email) and MUST be deleted by `afterAll`, even on test failure (`afterAll` guarded by try/catch).
-- **FR-004 (advisor scrape)**: The audit script MUST call the Supabase MCP `get_advisors` tool (security and performance) and serialise findings into `security-audit.md`.
+- **FR-004 (advisor scrape)**: The audit script MUST fetch advisor lints from the Supabase Management REST API (`GET /v1/projects/{ref}/advisors?type=security` and `?type=performance`), authenticated with `SUPABASE_SECRET_KEY`, and serialise findings into `security-audit.md`. (The Supabase MCP `get_advisors` tool is only callable from inside Claude Code; the audit script must run from a plain Node process.)
 - **FR-005 (RLS matrix generator)**: The audit script MUST programmatically enumerate (table, role, operation) tuples and exercise each via the role-specific JWT, producing a markdown table with the result.
 - **FR-006 (deterministic ordering)**: Tests MUST not depend on row creation order (sort fixtures by deterministic key when comparing).
 
@@ -58,8 +58,13 @@ A maintainer runs `npm run audit:security` and gets a single report listing ever
 
 ## Success Criteria
 
+### Buildable
+
 - **SC-001**: The full RPC suite runs end-to-end in ≤ 30 seconds against the hosted project (network-bound).
-- **SC-002**: When migration 006's pre-fix definition is reapplied (in a throwaway branch), `npm run test:rpc` reports `get_admin_overview` failed with the substring `aggregate function calls cannot be nested`.
-- **SC-003**: After the hardening migration, `get_advisors --type security` returns zero `0028` and zero `0029` findings for `public.*` functions that were marked for restriction.
-- **SC-004**: The audit report's RLS matrix shows every cell marked either ✓ (proven by a test) or ✗ (proven by a denied call) — no "unknown".
-- **SC-005**: The signal:noise ratio of the audit report is high enough that a maintainer can act on it in one sitting (≤ 30 minutes from open-to-decisions).
+- **SC-002**: When migration 006's pre-fix definition is reapplied (in a throwaway branch), `npm run test:rpc` reports `get_admin_overview` failed with the substring `aggregate function calls cannot be nested`. (Validated manually one-time per T039; not part of the CI gate.)
+- **SC-003**: After the hardening migration, `GET /v1/projects/{ref}/advisors?type=security` returns zero `0028` and zero `0029` findings for `public.*` functions that were marked for restriction.
+- **SC-004**: The audit report's RLS matrix shows every cell marked either ✓ (proven by a test) or ✗ (proven by a denied call) — no "unknown" or empty cells.
+
+### Quality goal (non-buildable, not gated)
+
+- **SC-005**: The signal:noise ratio of the audit report is high enough that a maintainer can act on it in one sitting (≤ 30 minutes from open-to-decisions). Subjective; not asserted by a test.

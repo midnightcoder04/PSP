@@ -84,7 +84,7 @@ afterAll (best-effort, wrapped in try/catch) (≤ 3 s)
 |---|---|
 | `is_admin(admin.id) = true` | helpers.md / `is_admin` test |
 | `is_admin(facilitator.id) = false` | same |
-| `is_admin(inactive.id) = false` (inactive admin should still be considered admin? **decision**: NO — `is_admin` requires `is_active=true`; tested) | same |
+| `is_admin(<inactive user>.id) = false` (the fixture inactive user has role=participant, so this proves only the role filter; the `is_active` filter for the admin role is documented in the implementation but not exercised by the current fixtures — adding an "inactive admin" fixture is a deferred follow-up, not on any AC path) | same |
 | `participant_in_session(participant, session) = true` | `participant_in_session` test |
 | `facilitates_session(facilitator, session) = true` | `facilitates_session` test |
 | `facilitator_has_participant(facilitator, participant) = true` | `facilitator_has_participant` test |
