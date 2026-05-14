@@ -12,7 +12,9 @@
     "test:coverage": "vitest run --coverage",
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
     "type-check": "tsc --noEmit",
-    "check:no-bypass": "bash scripts/check-no-bypass.sh"
+    "check:no-bypass": "bash scripts/check-no-bypass.sh",
+    "test:rpc": "vitest run scripts/rpc.test.ts",
+    "audit:security": "tsx --env-file=.env.local scripts/audit-security.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

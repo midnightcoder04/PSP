@@ -5,6 +5,20 @@
 
 ---
 
+## Iteration 3 Update (2026-05-11)
+
+**No bundle change** — Iteration 3 added only test infrastructure (`scripts/rpc.test.ts`,
+`scripts/audit-security.ts`, `scripts/_rpc_fixtures.ts`) and a DB hardening migration
+(`db/migrations/010_lock_security_definer_grants.sql`). No client code touched. Bundle
+footprint is identical to Iteration 2.
+
+### Iteration 3 Verdict: PASS (no-change)
+
+Zero net bundle delta. Test files are never bundled by Vite. The hardening migration
+runs server-side only (Postgres GRANT/REVOKE statements).
+
+---
+
 ## Iteration 2 Update (2026-05-07)
 
 **Build**: same — Vite 5.4.21, production, after WS-C Section Framing landed.

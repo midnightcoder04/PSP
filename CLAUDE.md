@@ -43,9 +43,11 @@ These feed into a **Goal Setting** section (Life Goal Inventory, Cross-Impact Ma
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-specs/002-iter2-fixes/plan.md
+specs/003-slide-nav-ux-rework/plan.md
 
 (The Iteration 1+2 plan at specs/001-psp-course-platform/plan.md remains the
-canonical source for the platform's technology choices and architecture; the
-current plan above only adds the RPC test suite + security audit on top.)
+canonical source for the platform's technology choices and architecture.
+The Iteration 3 plan at specs/002-iter2-fixes/plan.md covers the RPC test
+suite + security audit. The current plan above layers the slide navigation,
+sequential reveal, exercise UX rework, and testimonials work on top.)
 <!-- SPECKIT END -->
