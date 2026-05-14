@@ -102,4 +102,40 @@ describe('CourseHome', () => {
       expect(screen.getByText(/Sam Koshy/i)).toBeInTheDocument()
     })
   })
+
+  it('locks sections beyond Personality when no progress exists', async () => {
+    render(
+      <MemoryRouter>
+        <CourseHome />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('Attitudes')).toBeInTheDocument()
+    })
+
+    // Each locked section card has data-locked="true" and is not a button.
+    const attitudesCard = screen.getByText('Attitudes').closest('[data-locked]')
+    expect(attitudesCard).not.toBeNull()
+    expect(attitudesCard).toHaveAttribute('data-locked', 'true')
+
+    const personalityCard = screen.getByText('Personality').closest('[data-locked]')
+    expect(personalityCard).toHaveAttribute('data-locked', 'false')
+  })
+
+  it('describes locked sections with an accessible hint naming the prereq', async () => {
+    render(
+      <MemoryRouter>
+        <CourseHome />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('Attitudes')).toBeInTheDocument()
+    })
+
+    const attitudesCard = screen.getByText('Attitudes').closest('[data-locked="true"]')
+    expect(attitudesCard).not.toBeNull()
+    expect(attitudesCard!.getAttribute('aria-label') ?? '').toMatch(/locked.*personality/i)
+  })
 })

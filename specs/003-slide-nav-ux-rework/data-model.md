@@ -23,6 +23,8 @@ create index testimonials_participant_id_idx   on public.testimonials(participan
 
 alter table public.testimonials enable row level security;
 -- policies: see research.md R9 and contracts/testimonials-api.md
+-- Note: self_insert and self_update policies require profiles.role = 'participant'
+-- (resolution of analysis finding A4) — see contracts/testimonials-api.md §1 for full DDL.
 ```
 
 **Field semantics**:

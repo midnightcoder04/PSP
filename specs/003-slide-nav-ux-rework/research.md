@@ -86,6 +86,8 @@ function deriveWatusiCounts(checked: string[]): Record<'w'|'a'|'t'|'u'|'s'|'i', 
 
 **Rationale**: The seed already uses the `{prefix}_{n}` ID convention (`w_1`, `a_11`, `t_19`, etc.). Reading the existing response is one Supabase query (`responses` table by `(participant_id, exercise_id)`), already in flight on the SectionPage load. The participant can still drag the prefilled order to break ties — the **saved** ranking is what the participant confirms, but counts are never editable.
 
+**Re-derivation rule** (resolved from analysis A3): The prefilled order is computed *only* when no manual ranking response exists yet (`responses[ranking_exercise_id]` is null). Once the participant has saved a ranking — whether by manually dragging or by simply advancing the slide (which writes the prefilled order as their saved order) — subsequent checklist edits refresh the **count badges** but do NOT clobber the saved ranking. Implementation: the ranking renderer reads `responses[ranking_id]?.order` first; if set, it uses that as the displayed order. The `derives_from` computation is only consulted to seed an absent response and to refresh badges thereafter. This matches the user mental model "I made a choice → my choice persists, but the supporting numbers keep updating."
+
 **Co-location on a single slide**: handled by FR-005's `slide_group` column. Both exercises share `slide_group = X`; the SectionPage renders all exercises in one group on a single slide.
 
 **Alternatives considered**:
@@ -198,15 +200,28 @@ create policy testimonials_self_select on testimonials
   for select to authenticated
   using (participant_id = auth.uid());
 
--- self_insert/self_update: participant can create + edit their own testimonial
+-- self_insert/self_update: only users with role='participant' may author testimonials
+-- (resolution of analysis A4 — facilitator-authored testimonials are out of scope).
 create policy testimonials_self_insert on testimonials
   for insert to authenticated
-  with check (participant_id = auth.uid());
+  with check (
+    participant_id = auth.uid()
+    and exists (select 1 from public.profiles p
+                where p.id = auth.uid() and p.role = 'participant')
+  );
 
 create policy testimonials_self_update on testimonials
   for update to authenticated
-  using (participant_id = auth.uid())
-  with check (participant_id = auth.uid());
+  using (
+    participant_id = auth.uid()
+    and exists (select 1 from public.profiles p
+                where p.id = auth.uid() and p.role = 'participant')
+  )
+  with check (
+    participant_id = auth.uid()
+    and exists (select 1 from public.profiles p
+                where p.id = auth.uid() and p.role = 'participant')
+  );
 
 -- facilitator_select: facilitator can read testimonials for their sessions
 create policy testimonials_facilitator_select on testimonials

@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { useProgress } from '@/hooks/useProgress'
+import { useSectionLock } from '@/hooks/useSectionLock'
 import { PageShell } from '@/components/layout/PageShell'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
-import type { Section } from '@/types/database'
+import { LockIcon } from '@/components/ui/LockIcon'
+import type { Section, Progress } from '@/types/database'
 import styles from './CourseHome.module.css'
 
 export default function CourseHome() {
@@ -32,7 +34,16 @@ export default function CourseHome() {
       })
   }, [profile?.id])
 
-  // Resume position redirect on mount
+  const progressMap = useMemo(() => {
+    const m = new Map<string, Progress>()
+    for (const p of progress) m.set(p.section_id, p)
+    return m
+  }, [progress])
+
+  const locks = useSectionLock({ sections, progressMap })
+
+  // Resume position: only redirect when the first available (unlocked, in-progress) section
+  // exists. Don't auto-redirect past a locked boundary.
   useEffect(() => {
     if (!profile?.id) return
     supabase
@@ -40,26 +51,30 @@ export default function CourseHome() {
       .then(({ data }) => {
         if (data && data.length > 0) {
           const { section_slug } = data[0]
-          navigate(`/course/${section_slug}`, { replace: false })
+          const target = locks.find((l) => l.section.slug === section_slug)
+          if (target && !target.isLocked) {
+            navigate(`/course/${section_slug}`, { replace: false })
+          }
         }
       })
-  }, [profile?.id, navigate])
+  }, [profile?.id, navigate, locks])
 
-  const progressMap = Object.fromEntries(
-    progress.map((p) => [p.section_id, p])
-  )
-
-  const overallPct = sections.length > 0
-    ? Math.round(
-        progress.reduce((sum, p) => sum + (p.completed_exercises / Math.max(p.total_exercises, 1)) * 100, 0)
-        / sections.length
-      )
-    : 0
+  const overallPct =
+    sections.length > 0
+      ? Math.round(
+          progress.reduce(
+            (sum, p) => sum + (p.completed_exercises / Math.max(p.total_exercises, 1)) * 100,
+            0
+          ) / sections.length
+        )
+      : 0
 
   if (sectionsLoading || progressLoading) {
     return (
       <PageShell title="My Course">
-        <div className={styles.loading}><Spinner size="lg" /></div>
+        <div className={styles.loading}>
+          <Spinner size="lg" />
+        </div>
       </PageShell>
     )
   }
@@ -80,29 +95,57 @@ export default function CourseHome() {
       </div>
 
       <div className={styles.grid}>
-        {sections.map((section) => {
-          const prog = progressMap[section.id]
+        {locks.map(({ section, isLocked, prereqTitle }) => {
+          const prog = progressMap.get(section.id)
           const completed = prog?.completed_exercises ?? 0
           const total = prog?.total_exercises ?? 0
           const pct = total > 0 ? Math.round((completed / total) * 100) : 0
           const isDone = prog?.section_completed_at != null
 
+          const ariaLabel = isLocked
+            ? `Locked — complete ${prereqTitle} first`
+            : `${section.title} — ${pct}% complete`
+
+          if (isLocked) {
+            return (
+              <div
+                key={section.id}
+                className={`${styles.card} ${styles.cardLocked}`}
+                data-locked="true"
+                role="group"
+                aria-label={ariaLabel}
+                tabIndex={0}
+                title={`Complete ${prereqTitle} first`}
+              >
+                <div className={styles.cardTop}>
+                  <LockIcon size={24} aria-label="Locked" />
+                </div>
+                <h3 className={styles.cardTitle}>{section.title}</h3>
+                {section.subtitle && <p className={styles.cardSubtitle}>{section.subtitle}</p>}
+                <p className={styles.cardProgress}>
+                  Locked — complete {prereqTitle} first
+                </p>
+              </div>
+            )
+          }
+
           return (
             <button
               key={section.id}
               className={`${styles.card} ${isDone ? styles.cardDone : ''}`}
+              data-locked="false"
               onClick={() => navigate(`/course/${section.slug}`)}
-              aria-label={`${section.title} — ${pct}% complete`}
+              aria-label={ariaLabel}
             >
               <div className={styles.cardTop}>
                 <ProgressRing pct={pct} size={52} strokeWidth={4} />
                 {isDone && <Badge variant="success">Complete</Badge>}
               </div>
               <h3 className={styles.cardTitle}>{section.title}</h3>
-              {section.subtitle && (
-                <p className={styles.cardSubtitle}>{section.subtitle}</p>
-              )}
-              <p className={styles.cardProgress}>{completed}/{total} exercises</p>
+              {section.subtitle && <p className={styles.cardSubtitle}>{section.subtitle}</p>}
+              <p className={styles.cardProgress}>
+                {completed}/{total} exercises
+              </p>
             </button>
           )
         })}

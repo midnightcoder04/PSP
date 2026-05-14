@@ -31,6 +31,33 @@
   max-width: var(--max-content);
 }
 
+.slideTrack {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: var(--max-content);
+}
+
+.slide {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.slide[data-slide-active='true'] {
+  opacity: 1;
+  pointer-events: auto;
+  position: static;
+}
+
+.slide[data-slide-active='false'] {
+  position: absolute;
+  visibility: hidden;
+}
+
 .exerciseCard {
   background: var(--color-surface);
   border: 1px solid var(--color-border);

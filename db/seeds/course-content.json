@@ -16,7 +16,11 @@
         "facilitator_says": "D.I.S.C. isn't a label — it's a mirror. Today we're going to look at how you naturally show up, before we look at how you choose to show up.",
         "why_it_matters": "Strategy starts with self-knowledge. You can't plan a life you don't understand. Your D.I.S.C. style shapes how you make decisions, who energises you, and what kind of work feels effortless. Knowing it doesn't lock you in — it gives you a starting point.",
         "closing_reflection": "What is one D.I.S.C. trait that helps you, and one that gets in your way?",
-        "bridge_to_next": "Knowing your style is one filter. Now we look at the lenses you see through it: your attitudes."
+        "bridge_to_next": "Knowing your style is one filter. Now we look at the lenses you see through it: your attitudes.",
+        "reading_material": {
+          "title": "How To Read and Understand People — Bill Bonnstetter (TTI)",
+          "content": "A short primer on the D.I.S.C. behavioural model — the framework underneath this section. Bonnstetter explains why the four primary styles (Dominance, Influence, Steadiness, Compliance) are observable patterns, not fixed labels, and how each one tends to make decisions, communicate, and react under pressure. The PSP workshop adapts this work with permission."
+        }
       },
       "exercises": [
         {
@@ -257,7 +261,11 @@
         "facilitator_says": "Attitudes are the lenses we look through. We rarely notice them — but they shape every decision we make.",
         "why_it_matters": "Even with the right personality and the right skills, the wrong attitude will sabotage you. The good news: attitudes can be examined, named, and chosen. We're going to surface yours so you can decide which to keep, which to soften, and which to retire.",
         "closing_reflection": "Which one attitude — if you changed it tomorrow — would change the most about your life?",
-        "bridge_to_next": "Attitudes are HOW you see. Values are WHAT you protect. Let's go there next."
+        "bridge_to_next": "Attitudes are HOW you see. Values are WHAT you protect. Let's go there next.",
+        "reading_material": {
+          "title": "Man's Search for Meaning — Viktor Frankl",
+          "content": "The book the opening quote comes from. Frankl, a psychiatrist who survived the Nazi camps, argues that meaning is not given to us — it is the response we choose to whatever we are handed. For this section, the relevant move is his: you cannot always change the stimulus, but the space between stimulus and response is where your attitude lives. Naming that space is the first step in this exercise."
+        }
       },
       "exercises": [
         {
@@ -405,7 +413,11 @@
         "facilitator_says": "Values aren't what we say we believe. They are what we spend on — time, energy, attention. Today we make that visible.",
         "why_it_matters": "Your values are your compass. The Goal Setting section later in this course only works if you have named which direction is north. Most people inherit their values from family, school, or workplace and never audit them. The Values Shopping Spree exercise is your audit.",
         "closing_reflection": "Which of your top five values is currently underfed?",
-        "bridge_to_next": "You know your style, your lenses, your compass. Now: what hats are you actually wearing day-to-day?"
+        "bridge_to_next": "You know your style, your lenses, your compass. Now: what hats are you actually wearing day-to-day?",
+        "reading_material": {
+          "title": "The 7 Habits of Highly Effective People — Stephen R. Covey",
+          "content": "Covey's framework treats values as the centre of a personal mission and warns about the cost of confusing values with urgencies. Habit 2 — Begin with the end in mind — is the lens to bring into the Shopping Spree exercise: you are not buying what feels nice today, you are buying the things that, ten years from now, you would still defend as worth the money. Covey also separates principles (universal) from values (chosen) — useful vocabulary if you find the exercise hard."
+        }
       },
       "exercises": [
         {
@@ -520,7 +532,11 @@
         "facilitator_says": "We all wear multiple hats. The question isn't whether — it's whether each hat is one we still want to wear, or one we just inherited.",
         "why_it_matters": "Roles consume your hours. If you don't audit them, they will consume your life. The Life Line and Past Experience Inventory in this section help you see the shape of your time, not just the content of it. That shape is what your goals will have to fit inside.",
         "closing_reflection": "Which role on your list deserves more time than it currently gets — and which one secretly deserves less?",
-        "bridge_to_next": "Roles are demands on your time. Skills are what travel with you through every role. Let's catalogue them."
+        "bridge_to_next": "Roles are demands on your time. Skills are what travel with you through every role. Let's catalogue them.",
+        "reading_material": {
+          "title": "Essentialism: The Disciplined Pursuit of Less — Greg McKeown",
+          "content": "McKeown's central move is to treat your roles as decisions, not obligations. A role inherited from family, employer, or habit is still a role you renew every day by showing up. The book offers a useful filter — 'if it isn't a clear yes, it's a clear no' — for the Life Line exercise. Read this before deciding which roles to keep on the list and which to retire."
+        }
       },
       "exercises": [
         {
@@ -611,7 +627,11 @@
         "facilitator_says": "Skills aren't just job descriptions. They are patterns — and patterns travel with you wherever you go.",
         "why_it_matters": "Knowing your transferable skills means you are never trapped in one role. They are leverage. They are the answer to 'what could I do if I had to start over tomorrow?' Strategy needs options, and your skills inventory is your option set.",
         "closing_reflection": "Which skill, if developed, would unlock the most doors for you next year?",
-        "bridge_to_next": "You have your style, lenses, compass, hats, and toolkit. Now we put it all together — into goals."
+        "bridge_to_next": "You have your style, lenses, compass, hats, and toolkit. Now we put it all together — into goals.",
+        "reading_material": {
+          "title": "What Color Is Your Parachute? — Richard N. Bolles",
+          "content": "Bolles invented the modern transferable-skills inventory. The book's core exercise — the Flower — separates a skill from the job that taught you the skill, so you can carry it into completely different work. Read the chapter on transferable skills before the inventory exercise; it will help you list skills as verbs (analyse, listen, organise) rather than as job titles."
+        }
       },
       "exercises": [
         {
@@ -739,7 +759,11 @@
         "facilitator_says": "Now we put it together. Personality + Attitudes + Values + Roles + Skills = the lens through which you set goals that are actually yours, not someone else's.",
         "why_it_matters": "This is where Personal Strategic Planning earns its name. Everything before this was preparation. The Cross-Impact Matrix and Goal Achievement Plan exercises in this section are your blueprint for the next chapter — written by you, in your handwriting, using the self-knowledge you just built.",
         "closing_reflection": "Which goal on your list scares you the most? That one is probably the most important.",
-        "bridge_to_next": null
+        "bridge_to_next": null,
+        "reading_material": {
+          "title": "Goals! — Brian Tracy",
+          "content": "Tracy's framework is procedural: pick the goal, write it down, set a deadline, list everything needed, sort that list into a plan, take action on the plan today, and do something every day toward the most important goal. The Goal Achievement Plan in this section follows the same shape. Tracy's contribution to the workshop is the discipline of writing — until a goal is on paper with a date, it remains a wish (per Saint-Exupéry's opening quote)."
+        }
       },
       "exercises": [
         {

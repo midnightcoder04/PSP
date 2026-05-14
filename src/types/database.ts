@@ -13,6 +13,67 @@ export interface SectionFraming {
   why_it_matters: string
   closing_reflection: string
   bridge_to_next: string | null
+  reading_material?: {
+    title: string
+    content: string
+    url?: string
+  } | null
+}
+
+// Iteration 4 — new exercise type shapes ------------------------------------
+
+export interface StructuredTextQuestion {
+  id: string
+  label: string
+  placeholder?: string
+  min_length?: number
+  max_length?: number
+}
+
+export interface StructuredTextContent {
+  prompt: string
+  questions: StructuredTextQuestion[]
+}
+
+export interface StructuredTextResponse {
+  answers: Record<string, string>
+  _legacy?: string
+}
+
+export interface RatingPickerContent {
+  prompt: string
+  scale: { min: number; max: number; labels?: string[] }
+  items: { id: string; label: string }[]
+}
+
+export interface RatingPickerResponse {
+  ratings: Record<string, number>
+}
+
+export interface RankingDerivesFrom {
+  source_exercise_slug: string
+  group_by: 'id_prefix'
+}
+
+export interface RankingContent {
+  prompt: string
+  items: { id: string; label: string }[]
+  interaction?: 'drag' | 'buttons'
+  derives_from?: RankingDerivesFrom
+  show_counts?: boolean
+}
+
+export interface TableContent {
+  prompt: string
+  headers: string[]
+  rows: number
+  col_types?: ('text' | 'number' | 'currency')[]
+  total_target?: number
+}
+
+export interface TableResponse {
+  rows: string[][]
+  total_spent?: number
 }
 
 export interface Database {
@@ -170,9 +231,10 @@ export interface Database {
           section_id: string
           slug: string
           title: string
-          type: 'checkbox' | 'text' | 'table' | 'ranking' | 'info'
+          type: 'checkbox' | 'text' | 'table' | 'ranking' | 'info' | 'structured-text' | 'rating-picker'
           content_json: Json
           order_index: number
+          slide_group: number | null
           is_scored: boolean
           attribution: string | null
         }
@@ -181,17 +243,19 @@ export interface Database {
           section_id: string
           slug: string
           title: string
-          type: 'checkbox' | 'text' | 'table' | 'ranking' | 'info'
+          type: 'checkbox' | 'text' | 'table' | 'ranking' | 'info' | 'structured-text' | 'rating-picker'
           content_json: Json
           order_index: number
+          slide_group?: number | null
           is_scored?: boolean
           attribution?: string | null
         }
         Update: {
           title?: string
-          type?: 'checkbox' | 'text' | 'table' | 'ranking' | 'info'
+          type?: 'checkbox' | 'text' | 'table' | 'ranking' | 'info' | 'structured-text' | 'rating-picker'
           content_json?: Json
           order_index?: number
+          slide_group?: number | null
           attribution?: string | null
         }
         Relationships: [
@@ -307,6 +371,47 @@ export interface Database {
           }
         ]
       }
+      testimonials: {
+        Row: {
+          id: string
+          participant_id: string
+          session_id: string
+          content: string
+          rating: number | null
+          submitted_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          participant_id: string
+          session_id: string
+          content: string
+          rating?: number | null
+          submitted_at?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          rating?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'testimonials_participant_id_fkey'
+            columns: ['participant_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'testimonials_session_id_fkey'
+            columns: ['session_id']
+            isOneToOne: false
+            referencedRelation: 'sessions'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -346,3 +451,4 @@ export type Section = Tables<'sections'>
 export type Exercise = Tables<'exercises'>
 export type Response = Tables<'responses'>
 export type Progress = Tables<'progress'>
+export type Testimonial = Tables<'testimonials'>

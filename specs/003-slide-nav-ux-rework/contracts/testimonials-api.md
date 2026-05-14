@@ -29,14 +29,35 @@ create policy testimonials_self_select on public.testimonials
   for select to authenticated
   using (participant_id = auth.uid());
 
+-- self_insert is restricted to users whose role is 'participant'.
+-- Resolution of analysis finding A4: testimonials are author-by-participant
+-- per the spec ("Out of scope: facilitator-authored testimonials").
 create policy testimonials_self_insert on public.testimonials
   for insert to authenticated
-  with check (participant_id = auth.uid());
+  with check (
+    participant_id = auth.uid()
+    and exists (
+      select 1 from public.profiles p
+      where p.id = auth.uid() and p.role = 'participant'
+    )
+  );
 
 create policy testimonials_self_update on public.testimonials
   for update to authenticated
-  using (participant_id = auth.uid())
-  with check (participant_id = auth.uid());
+  using (
+    participant_id = auth.uid()
+    and exists (
+      select 1 from public.profiles p
+      where p.id = auth.uid() and p.role = 'participant'
+    )
+  )
+  with check (
+    participant_id = auth.uid()
+    and exists (
+      select 1 from public.profiles p
+      where p.id = auth.uid() and p.role = 'participant'
+    )
+  );
 
 create policy testimonials_facilitator_select on public.testimonials
   for select to authenticated
@@ -175,7 +196,8 @@ To be added to `scripts/rpc.test.ts` (or a sibling `scripts/testimonials.test.ts
 | participant A | `delete` own | ✗ 403 (no policy) |
 | facilitator F | `select` testimonial for F's session | ✓ |
 | facilitator F | `select` testimonial for another facilitator's session | ✗ empty |
-| facilitator F | `insert` testimonial as themselves | ✗ (no self_insert match — facilitators aren't participants of the testimonial) |
+| facilitator F | `insert` testimonial with `participant_id = F.id` | ✗ 403 — `self_insert` requires the actor's `profiles.role = 'participant'` |
+| facilitator F | `insert` testimonial impersonating participant P | ✗ 403 — `with check (participant_id = auth.uid())` fails |
 | admin | `select` any | ✓ |
 | admin | `update` someone else's | ✗ (no admin_update policy) |
 | unauthenticated | any | ✗ |

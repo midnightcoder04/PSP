@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
+import { useSlideState } from '@/hooks/useSlideState'
 import { PageShell } from '@/components/layout/PageShell'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { Spinner } from '@/components/ui/Spinner'
@@ -10,9 +11,11 @@ import { TextExercise } from '@/components/exercise/TextExercise'
 import { RankingExercise } from '@/components/exercise/RankingExercise'
 import { TableExercise } from '@/components/exercise/TableExercise'
 import { InfoExercise } from '@/components/exercise/InfoExercise'
-import { SectionOpening } from '@/components/section/SectionOpening'
-import { SectionClosing } from '@/components/section/SectionClosing'
+import { SectionIntroSlide } from '@/components/section/SectionIntroSlide'
+import { SectionClosingSlide } from '@/components/section/SectionClosingSlide'
+import { SlideNav } from '@/components/section/SlideNav'
 import { SECTION_SLUGS } from '@/lib/constants'
+import { groupExercisesBySlide } from '@/lib/exerciseCompletion'
 import type { Section, Exercise, Response } from '@/types/database'
 import styles from './SectionPage.module.css'
 
@@ -29,8 +32,9 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   const [exercises, setExercises] = useState<Exercise[]>([])
   const [responses, setResponses] = useState<Record<string, Response>>({})
   const [loading, setLoading] = useState(true)
+  const [resumeExerciseId, setResumeExerciseId] = useState<string | null>(null)
 
-  const sessionId = null // TODO: wire session context in v2
+  const sessionId = null // session context wires in a later iteration
 
   useEffect(() => {
     if (!sectionSlug || !profile?.id) return
@@ -38,16 +42,22 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
     async function load() {
       setLoading(true)
 
-      const [{ data: sec }, { data: exs }] = await Promise.all([
-        supabase.from('sections').select('*').eq('slug', sectionSlug!).single(),
-        supabase
-          .from('exercises')
-          .select('*')
-          .eq('section_id', (await supabase.from('sections').select('id').eq('slug', sectionSlug!).single()).data?.id ?? '')
-          .order('order_index'),
-      ])
+      const { data: sec } = await supabase
+        .from('sections')
+        .select('*')
+        .eq('slug', sectionSlug!)
+        .single()
 
-      if (!sec) { navigate('/course'); return }
+      if (!sec) {
+        navigate('/course')
+        return
+      }
+
+      const { data: exs } = await supabase
+        .from('exercises')
+        .select('*')
+        .eq('section_id', sec.id)
+        .order('order_index')
 
       setSection(sec)
       setExercises(exs ?? [])
@@ -57,7 +67,10 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
           .from('responses')
           .select('*')
           .eq('participant_id', profile!.id)
-          .in('exercise_id', exs.map((e) => e.id))
+          .in(
+            'exercise_id',
+            exs.map((e) => e.id)
+          )
           .is('session_id', null)
 
         const respMap: Record<string, Response> = {}
@@ -67,11 +80,39 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         setResponses(respMap)
       }
 
+      // Resume position: read progress.last_exercise_id for this section.
+      const { data: prog } = await supabase
+        .from('progress')
+        .select('last_exercise_id')
+        .eq('participant_id', profile!.id)
+        .eq('section_id', sec.id)
+        .is('session_id', null)
+        .maybeSingle()
+      setResumeExerciseId(prog?.last_exercise_id ?? null)
+
       setLoading(false)
     }
 
     load()
   }, [sectionSlug, profile?.id, navigate])
+
+  const slideGroups = useMemo(() => groupExercisesBySlide(exercises), [exercises])
+
+  const introEnabled = !!section?.framing
+  const {
+    currentSlide,
+    canGoNext,
+    canGoPrev,
+    goNext,
+    goPrev,
+    isAtIntro,
+    isAtClosing,
+  } = useSlideState({
+    intro: introEnabled,
+    slideGroups,
+    responses,
+    resumeExerciseId,
+  })
 
   const completed = exercises.filter((e) => responses[e.id]?.is_complete).length
   const total = exercises.filter((e) => e.type !== 'info').length
@@ -80,7 +121,9 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   if (loading) {
     return (
       <PageShell>
-        <div className={styles.loading}><Spinner size="lg" /></div>
+        <div className={styles.loading}>
+          <Spinner size="lg" />
+        </div>
       </PageShell>
     )
   }
@@ -140,42 +183,93 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
     }
   }
 
+  const nextSlug = nextSectionSlug(sectionSlug)
+  const isLastSection = nextSlug === null
+
+  const slideHint =
+    !canGoNext && !isAtIntro && !isAtClosing
+      ? 'Complete the exercise to continue'
+      : null
+
+  let nextLabel: string | undefined
+  if (isAtIntro) nextLabel = 'Begin →'
+  else if (isAtClosing) nextLabel = isLastSection ? 'Finish course →' : 'Continue to next section →'
+
   return (
     <PageShell title={section?.title}>
       <div className={styles.progressBar}>
         <ProgressRing pct={pct} size={48} strokeWidth={4} />
-        <span className={styles.progressLabel}>{completed} of {total} exercises complete</span>
+        <span className={styles.progressLabel}>
+          {completed} of {total} exercises complete
+        </span>
       </div>
 
-      {section?.subtitle && (
-        <p className={styles.filterLabel}>{section.subtitle}</p>
-      )}
+      {section?.subtitle && <p className={styles.filterLabel}>{section.subtitle}</p>}
 
-      <SectionOpening framing={section?.framing ?? null} />
-
-      <div className={styles.exerciseList}>
-        {exercises.map((exercise, index) => (
-          <section key={exercise.id} className={styles.exerciseCard} id={`exercise-${exercise.slug}`}>
-            <div className={styles.exerciseHeader}>
-              {exercise.type !== 'info' && (
-                <span className={styles.exerciseNum}>{index + 1}</span>
-              )}
-              <h3 className={styles.exerciseTitle}>{exercise.title}</h3>
-              {responses[exercise.id]?.is_complete && exercise.type !== 'info' && (
-                <span className={styles.completedMark} aria-label="Completed">✓</span>
-              )}
-            </div>
-            <div className={styles.exerciseBody}>
-              {renderExercise(exercise)}
-            </div>
+      <div className={styles.slideTrack}>
+        {/* Intro slide */}
+        {introEnabled && (
+          <section
+            className={styles.slide}
+            data-slide-active={isAtIntro}
+            aria-hidden={!isAtIntro}
+          >
+            <SectionIntroSlide framing={section?.framing} onBegin={goNext} />
           </section>
-        ))}
+        )}
+
+        {/* Exercise slide groups */}
+        {slideGroups.map((group, groupIdx) => {
+          const active = currentSlide === groupIdx
+          return (
+            <section
+              key={`group-${groupIdx}`}
+              className={styles.slide}
+              data-slide-active={active}
+              aria-hidden={!active}
+            >
+              {group.map((exercise) => (
+                <article
+                  key={exercise.id}
+                  className={styles.exerciseCard}
+                  id={`exercise-${exercise.slug}`}
+                >
+                  <header className={styles.exerciseHeader}>
+                    <h3 className={styles.exerciseTitle}>{exercise.title}</h3>
+                    {responses[exercise.id]?.is_complete && exercise.type !== 'info' && (
+                      <span className={styles.completedMark} aria-label="Completed">
+                        ✓
+                      </span>
+                    )}
+                  </header>
+                  <div className={styles.exerciseBody}>{renderExercise(exercise)}</div>
+                </article>
+              ))}
+            </section>
+          )
+        })}
+
+        {/* Closing slide */}
+        <section
+          className={styles.slide}
+          data-slide-active={isAtClosing}
+          aria-hidden={!isAtClosing}
+        >
+          <SectionClosingSlide
+            framing={section?.framing}
+            nextSectionSlug={nextSlug}
+            isLastSection={isLastSection}
+          />
+        </section>
       </div>
 
-      <SectionClosing
-        framing={section?.framing ?? null}
-        nextSectionSlug={nextSectionSlug(sectionSlug)}
-        showContinue={!readOnly}
+      <SlideNav
+        onPrev={goPrev}
+        onNext={goNext}
+        canGoPrev={canGoPrev}
+        canGoNext={canGoNext}
+        nextLabel={nextLabel}
+        hint={slideHint}
       />
 
       <div className={styles.navButtons}>
