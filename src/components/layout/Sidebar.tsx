@@ -13,10 +13,12 @@ const ADMIN_NAV: NavItem[] = [
   { to: ROUTES.ADMIN, label: 'Dashboard', icon: '⬡' },
   { to: ROUTES.ADMIN_USERS, label: 'Users', icon: '◎' },
   { to: ROUTES.ADMIN_SESSIONS, label: 'Sessions', icon: '◫' },
+  { to: ROUTES.ADMIN_TESTIMONIALS, label: 'Testimonials', icon: '✦' },
 ]
 
 const FACILITATOR_NAV: NavItem[] = [
   { to: ROUTES.FACILITATOR, label: 'Dashboard', icon: '⬡' },
+  { to: ROUTES.FACILITATOR_TESTIMONIALS, label: 'Testimonials', icon: '✦' },
 ]
 
 const PARTICIPANT_NAV: NavItem[] = [

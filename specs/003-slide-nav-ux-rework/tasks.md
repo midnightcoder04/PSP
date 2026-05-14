@@ -25,23 +25,35 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 ## Implementation Status (2026-05-15)
 
-**MVP slice complete + hosted-DB migrated + seeded** — 28 / 86 tasks done. Phase 1 + Phase 2 (foundational) + Phase 3 (US1 — slide navigation, intro slide, section locking) are shipped on branch `003-slide-nav-ux-rework`, with migrations 011 + 012 applied to the hosted project `okedskadkspeiyxjslqc` and `reading_material` seeded for all six sections.
+**Full iteration shipped** — 76 of 86 tasks complete on branch `003-slide-nav-ux-rework`. All 8 user stories (US1–US8) plus Polish are merged in code; the remaining 10 tasks are manual browser walkthroughs + the accessibility audit (T085) reserved as owner actions.
 
-| Task | Status | Notes |
-|------|--------|-------|
-| T001–T003 | ✓ | Branch created, `@dnd-kit/{core,sortable}` installed, bundle baseline at `specs/003-slide-nav-ux-rework/bundle-baseline.txt`. |
-| T004–T007, T009, T010, T012 | ✓ | Migrations `011_exercise_slide_group.sql` + `012_testimonials.sql` (both `db/` + `supabase/`). Types extended for `Testimonial`, `SectionFraming.reading_material`, `StructuredText*`, `RatingPicker*`, `RankingContent.{interaction,derives_from,show_counts}`, `TableContent.{col_types,total_target}`, `exercises.slide_group`. `lib/exerciseCompletion.ts` shipped. Constants updated. |
-| T008 | ✓ | Applied to hosted Supabase project `okedskadkspeiyxjslqc` via MCP `apply_migration`. Verified: `slide_group` column exists, type CHECK extended, 5 RLS policies on `testimonials`. (No local Docker stack used — direct-to-hosted workflow per owner decision 2026-05-15.) |
-| T011 | ✓ | IP review resolved 2026-05-15 by owner. The six reading_material blocks reference widely-attributed public works at description level only and inherit the existing PSP workshop IP grant. No drafts file needed. |
-| T013–T018 | ✓ | 6 RED test files (30 unit tests + 11 page tests = 41 new tests, all GREEN). |
-| T019–T025, T027–T028 | ✓ | `useSlideState`, `useSectionLock`, `LockIcon`, `SlideNav`, `SectionIntroSlide`, `SectionClosingSlide` shipped. `SectionPage` refactored to slide state machine; `CourseHome` renders locked cards. |
-| T026 | ✓ | `reading_material` added per section in seed JSON; seeded to hosted DB via `npm run db:seed`; verified by SELECT against `sections.framing->'reading_material'`. |
-| T029 | ⏳ Pending | Manual browser verification + 60 fps spot-check — owner action. |
-| T030+ | ⏳ Pending | Remaining stories US2–US8 + Polish. |
+| Phase | Status | Notes |
+|-------|--------|-------|
+| Phase 1 (Setup, T001–T003) | ✓ | Branch, deps, baseline. |
+| Phase 2 (Foundational, T004–T012) | ✓ | Migrations 011 + 012 applied to hosted project `okedskadkspeiyxjslqc`. Types, constants, lib/exerciseCompletion shipped. IP rights inherited (owner decision 2026-05-15). |
+| US1 — slide nav + locking (T013–T028) | ✓ | Hooks, components, page refactors. **T029 (manual verification) pending owner.** |
+| US2 — structured-text (T030–T034) | ✓ | Component + tests + seed rewrites for past-experience-inventory, contract-with-myself, mission-statement (14 / 6 / 5 sub-questions). **T035 manual verification pending.** |
+| US3 — WATUSI auto-count + slide-group (T036–T041) | ✓ | `useWatusiCounts`, RankingExercise extension, `slide_group=2` linking checklist + ranking, derives_from wired through SectionPage. **T042 manual verification pending.** |
+| US4 — Values widget + gated proceed (T043–T050) | ✓ | `useValuesTotal`, `ValueBudgetWidget`, currency-col TableExercise extension, `total_target: 100000` in seed. is_complete = total === target (right arrow gates automatically). **T051 manual verification pending.** |
+| US5 — Testimonials (T052–T062) | ✓ | TestimonialModal, TestimonialList, CourseClosing, admin + facilitator pages (lazy-loaded), routes wired in App.tsx, Sidebar entries added. RLS integration test scaffolded (auto-skip without creds). **T063 manual verification pending.** |
+| US6 — Drag-and-drop ranking (T064–T066) | ✓ | RankingExercise supports `interaction: 'drag'` via @dnd-kit/sortable with KeyboardSensor + PointerSensor + TouchSensor. Applied to attitude-types-watusi and goal-priorities in seed (Roles has no ranking exercises). **T067 manual verification pending.** |
+| US7 — Rating picker (T068–T072) | ✓ | RatingPickerExercise (radio groups 1–5 with labels), three transferable-skills exercises rewritten to `rating-picker`. **T073 manual verification pending.** |
+| US8 — Goal Setting patterns (T074–T075) | ✓ | Audit produced (`goal-setting-audit.md`); two changes applied: goal-priorities → drag, goal-achievement-plan → structured-text (10 sub-questions). **T076 manual verification pending.** |
+| Polish (T077–T086) | ✓ where automatable | T077 (bundle delta), T078 (full suite), T080 (security audit), T081 (no-bypass), T082 (lazy-chunks), T083 (post-impl Constitution check), T084 (open Q resolution), T086 (Iteration 5 stub) all done. **T079 (quickstart polish) + T085 (axe-core a11y audit) pending owner.** |
 
-**Test summary**: `npm test -- --run` → 135/135 passing (was 134 + 1 pre-existing failure cleaned up: the stale `facilitator_says` assertion on `SectionOpening.test.tsx` was removed since the participant intro intentionally excludes the facilitator cue per AC-1). 42 hosted-DB tests skip as designed.
+**Test summary**: `npm test -- --run` → **181 passing / 0 failing / 52 skipped** (33 test files). Skipped tests are the hosted-DB integration suite (RPC + testimonials) which auto-skip without `VITE_SUPABASE_URL` + `SUPABASE_SECRET_KEY`.
 
-**Bundle delta** (US1 only): SectionPage `4.15 → 5.55 KB gz` (+1.4 KB); CourseHome no measurable change; `index` chunk +0.02 KB. Total participant-route delta ≈ **+1.4 KB gz** (well within the 15 KB iteration budget; `@dnd-kit` not yet bundled — only loaded once US6 begins).
+**Bundle delta**: Participant route ≈ **+21 KB gz** (target was 15 KB; overage documented in `bundle-delta.md`; root cause is `@dnd-kit/*` bundled into SectionPage chunk — recommended mitigation in Iteration 5 is to lazy-load RankingExercise via React.lazy).
+
+**Hosted DB state** (project `okedskadkspeiyxjslqc`):
+- Migration 011: slide_group column + type CHECK with `structured-text`, `rating-picker` ✓
+- Migration 012: testimonials table + 5 RLS policies + `set_updated_at()` trigger ✓
+- Seed: 6 sections with reading_material; identifying-attitudes + attitude-types-watusi share slide_group=2; past-experience-inventory + contract-with-myself + mission-statement + goal-achievement-plan as structured-text; transferable-skills-* as rating-picker; values-shopping-spree with total_target=100000.
+
+**Manual / owner tasks remaining** (10):
+- T029, T035, T042, T051, T063, T067, T073, T076 — per-story manual UI verifications (use `npm run dev` against hosted DB).
+- T079 — quickstart.md polish based on what surfaced during manual testing.
+- T085 — accessibility audit (axe-core / Playwright skill).
 
 ---
 
@@ -131,14 +143,14 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T030 [P] [US2] Write failing test `src/components/exercise/StructuredTextExercise.test.tsx` covering: renders N labelled textareas; min_length gating per question; saving creates `{answers: {q1: …, q2: …}}` JSON; legacy banner appears when `_legacy` is present in initialResponse.
-- [ ] T031 [P] [US2] Write failing test additions in `src/lib/exerciseCompletion.test.ts` for `isStructuredTextComplete` per data-model.md §5 completion predicate.
+- [X] T030 [P] [US2] Write failing test `src/components/exercise/StructuredTextExercise.test.tsx` covering: renders N labelled textareas; min_length gating per question; saving creates `{answers: {q1: …, q2: …}}` JSON; legacy banner appears when `_legacy` is present in initialResponse.
+- [X] T031 [P] [US2] Write failing test additions in `src/lib/exerciseCompletion.test.ts` for `isStructuredTextComplete` per data-model.md §5 completion predicate.
 
 ### Implementation for User Story 2
 
-- [ ] T032 [P] [US2] Implement `src/components/exercise/StructuredTextExercise.tsx` + `StructuredTextExercise.module.css` per `contracts/exercise-types.md` §1 (controlled inputs per question, autosave via `useExerciseSave`, `_legacy` banner UI).
-- [ ] T033 [US2] Add a `case 'structured-text'` branch to the `renderExercise` switch in `src/pages/course/SectionPage.tsx`; wire `StructuredTextExercise` with `commonProps`.
-- [ ] T034 [US2] Rewrite three entries in `db/seeds/course-content.json`: `past-experience-inventory` (type → `structured-text`; 14 questions q1–q14 with labels from the current prompt); `contract-with-myself` (article_1 … article_6); `mission-statement` (5 dimensions). Preserve original `prompt` text as framing. Re-run `npm run seed`.
+- [X] T032 [P] [US2] Implement `src/components/exercise/StructuredTextExercise.tsx` + `StructuredTextExercise.module.css` per `contracts/exercise-types.md` §1 (controlled inputs per question, autosave via `useExerciseSave`, `_legacy` banner UI).
+- [X] T033 [US2] Add a `case 'structured-text'` branch to the `renderExercise` switch in `src/pages/course/SectionPage.tsx`; wire `StructuredTextExercise` with `commonProps`.
+- [X] T034 [US2] Rewrite three entries in `db/seeds/course-content.json`: `past-experience-inventory` (type → `structured-text`; 14 questions q1–q14 with labels from the current prompt); `contract-with-myself` (article_1 … article_6); `mission-statement` (5 dimensions). Preserve original `prompt` text as framing. Re-run `npm run seed`.
 - [ ] T035 [US2] Manual verification per `quickstart.md` §6. For an existing test profile with an old free-text response, confirm the `_legacy` banner displays.
 
 **Checkpoint**: US2 functional.
@@ -153,15 +165,15 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T036 [P] [US3] Write failing test `src/hooks/useWatusiCounts.test.ts` covering: empty checklist → all zeros; mixed prefix counting; tie-breaking by canonical WATUSI order; ignoring malformed item ids.
-- [ ] T037 [P] [US3] Extend `src/components/exercise/RankingExercise.test.tsx` for the `show_counts` + `derives_from` branch: count badges render beneath items; badge clicks are inert; prefilled order matches derived counts; manual reorder still persists.
+- [X] T036 [P] [US3] Write failing test `src/hooks/useWatusiCounts.test.ts` covering: empty checklist → all zeros; mixed prefix counting; tie-breaking by canonical WATUSI order; ignoring malformed item ids.
+- [X] T037 [P] [US3] Extend `src/components/exercise/RankingExercise.test.tsx` for the `show_counts` + `derives_from` branch: count badges render beneath items; badge clicks are inert; prefilled order matches derived counts; manual reorder still persists.
 
 ### Implementation for User Story 3
 
-- [ ] T038 [P] [US3] Implement `src/hooks/useWatusiCounts.ts` (pure function of a checklist response, returns `{ w, a, t, u, s, i }`; tie-break order constant per research.md R4).
-- [ ] T039 [US3] Extend `src/components/exercise/RankingExercise.tsx`: when `content.show_counts === true` and `content.derives_from` is set, query the upstream exercise's response (via prop drilling from SectionPage; do NOT fetch from inside RankingExercise) and render read-only count badges; auto-fill the initial `order` from derived counts when no saved response exists yet.
-- [ ] T040 [US3] Update `src/pages/course/SectionPage.tsx` to: (a) compute `slideGroups` by `slide_group` (falling back to `order_index`); (b) for each group, render its exercises inside a single slide container with shared completion check (all exercises in group must be `is_complete`); (c) when a ranking exercise has `derives_from`, pass the upstream exercise's response in as `derivesFromResponse` prop.
-- [ ] T041 [US3] Update `db/seeds/course-content.json`: set `slide_group = 3` on both `attitude-types-checklist` and `attitude-types-watusi`; add `show_counts: true` and `derives_from: { source_exercise_slug: 'attitude-types-checklist', group_by: 'id_prefix' }` to `attitude-types-watusi.content_json`. Re-run `npm run seed`.
+- [X] T038 [P] [US3] Implement `src/hooks/useWatusiCounts.ts` (pure function of a checklist response, returns `{ w, a, t, u, s, i }`; tie-break order constant per research.md R4).
+- [X] T039 [US3] Extend `src/components/exercise/RankingExercise.tsx`: when `content.show_counts === true` and `content.derives_from` is set, query the upstream exercise's response (via prop drilling from SectionPage; do NOT fetch from inside RankingExercise) and render read-only count badges; auto-fill the initial `order` from derived counts when no saved response exists yet.
+- [X] T040 [US3] Update `src/pages/course/SectionPage.tsx` to: (a) compute `slideGroups` by `slide_group` (falling back to `order_index`); (b) for each group, render its exercises inside a single slide container with shared completion check (all exercises in group must be `is_complete`); (c) when a ranking exercise has `derives_from`, pass the upstream exercise's response in as `derivesFromResponse` prop.
+- [X] T041 [US3] Update `db/seeds/course-content.json`: set `slide_group = 3` on both `attitude-types-checklist` and `attitude-types-watusi`; add `show_counts: true` and `derives_from: { source_exercise_slug: 'attitude-types-checklist', group_by: 'id_prefix' }` to `attitude-types-watusi.content_json`. Re-run `npm run seed`.
 - [ ] T042 [US3] Manual verification per `quickstart.md` §3.
 
 **Checkpoint**: US3 functional.
@@ -176,17 +188,17 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T043 [P] [US4] Write failing test `src/hooks/useValuesTotal.test.ts` covering: sums numeric values, ignores non-numeric, handles empty rows, handles decimal inputs.
-- [ ] T044 [P] [US4] Write failing test `src/components/exercise/ValueBudgetWidget.test.tsx` covering: renders Spent/Remaining; "Perfect" state at exactly target; "Over budget" recolour when remaining is negative.
-- [ ] T045 [P] [US4] Extend `src/components/exercise/TableExercise.test.tsx`: with `col_types: ['currency','text']` + `total_target: 100000`, the widget renders and `response.total_spent` is computed on save.
+- [X] T043 [P] [US4] Write failing test `src/hooks/useValuesTotal.test.ts` covering: sums numeric values, ignores non-numeric, handles empty rows, handles decimal inputs.
+- [X] T044 [P] [US4] Write failing test `src/components/exercise/ValueBudgetWidget.test.tsx` covering: renders Spent/Remaining; "Perfect" state at exactly target; "Over budget" recolour when remaining is negative.
+- [X] T045 [P] [US4] Extend `src/components/exercise/TableExercise.test.tsx`: with `col_types: ['currency','text']` + `total_target: 100000`, the widget renders and `response.total_spent` is computed on save.
 
 ### Implementation for User Story 4
 
-- [ ] T046 [P] [US4] Implement `src/hooks/useValuesTotal.ts`.
-- [ ] T047 [P] [US4] Implement `src/components/exercise/ValueBudgetWidget.tsx` + `ValueBudgetWidget.module.css`. Position: fixed bottom-right on desktop, full-width sticky bottom on mobile.
-- [ ] T048 [US4] Extend `src/components/exercise/TableExercise.tsx`: detect `content.col_types` includes `'currency'`; render `ValueBudgetWidget` with `budget = content.total_target ?? 0` and `spent = total`; persist `total_spent` alongside rows when saving.
-- [ ] T049 [US4] Add a Proceed-gate to the follow-on slide. The simplest path: in `SectionPage.tsx`, when computing `canGoNext` for a slide group, if any exercise in the group has a `total_target` and its response's `total_spent !== total_target`, return false with hint "Total must equal $100,000 to continue". The follow-on slide ("What Do I Value?") is the next slide group after the Shopping Spree, so its render also reads the prior response and shows a helper message. (See `quickstart.md` §4.)
-- [ ] T050 [US4] Update `db/seeds/course-content.json`: `values-shopping-spree.content_json.col_types = ['currency','text']`, `total_target = 100000`. Re-run `npm run seed`.
+- [X] T046 [P] [US4] Implement `src/hooks/useValuesTotal.ts`.
+- [X] T047 [P] [US4] Implement `src/components/exercise/ValueBudgetWidget.tsx` + `ValueBudgetWidget.module.css`. Position: fixed bottom-right on desktop, full-width sticky bottom on mobile.
+- [X] T048 [US4] Extend `src/components/exercise/TableExercise.tsx`: detect `content.col_types` includes `'currency'`; render `ValueBudgetWidget` with `budget = content.total_target ?? 0` and `spent = total`; persist `total_spent` alongside rows when saving.
+- [X] T049 [US4] Add a Proceed-gate to the follow-on slide. The simplest path: in `SectionPage.tsx`, when computing `canGoNext` for a slide group, if any exercise in the group has a `total_target` and its response's `total_spent !== total_target`, return false with hint "Total must equal $100,000 to continue". The follow-on slide ("What Do I Value?") is the next slide group after the Shopping Spree, so its render also reads the prior response and shows a helper message. (See `quickstart.md` §4.)
+- [X] T050 [US4] Update `db/seeds/course-content.json`: `values-shopping-spree.content_json.col_types = ['currency','text']`, `total_target = 100000`. Re-run `npm run seed`.
 - [ ] T051 [US4] Manual verification per `quickstart.md` §4.
 
 **Checkpoint**: US4 functional.
@@ -201,20 +213,20 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T052 [P] [US5] Write failing test `src/components/testimonials/TestimonialModal.test.tsx`: 50/1500 char enforcement, optional rating 1–5, submit triggers upsert with correct payload.
-- [ ] T053 [P] [US5] Write failing test `src/components/testimonials/TestimonialList.test.tsx`: renders rows, empty state, row click expands content.
-- [ ] T054 [P] [US5] Write failing integration test `scripts/testimonials.test.ts` exercising the RLS matrix in `contracts/testimonials-api.md` §6 against the hosted DB. Follow the auto-skip pattern from `scripts/rpc.test.ts` (skip when `VITE_SUPABASE_URL` or `SUPABASE_SECRET_KEY` is unset).
+- [X] T052 [P] [US5] Write failing test `src/components/testimonials/TestimonialModal.test.tsx`: 50/1500 char enforcement, optional rating 1–5, submit triggers upsert with correct payload.
+- [X] T053 [P] [US5] Write failing test `src/components/testimonials/TestimonialList.test.tsx`: renders rows, empty state, row click expands content.
+- [X] T054 [P] [US5] Write failing integration test `scripts/testimonials.test.ts` exercising the RLS matrix in `contracts/testimonials-api.md` §6 against the hosted DB. Follow the auto-skip pattern from `scripts/rpc.test.ts` (skip when `VITE_SUPABASE_URL` or `SUPABASE_SECRET_KEY` is unset).
 
 ### Implementation for User Story 5
 
-- [ ] T055 [P] [US5] Implement `src/components/testimonials/TestimonialModal.tsx` + CSS. Resolves `session_id` from the participant's most recent active enrollment per `contracts/testimonials-api.md` §2. On submit calls `supabase.from('testimonials').upsert(..., { onConflict: 'participant_id,session_id' })`.
-- [ ] T056 [P] [US5] Implement `src/components/testimonials/TestimonialList.tsx` + CSS. Generic list usable by both admin and facilitator pages; accepts a `query` prop for the supabase-js select chain.
-- [ ] T057 [US5] Implement `src/pages/course/CourseClosing.tsx`. Shown when every section's `section_completed_at` is non-null. Shows summary + attribution + primary "Leave a testimonial" button that opens `TestimonialModal`.
-- [ ] T058 [US5] Add route `/course/complete → <CourseClosing />` in `src/App.tsx` under the participant auth guard.
-- [ ] T059 [P] [US5] Implement `src/pages/admin/TestimonialsPage.tsx`. **MUST be loaded via `React.lazy(() => import(...))`** at the App.tsx route registration site so the file ships as a separate Vite chunk (verified by inspecting `dist/assets/` after `npm run build` for a dedicated `TestimonialsPage-*.js` chunk). Renders `TestimonialList` with the admin query from `contracts/testimonials-api.md` §5. Add to admin Sidebar.
-- [ ] T060 [P] [US5] Implement `src/pages/facilitator/TestimonialsPage.tsx`. **MUST be `React.lazy`-loaded** (same chunking expectation as T059). Renders `TestimonialList` with the facilitator query from `contracts/testimonials-api.md` §4. Add to facilitator Sidebar.
-- [ ] T061 [US5] Update `src/components/layout/Sidebar.tsx` (or admin/facilitator-specific variant) to include a "Testimonials" entry pointing at the right route per role; guard via the existing role check.
-- [ ] T062 [US5] Update `src/App.tsx` routing: add `/admin/testimonials` and `/facilitator/testimonials` lazy-loaded routes under the existing role guards.
+- [X] T055 [P] [US5] Implement `src/components/testimonials/TestimonialModal.tsx` + CSS. Resolves `session_id` from the participant's most recent active enrollment per `contracts/testimonials-api.md` §2. On submit calls `supabase.from('testimonials').upsert(..., { onConflict: 'participant_id,session_id' })`.
+- [X] T056 [P] [US5] Implement `src/components/testimonials/TestimonialList.tsx` + CSS. Generic list usable by both admin and facilitator pages; accepts a `query` prop for the supabase-js select chain.
+- [X] T057 [US5] Implement `src/pages/course/CourseClosing.tsx`. Shown when every section's `section_completed_at` is non-null. Shows summary + attribution + primary "Leave a testimonial" button that opens `TestimonialModal`.
+- [X] T058 [US5] Add route `/course/complete → <CourseClosing />` in `src/App.tsx` under the participant auth guard.
+- [X] T059 [P] [US5] Implement `src/pages/admin/TestimonialsPage.tsx`. **MUST be loaded via `React.lazy(() => import(...))`** at the App.tsx route registration site so the file ships as a separate Vite chunk (verified by inspecting `dist/assets/` after `npm run build` for a dedicated `TestimonialsPage-*.js` chunk). Renders `TestimonialList` with the admin query from `contracts/testimonials-api.md` §5. Add to admin Sidebar.
+- [X] T060 [P] [US5] Implement `src/pages/facilitator/TestimonialsPage.tsx`. **MUST be `React.lazy`-loaded** (same chunking expectation as T059). Renders `TestimonialList` with the facilitator query from `contracts/testimonials-api.md` §4. Add to facilitator Sidebar.
+- [X] T061 [US5] Update `src/components/layout/Sidebar.tsx` (or admin/facilitator-specific variant) to include a "Testimonials" entry pointing at the right route per role; guard via the existing role check.
+- [X] T062 [US5] Update `src/App.tsx` routing: add `/admin/testimonials` and `/facilitator/testimonials` lazy-loaded routes under the existing role guards.
 - [ ] T063 [US5] Manual verification per `quickstart.md` §9 (8-step cross-role walkthrough).
 
 **Checkpoint**: US5 functional.
@@ -229,12 +241,12 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T064 [P] [US6] Extend `src/components/exercise/RankingExercise.test.tsx` with an `interaction: 'drag'` branch: assert up/down buttons are NOT rendered; assert `DndContext`/`SortableContext` are in the tree; simulate keyboard reorder via `@testing-library/user-event` and verify saved `order` reflects the change.
+- [X] T064 [P] [US6] Extend `src/components/exercise/RankingExercise.test.tsx` with an `interaction: 'drag'` branch: assert up/down buttons are NOT rendered; assert `DndContext`/`SortableContext` are in the tree; simulate keyboard reorder via `@testing-library/user-event` and verify saved `order` reflects the change.
 
 ### Implementation for User Story 6
 
-- [ ] T065 [US6] Extend `src/components/exercise/RankingExercise.tsx` with an `interaction: 'drag'` branch using `@dnd-kit/core` + `@dnd-kit/sortable`. Compose `KeyboardSensor`, `PointerSensor`, `TouchSensor`. On drop, call `save({ order: nextOrder }, true)`. Preserve the existing `'buttons'` branch unchanged for default callers.
-- [ ] T066 [US6] Update `db/seeds/course-content.json`: every ranking-type exercise in the Roles section (`roles`) sets `interaction: 'drag'`. Re-run `npm run seed`.
+- [X] T065 [US6] Extend `src/components/exercise/RankingExercise.tsx` with an `interaction: 'drag'` branch using `@dnd-kit/core` + `@dnd-kit/sortable`. Compose `KeyboardSensor`, `PointerSensor`, `TouchSensor`. On drop, call `save({ order: nextOrder }, true)`. Preserve the existing `'buttons'` branch unchanged for default callers.
+- [X] T066 [US6] Update `db/seeds/course-content.json`: every ranking-type exercise in the Roles section (`roles`) sets `interaction: 'drag'`. Re-run `npm run seed`.
 - [ ] T067 [US6] Manual verification per `quickstart.md` §5.
 
 **Checkpoint**: US6 functional.
@@ -249,14 +261,14 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 ### Tests for User Story 7 ⚠️
 
-- [ ] T068 [P] [US7] Write failing test `src/components/exercise/RatingPickerExercise.test.tsx`: renders N rows × 5 radios; only one selection per item; "complete" only when every item is rated.
-- [ ] T069 [P] [US7] Extend `src/lib/exerciseCompletion.test.ts` for `isRatingPickerComplete` per data-model.md §6.
+- [X] T068 [P] [US7] Write failing test `src/components/exercise/RatingPickerExercise.test.tsx`: renders N rows × 5 radios; only one selection per item; "complete" only when every item is rated.
+- [X] T069 [P] [US7] Extend `src/lib/exerciseCompletion.test.ts` for `isRatingPickerComplete` per data-model.md §6.
 
 ### Implementation for User Story 7
 
-- [ ] T070 [P] [US7] Implement `src/components/exercise/RatingPickerExercise.tsx` + CSS. Render a `<fieldset>` per item; five `<input type="radio">` per fieldset; labels from `content.scale.labels` when provided; persistence via `useExerciseSave`.
-- [ ] T071 [US7] Add `case 'rating-picker'` to the `renderExercise` switch in `src/pages/course/SectionPage.tsx`.
-- [ ] T072 [US7] Update `db/seeds/course-content.json`: rewrite `determining-transferable-skills` to type `'rating-picker'`; populate `items` from the workbook skill list; set `scale: { min: 1, max: 5, labels: ['Strongly Disagree','Disagree','Neutral','Agree','Strongly Agree'] }`. Re-run `npm run seed`.
+- [X] T070 [P] [US7] Implement `src/components/exercise/RatingPickerExercise.tsx` + CSS. Render a `<fieldset>` per item; five `<input type="radio">` per fieldset; labels from `content.scale.labels` when provided; persistence via `useExerciseSave`.
+- [X] T071 [US7] Add `case 'rating-picker'` to the `renderExercise` switch in `src/pages/course/SectionPage.tsx`.
+- [X] T072 [US7] Update `db/seeds/course-content.json`: rewrite `determining-transferable-skills` to type `'rating-picker'`; populate `items` from the workbook skill list; set `scale: { min: 1, max: 5, labels: ['Strongly Disagree','Disagree','Neutral','Agree','Strongly Agree'] }`. Re-run `npm run seed`.
 - [ ] T073 [US7] Manual verification per `quickstart.md` §7.
 
 **Checkpoint**: US7 functional.
@@ -269,8 +281,8 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 **Independent test**: Walk through every exercise in the Setting Goals section; confirm each multi-question prompt is now a structured-text exercise and each rating-style exercise is now a rating-picker.
 
-- [ ] T074 [P] [US8] Audit `db/seeds/course-content.json` entries under the `goal-setting` section; in `specs/003-slide-nav-ux-rework/goal-setting-audit.md`, list each exercise with the current type and the proposed new type (or "no change"). Justify each decision in one line.
-- [ ] T075 [US8] Update `db/seeds/course-content.json` per the audit: rewrite eligible Goal Setting exercises to `structured-text` or `rating-picker`. Cross-Impact Matrix MUST remain `table`. Re-run `npm run seed`.
+- [X] T074 [P] [US8] Audit `db/seeds/course-content.json` entries under the `goal-setting` section; in `specs/003-slide-nav-ux-rework/goal-setting-audit.md`, list each exercise with the current type and the proposed new type (or "no change"). Justify each decision in one line.
+- [X] T075 [US8] Update `db/seeds/course-content.json` per the audit: rewrite eligible Goal Setting exercises to `structured-text` or `rating-picker`. Cross-Impact Matrix MUST remain `table`. Re-run `npm run seed`.
 - [ ] T076 [US8] Manual verification per `quickstart.md` §8.
 
 **Checkpoint**: US8 functional. Feature complete.
@@ -281,16 +293,16 @@ Single-project SPA at repository root: `src/`, `db/`, `supabase/`, `scripts/`, `
 
 **Purpose**: Verification, hardening, and post-implementation Constitution re-check.
 
-- [ ] T077 [P] Bundle delta verification: `npm run build && du -sh dist/assets/*.js.gz | sort -h | tee /tmp/bundle-after.txt`; diff against the baseline captured in T003. Confirm participant route delta ≤ 15 KB gz. Lazy-loaded admin chunks may be larger. Record results in `specs/003-slide-nav-ux-rework/bundle-delta.md`.
-- [ ] T078 [P] Run full vitest suite: `npm test -- --run`. Confirm all existing tests + every new test green, no regressions vs. iteration 2's `84/84 passing` baseline (plus the new tests).
+- [X] T077 [P] Bundle delta verification: `npm run build && du -sh dist/assets/*.js.gz | sort -h | tee /tmp/bundle-after.txt`; diff against the baseline captured in T003. Confirm participant route delta ≤ 15 KB gz. Lazy-loaded admin chunks may be larger. Record results in `specs/003-slide-nav-ux-rework/bundle-delta.md`.
+- [X] T078 [P] Run full vitest suite: `npm test -- --run`. Confirm all existing tests + every new test green, no regressions vs. iteration 2's `84/84 passing` baseline (plus the new tests).
 - [ ] T079 [P] Update `specs/003-slide-nav-ux-rework/quickstart.md` with any rough edges discovered during implementation (real screenshots, exact CLI quirks, etc.).
-- [ ] T080 [P] Run `npm run audit:security`; review `security-audit.md` output. No new advisor findings should appear (testimonials policies should be lint-clean; structured-text/rating-picker are JSONB-only additions).
-- [ ] T081 [P] Run `npm run check:no-bypass` (existing script extended in iteration 2). Confirm no dev sentinels in `dist/`.
-- [ ] T082 **Verify** (post-build) that `TestimonialsPage` files emerged as separate Vite chunks (admin + facilitator each in their own `dist/assets/*.js` file). The lazy-loading itself is required *during* US5 implementation (T059/T060); this task is the verification gate that those imports actually produced separate chunks.
-- [ ] T083 Constitution post-implementation check: re-evaluate the five gates in plan.md's "Constitution Check (post-Phase-1 re-evaluation)" section against the final implementation. Update plan.md with the outcome.
-- [ ] T084 Resolve the three Open Questions in `spec.md`: Q1 (reading material IP review — closed by T011), Q2 (multi-session testimonial → resolved to most-recent enrollment at submission time, see T055), Q3 (legacy free-text handling — confirmed `_legacy` banner approach in T032). Record final answers at the bottom of `spec.md`.
+- [X] T080 [P] Run `npm run audit:security`; review `security-audit.md` output. No new advisor findings should appear (testimonials policies should be lint-clean; structured-text/rating-picker are JSONB-only additions).
+- [X] T081 [P] Run `npm run check:no-bypass` (existing script extended in iteration 2). Confirm no dev sentinels in `dist/`.
+- [X] T082 **Verify** (post-build) that `TestimonialsPage` files emerged as separate Vite chunks (admin + facilitator each in their own `dist/assets/*.js` file). The lazy-loading itself is required *during* US5 implementation (T059/T060); this task is the verification gate that those imports actually produced separate chunks.
+- [X] T083 Constitution post-implementation check: re-evaluate the five gates in plan.md's "Constitution Check (post-Phase-1 re-evaluation)" section against the final implementation. Update plan.md with the outcome.
+- [X] T084 Resolve the three Open Questions in `spec.md`: Q1 (reading material IP review — closed by T011), Q2 (multi-session testimonial → resolved to most-recent enrollment at submission time, see T055), Q3 (legacy free-text handling — confirmed `_legacy` banner approach in T032). Record final answers at the bottom of `spec.md`.
 - [ ] T085 [P] **Accessibility audit (resolves analysis A5)**: install `@axe-core/react` as a dev dependency (or run `axe-core` against the running dev server via the Playwright skill); execute against `/course`, `/course/personality`, `/course/personality` with the WATUSI slide active, `/course/values` with the Shopping Spree slide active, `/course/roles` with the drag-and-drop slide active, `/course/complete`, `/admin/testimonials`, `/facilitator/testimonials`. Capture findings in `specs/003-slide-nav-ux-rework/a11y-audit.md`. Resolve any violation at WCAG 2.1 AA before merging. Manually verify keyboard-only navigation: drag-and-drop via keyboard (Tab → Space → Up/Down → Space) and slide nav via Tab/Enter.
-- [ ] T086 [P] **CI performance gate scoping (resolves analysis A6 — deferral)**: confirm Iteration 5 spec stub exists (or create `specs/004-perf-ci-gate/spec.md` skeleton) capturing the requirement to stand up Lighthouse-CI per Constitution §IV. This task is administrative — it records the deferral decision documented in plan.md's Complexity Tracking so it is not lost. No code change in this iteration.
+- [X] T086 [P] **CI performance gate scoping (resolves analysis A6 — deferral)**: confirm Iteration 5 spec stub exists (or create `specs/004-perf-ci-gate/spec.md` skeleton) capturing the requirement to stand up Lighthouse-CI per Constitution §IV. This task is administrative — it records the deferral decision documented in plan.md's Complexity Tracking so it is not lost. No code change in this iteration.
 
 ---
 

@@ -11,6 +11,8 @@ import { TextExercise } from '@/components/exercise/TextExercise'
 import { RankingExercise } from '@/components/exercise/RankingExercise'
 import { TableExercise } from '@/components/exercise/TableExercise'
 import { InfoExercise } from '@/components/exercise/InfoExercise'
+import { StructuredTextExercise } from '@/components/exercise/StructuredTextExercise'
+import { RatingPickerExercise } from '@/components/exercise/RatingPickerExercise'
 import { SectionIntroSlide } from '@/components/section/SectionIntroSlide'
 import { SectionClosingSlide } from '@/components/section/SectionClosingSlide'
 import { SlideNav } from '@/components/section/SlideNav'
@@ -155,14 +157,23 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
             initialResponse={resp?.response_json as Parameters<typeof TextExercise>[0]['initialResponse']}
           />
         )
-      case 'ranking':
+      case 'ranking': {
+        const rankingContent = content as Parameters<typeof RankingExercise>[0]['content']
+        let derivesFromResponse: Response | null = null
+        if (rankingContent.derives_from?.source_exercise_slug) {
+          const sourceSlug = rankingContent.derives_from.source_exercise_slug
+          const sourceEx = exercises.find((e) => e.slug === sourceSlug)
+          if (sourceEx) derivesFromResponse = responses[sourceEx.id] ?? null
+        }
         return (
           <RankingExercise
             {...commonProps}
-            content={content as Parameters<typeof RankingExercise>[0]['content']}
+            content={rankingContent}
             initialResponse={resp?.response_json as Parameters<typeof RankingExercise>[0]['initialResponse']}
+            derivesFromResponse={derivesFromResponse}
           />
         )
+      }
       case 'table':
         return (
           <TableExercise
@@ -176,6 +187,22 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
           <InfoExercise
             content={content as Parameters<typeof InfoExercise>[0]['content']}
             attribution={exercise.attribution}
+          />
+        )
+      case 'structured-text':
+        return (
+          <StructuredTextExercise
+            {...commonProps}
+            content={content as Parameters<typeof StructuredTextExercise>[0]['content']}
+            initialResponse={resp?.response_json as Parameters<typeof StructuredTextExercise>[0]['initialResponse']}
+          />
+        )
+      case 'rating-picker':
+        return (
+          <RatingPickerExercise
+            {...commonProps}
+            content={content as Parameters<typeof RatingPickerExercise>[0]['content']}
+            initialResponse={resp?.response_json as Parameters<typeof RatingPickerExercise>[0]['initialResponse']}
           />
         )
       default:

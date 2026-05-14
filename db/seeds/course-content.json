@@ -285,6 +285,7 @@
           "title": "EXERCISE: Identifying Your Attitudes",
           "type": "checkbox",
           "order_index": 2,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
@@ -349,10 +350,17 @@
           "title": "The Six Attitude Types — WATUSI",
           "type": "ranking",
           "order_index": 3,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": null,
           "content_json": {
-            "prompt": "Based on your checklist results, rank these six attitude types from highest (most checks) to lowest. Your top two attitudes reveal your primary world view and motivational drivers.",
+            "prompt": "Your prefilled order below is derived from the checklist you just completed. The count beside each item is auto-calculated and read-only. Drag any row to adjust the ranking when you disagree with a tie or want to reflect your own emphasis.",
+            "interaction": "drag",
+            "show_counts": true,
+            "derives_from": {
+              "source_exercise_slug": "identifying-attitudes",
+              "group_by": "id_prefix"
+            },
             "items": [
               {
                 "id": "attitude_w",
@@ -432,6 +440,7 @@
             "headers": ["#", "Item", "Amount Budgeted ($)"],
             "rows": 34,
             "col_types": ["number", "text", "currency"],
+            "total_target": 100000,
             "items": [
               "A process guaranteed to rid the world of prejudice and racism.",
               "An opportunity to help the sick and impoverished and allow them happier lives.",
@@ -570,43 +579,65 @@
         {
           "slug": "past-experience-inventory",
           "title": "EXERCISE: Past Experience Inventory",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 3,
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "Answer each of the following 14 questions as honestly and fully as possible. This inventory helps you identify the experiences, influences, and patterns that have shaped who you are today.\n\n1. Who have been the most influential people in your life and in what way?\n2. What were the critical incidents (events) that made you who you are?\n3. What have been the major interests in your life so far?\n4. What were the significant experiences in your school or college career?\n5. What were your significant work experiences?\n6. What were the most significant decisions in your life?\n7. What makes you alive and excited? What events or activities spur you on?\n8. What am I really good at? What strengths do I have to build on?\n9. What do I do poorly? What do I need to develop or correct?\n10. What do I want to stop doing that affects my effectiveness?\n11. What do I want to change in my life?\n12. What do I want to start doing much better?\n13. What do I want to learn or develop in myself?\n14. Who are the persons or organizations that can help me achieve my goals?",
-            "placeholder": "1. The most influential people in my life have been...\n\n2. Critical events that shaped me...\n\n3. My major interests...",
-            "min_length": 100,
-            "max_length": 5000
+            "prompt": "Answer each of the following 14 questions as honestly and fully as possible. This inventory helps you identify the experiences, influences, and patterns that have shaped who you are today.",
+            "questions": [
+              { "id": "q1",  "label": "Who have been the most influential people in your life and in what way?", "min_length": 20, "max_length": 800 },
+              { "id": "q2",  "label": "What were the critical incidents (events) that made you who you are?", "min_length": 20, "max_length": 800 },
+              { "id": "q3",  "label": "What have been the major interests in your life so far?", "min_length": 20, "max_length": 800 },
+              { "id": "q4",  "label": "What were the significant experiences in your school or college career?", "min_length": 20, "max_length": 800 },
+              { "id": "q5",  "label": "What were your significant work experiences?", "min_length": 20, "max_length": 800 },
+              { "id": "q6",  "label": "What were the most significant decisions in your life?", "min_length": 20, "max_length": 800 },
+              { "id": "q7",  "label": "What makes you alive and excited? What events or activities spur you on?", "min_length": 20, "max_length": 800 },
+              { "id": "q8",  "label": "What am I really good at? What strengths do I have to build on?", "min_length": 20, "max_length": 800 },
+              { "id": "q9",  "label": "What do I do poorly? What do I need to develop or correct?", "min_length": 20, "max_length": 800 },
+              { "id": "q10", "label": "What do I want to stop doing that affects my effectiveness?", "min_length": 20, "max_length": 800 },
+              { "id": "q11", "label": "What do I want to change in my life?", "min_length": 20, "max_length": 800 },
+              { "id": "q12", "label": "What do I want to start doing much better?", "min_length": 20, "max_length": 800 },
+              { "id": "q13", "label": "What do I want to learn or develop in myself?", "min_length": 20, "max_length": 800 },
+              { "id": "q14", "label": "Who are the persons or organizations that can help me achieve my goals?", "min_length": 20, "max_length": 800 }
+            ]
           }
         },
         {
           "slug": "contract-with-myself",
           "title": "EXERCISE: A Contract With Myself",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 4,
           "is_scored": false,
           "attribution": "(From Professor Muriel James, author of Born to Win, Breaking Free, Passion for Life — on transactional analysis)",
           "content_json": {
-            "prompt": "Complete this personal contract for change (as suggested by Professor Muriel James, author of Born to Win):\n\nArticle 1: What do I want to change in my life for the better?\nArticle 2: What do I need to get what I want?\nArticle 3: What am I willing to do?\nArticle 4: How will I measure my success?\nArticle 5: How could I sabotage myself from achieving success?\nArticle 6: What are my next positive steps toward change?",
-            "placeholder": "Article 1 — What I want to change:\n\nArticle 2 — What I need:\n\nArticle 3 — What I am willing to do:\n\nArticle 4 — How I will measure success:\n\nArticle 5 — How I could sabotage myself:\n\nArticle 6 — My next positive steps:",
-            "min_length": 100,
-            "max_length": 3000
+            "prompt": "Complete this personal contract for change (as suggested by Professor Muriel James, author of Born to Win):",
+            "questions": [
+              { "id": "article_1", "label": "Article 1 — What do I want to change in my life for the better?", "min_length": 15, "max_length": 600 },
+              { "id": "article_2", "label": "Article 2 — What do I need to get what I want?", "min_length": 15, "max_length": 600 },
+              { "id": "article_3", "label": "Article 3 — What am I willing to do?", "min_length": 15, "max_length": 600 },
+              { "id": "article_4", "label": "Article 4 — How will I measure my success?", "min_length": 15, "max_length": 600 },
+              { "id": "article_5", "label": "Article 5 — How could I sabotage myself from achieving success?", "min_length": 15, "max_length": 600 },
+              { "id": "article_6", "label": "Article 6 — What are my next positive steps toward change?", "min_length": 15, "max_length": 600 }
+            ]
           }
         },
         {
           "slug": "mission-statement",
           "title": "EXERCISE: My Mission Statement",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 5,
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "A Mission/Vision Statement gives you a powerful tool to help you focus and prioritize your life. Write your personal mission statement, addressing four dimensions:\n\n1. My Vision/Mission/Purpose for this life is...\n2. In relation to MYSELF...\n3. In relation to OTHERS...\n4. In relation to THE WORLD...\n5. If I put it in one sentence, my mission is...\n\nTip: Look at your own eyes in the mirror and repeat your mission statement to yourself. Ask: Does it sound right for me? Does it fit me completely as the person I am? Is it MY statement or someone else's?",
-            "placeholder": "My Vision/Mission/Purpose for this life is...\n\nIn relation to MYSELF:\n\nIn relation to OTHERS:\n\nIn relation to THE WORLD:\n\nIn one sentence, my mission is:",
-            "min_length": 50,
-            "max_length": 2000
+            "prompt": "A Mission/Vision Statement gives you a powerful tool to help you focus and prioritize your life. Tip: look at your own eyes in the mirror and repeat each line back to yourself. Does it fit you completely?",
+            "questions": [
+              { "id": "vision",       "label": "My Vision / Mission / Purpose for this life is...", "min_length": 15, "max_length": 600 },
+              { "id": "self",         "label": "In relation to MYSELF...", "min_length": 15, "max_length": 600 },
+              { "id": "others",       "label": "In relation to OTHERS...", "min_length": 15, "max_length": 600 },
+              { "id": "world",        "label": "In relation to THE WORLD...", "min_length": 15, "max_length": 600 },
+              { "id": "one_sentence", "label": "If I put it in one sentence, my mission is...", "min_length": 10, "max_length": 300 }
+            ]
           }
         }
       ]
@@ -637,93 +668,99 @@
         {
           "slug": "transferable-skills-with-individuals",
           "title": "EXERCISE: Transferable Skills — Dealing with Individuals",
-          "type": "table",
+          "type": "rating-picker",
           "order_index": 1,
           "is_scored": true,
           "attribution": null,
           "content_json": {
             "prompt": "Rate each skill on a scale of 1 (lowest) to 5 (highest). These are skills you use when dealing with individuals one-on-one.",
-            "headers": ["Skill", "1 (Low)", "2", "3", "4", "5 (High)"],
-            "rows": 10,
-            "col_types": ["text", "rating", "rating", "rating", "rating", "rating"],
-            "skills": [
-              "Take instructions, Serve or Help",
-              "Diagnose, Treat or Heal",
-              "Do well in conversation, in person, or on the phone",
-              "Refer people, or help two to link up",
-              "Communicate well in writing (e.g. excellent letters)",
-              "Assess, Evaluate, Screen, or Select Individuals",
-              "Instruct, Teach, Tutor, or Train Individuals",
-              "Persuade, Motivate, Recruit, Sell to Individuals",
-              "Advise, Coach, Counsel, Mentor",
-              "Represent Others, Interpret Others' Ideas"
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "labels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+            },
+            "items": [
+              { "id": "ind_1",  "label": "Take instructions, Serve or Help" },
+              { "id": "ind_2",  "label": "Diagnose, Treat or Heal" },
+              { "id": "ind_3",  "label": "Do well in conversation, in person, or on the phone" },
+              { "id": "ind_4",  "label": "Refer people, or help two to link up" },
+              { "id": "ind_5",  "label": "Communicate well in writing (e.g. excellent letters)" },
+              { "id": "ind_6",  "label": "Assess, Evaluate, Screen, or Select Individuals" },
+              { "id": "ind_7",  "label": "Instruct, Teach, Tutor, or Train Individuals" },
+              { "id": "ind_8",  "label": "Persuade, Motivate, Recruit, Sell to Individuals" },
+              { "id": "ind_9",  "label": "Advise, Coach, Counsel, Mentor" },
+              { "id": "ind_10", "label": "Represent Others, Interpret Others' Ideas" }
             ]
           }
         },
         {
           "slug": "transferable-skills-with-groups",
           "title": "EXERCISE: Transferable Skills — Dealing with Groups",
-          "type": "table",
+          "type": "rating-picker",
           "order_index": 2,
           "is_scored": true,
           "attribution": null,
           "content_json": {
             "prompt": "Rate each skill on a scale of 1 (lowest) to 5 (highest). These are skills you use when working with groups and audiences.",
-            "headers": ["Skill", "1 (Low)", "2", "3", "4", "5 (High)"],
-            "rows": 15,
-            "col_types": ["text", "rating", "rating", "rating", "rating", "rating"],
-            "skills": [
-              "Communicate Effectively to a group or a multitude",
-              "Play games or lead others in recreation",
-              "Manage, Supervise or Run (a business, fund drive etc.)",
-              "Use words expressively in speaking or writing",
-              "Teach, Train, or Design educational events",
-              "Follow through getting things done",
-              "Make presentations in person, or on TV or film",
-              "Guide a Group Discussion conveying warmth",
-              "Take the lead, be a pioneer",
-              "Perform, Entertain, Amuse or Inspire",
-              "Persuade a Group, Motivate or Sell",
-              "Initiating, Starting Up, Founding, Or Establishing",
-              "Sign, Mimic, Act, Sing, or Play an Instrument",
-              "Consult, give advice to groups in your area of service",
-              "Negotiate between two parties, or resolve conflict"
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "labels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+            },
+            "items": [
+              { "id": "grp_1",  "label": "Communicate Effectively to a group or a multitude" },
+              { "id": "grp_2",  "label": "Play games or lead others in recreation" },
+              { "id": "grp_3",  "label": "Manage, Supervise or Run (a business, fund drive etc.)" },
+              { "id": "grp_4",  "label": "Use words expressively in speaking or writing" },
+              { "id": "grp_5",  "label": "Teach, Train, or Design educational events" },
+              { "id": "grp_6",  "label": "Follow through getting things done" },
+              { "id": "grp_7",  "label": "Make presentations in person, or on TV or film" },
+              { "id": "grp_8",  "label": "Guide a Group Discussion conveying warmth" },
+              { "id": "grp_9",  "label": "Take the lead, be a pioneer" },
+              { "id": "grp_10", "label": "Perform, Entertain, Amuse or Inspire" },
+              { "id": "grp_11", "label": "Persuade a Group, Motivate or Sell" },
+              { "id": "grp_12", "label": "Initiating, Starting Up, Founding, Or Establishing" },
+              { "id": "grp_13", "label": "Sign, Mimic, Act, Sing, or Play an Instrument" },
+              { "id": "grp_14", "label": "Consult, give advice to groups in your area of service" },
+              { "id": "grp_15", "label": "Negotiate between two parties, or resolve conflict" }
             ]
           }
         },
         {
           "slug": "transferable-skills-information",
           "title": "EXERCISE: Transferable Skills — Dealing with Information & Data",
-          "type": "table",
+          "type": "rating-picker",
           "order_index": 3,
           "is_scored": true,
           "attribution": null,
           "content_json": {
             "prompt": "Rate each skill on a scale of 1 (lowest) to 5 (highest). These are skills you use when gathering, managing, storing and retrieving information, data, and ideas.",
-            "headers": ["Skill", "1 (Low)", "2", "3", "4", "5 (High)"],
-            "rows": 18,
-            "col_types": ["text", "rating", "rating", "rating", "rating", "rating"],
-            "skills": [
-              "Compile, Search, or Research",
-              "Gather information by interviewing or observing people",
-              "Gather information by studying or observing things",
-              "Have an acute sense of hearing, smell, taste, or sight",
-              "Imagine, invent, create or design new ideas",
-              "Copy and/or compare similarities or differences",
-              "Compute, working with numbers, do accounting",
-              "Analyze, break down into its parts",
-              "Organize, classify, systematize, and/or prioritize",
-              "Plan, lay out step by step process for achieving a goal",
-              "Adapt, translate (incl. computer programming), develop or improve",
-              "Visualize, draw, paint, dramatize, create videos or software",
-              "Synthesize, combining parts into a whole",
-              "Problem solve or see patterns among a mass of data",
-              "Decide, evaluate, appraise, or make recommendations",
-              "Keep Records (Incl. on film or on a computer)",
-              "Store or File: microfiche, video, audio, or computer",
-              "Retrieve information, ideas, data",
-              "Enable other people to find or retrieve information",
-              "Have a superior memory, keeping track of details"
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "labels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+            },
+            "items": [
+              { "id": "inf_1",  "label": "Compile, Search, or Research" },
+              { "id": "inf_2",  "label": "Gather information by interviewing or observing people" },
+              { "id": "inf_3",  "label": "Gather information by studying or observing things" },
+              { "id": "inf_4",  "label": "Have an acute sense of hearing, smell, taste, or sight" },
+              { "id": "inf_5",  "label": "Imagine, invent, create or design new ideas" },
+              { "id": "inf_6",  "label": "Copy and/or compare similarities or differences" },
+              { "id": "inf_7",  "label": "Compute, working with numbers, do accounting" },
+              { "id": "inf_8",  "label": "Analyze, break down into its parts" },
+              { "id": "inf_9",  "label": "Organize, classify, systematize, and/or prioritize" },
+              { "id": "inf_10", "label": "Plan, lay out step by step process for achieving a goal" },
+              { "id": "inf_11", "label": "Adapt, translate (incl. computer programming), develop or improve" },
+              { "id": "inf_12", "label": "Visualize, draw, paint, dramatize, create videos or software" },
+              { "id": "inf_13", "label": "Synthesize, combining parts into a whole" },
+              { "id": "inf_14", "label": "Problem solve or see patterns among a mass of data" },
+              { "id": "inf_15", "label": "Decide, evaluate, appraise, or make recommendations" },
+              { "id": "inf_16", "label": "Keep Records (Incl. on film or on a computer)" },
+              { "id": "inf_17", "label": "Store or File: microfiche, video, audio, or computer" },
+              { "id": "inf_18", "label": "Retrieve information, ideas, data" },
+              { "id": "inf_19", "label": "Enable other people to find or retrieve information" },
+              { "id": "inf_20", "label": "Have a superior memory, keeping track of details" }
             ]
           }
         },
@@ -788,7 +825,8 @@
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "From all the goals in your Life Goal Inventory, select the ones that seem most important to you at this time. Do not choose more than ten (10). List them below in order of preference — most important first, least important last.",
+            "prompt": "From all the goals in your Life Goal Inventory, select the ones that seem most important to you at this time. Do not choose more than ten (10). Drag the rows to order them — most important first, least important last.",
+            "interaction": "drag",
             "items": [
               { "id": "priority_1", "label": "Goal Priority 1 (Most Important)" },
               { "id": "priority_2", "label": "Goal Priority 2" },
@@ -820,15 +858,24 @@
         {
           "slug": "goal-achievement-plan",
           "title": "EXERCISE: My Goal Achievement Plan",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 4,
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "For each of your top 8 goals, work through the following 6 questions AND identify obstacles and action steps. This is your Personal Strategic Plan™.\n\nFor each goal, answer:\n1. How important is it that you achieve this goal?\n2. How does this goal relate to your long-term goals? What conflicts are there?\n3. How will you feel when you attain this goal? (Try to imagine yourself with the goal achieved.)\n4. How will you feel if you do not attain this goal?\n5. What do you think about your chances of succeeding? What will happen if you do succeed?\n6. What will happen if you fail?\n\nFor removing obstacles, consider:\n• Personal shortcomings that could prevent you from achieving the goal\n• Obstacles in the world that could prevent achievement\n• What you can do to eliminate or lessen each obstacle\n• Specific action steps that will move you toward the goal\n\nComplete this for each of your top 8 goals:",
-            "placeholder": "GOAL 1: ___\n\n1. Importance:\n2. Long-term relation / conflicts:\n3. How I'll feel when attained:\n4. How I'll feel if not attained:\n5. Chances of success:\n6. If I fail:\n\nPersonal shortcomings:\nWorld obstacles:\nAction steps:\n\n---\n\nGOAL 2: ___\n...",
-            "min_length": 200,
-            "max_length": 10000
+            "prompt": "Work through this plan for your #1 priority goal. This is your Personal Strategic Plan™. You can repeat this exercise for additional goals in your own notes — the structured plan below is for the goal you want to commit to first.",
+            "questions": [
+              { "id": "top_goal",       "label": "My #1 priority goal (write it as a specific outcome with a date)", "min_length": 15, "max_length": 400 },
+              { "id": "importance",     "label": "How important is it that I achieve this goal?", "min_length": 15, "max_length": 600 },
+              { "id": "long_term",      "label": "How does this goal relate to my long-term goals? What conflicts are there?", "min_length": 15, "max_length": 600 },
+              { "id": "feel_attained",  "label": "How will I feel when I attain this goal? (Imagine yourself with the goal achieved.)", "min_length": 15, "max_length": 600 },
+              { "id": "feel_not",       "label": "How will I feel if I do not attain this goal?", "min_length": 15, "max_length": 600 },
+              { "id": "chances",        "label": "What do I think about my chances of succeeding? What will happen if I do succeed?", "min_length": 15, "max_length": 600 },
+              { "id": "if_fail",        "label": "What will happen if I fail?", "min_length": 15, "max_length": 600 },
+              { "id": "personal_obs",   "label": "Personal shortcomings that could prevent achievement", "min_length": 15, "max_length": 600 },
+              { "id": "world_obs",      "label": "Obstacles in the world that could prevent achievement", "min_length": 15, "max_length": 600 },
+              { "id": "action_steps",   "label": "Specific action steps that will move me toward the goal", "min_length": 20, "max_length": 1000 }
+            ]
           }
         },
         {
