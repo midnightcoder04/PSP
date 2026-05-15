@@ -16,8 +16,9 @@ import { StructuredTextExercise } from '@/components/exercise/StructuredTextExer
 import { RatingPickerExercise } from '@/components/exercise/RatingPickerExercise'
 import { SectionIntroSlide } from '@/components/section/SectionIntroSlide'
 import { SectionClosingSlide } from '@/components/section/SectionClosingSlide'
+import { SectionGroupContext } from '@/components/section/SectionGroupContext'
 import { SlideNav } from '@/components/section/SlideNav'
-import { SECTION_SLUGS, ROUTES } from '@/lib/constants'
+import { SECTION_SLUGS, GROUP_SLUGS, ROUTES, type GroupSlug } from '@/lib/constants'
 import { groupExercisesBySlide } from '@/lib/exerciseCompletion'
 import type { Section, Exercise, Response } from '@/types/database'
 import styles from './SectionPage.module.css'
@@ -36,6 +37,10 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   const [responses, setResponses] = useState<Record<string, Response>>({})
   const [loading, setLoading] = useState(true)
   const [resumeExerciseId, setResumeExerciseId] = useState<string | null>(null)
+  // Group-context affordance state (US5, 004-content-restructure): the current
+  // section's position within its group (1-of-5 etc.). Derived from a one-time
+  // fetch of all sections that share the current group_slug.
+  const [groupPosition, setGroupPosition] = useState<{ position: number; total: number } | null>(null)
 
   const sessionId = null // session context wires in a later iteration
 
@@ -64,6 +69,22 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
 
       setSection(sec)
       setExercises(exs ?? [])
+
+      // Derive position-in-group for the section-page affordance.
+      if (sec.group_slug && (GROUP_SLUGS as readonly string[]).includes(sec.group_slug)) {
+        const { data: peers } = await supabase
+          .from('sections')
+          .select('slug, order_index')
+          .eq('group_slug', sec.group_slug)
+          .order('order_index')
+        const peerList = peers ?? []
+        const idx = peerList.findIndex((p) => p.slug === sec.slug)
+        if (idx >= 0) {
+          setGroupPosition({ position: idx + 1, total: peerList.length })
+        }
+      } else {
+        setGroupPosition(null)
+      }
 
       if (exs && exs.length > 0) {
         const { data: resps } = await supabase
@@ -306,6 +327,13 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   return (
     <PageShell title={section?.title}>
       <LocalResponseUpdateContext.Provider value={localUpdate}>
+      {groupPosition && section?.group_slug && (
+        <SectionGroupContext
+          groupSlug={section.group_slug as GroupSlug}
+          positionInGroup={groupPosition.position}
+          groupSize={groupPosition.total}
+        />
+      )}
       <div className={styles.progressBar}>
         <ProgressRing pct={pct} size={48} strokeWidth={4} />
         <span className={styles.progressLabel}>

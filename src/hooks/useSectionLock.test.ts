@@ -12,6 +12,7 @@ function section(slug: string, order: number): Section {
     order_index: order,
     icon_name: null,
     framing: null,
+    group_slug: null,
   }
 }
 

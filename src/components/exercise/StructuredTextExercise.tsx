@@ -44,9 +44,11 @@ export function StructuredTextExercise({
     save(payload, complete)
   }
 
+  const preamble = content.intro ?? content.prompt
+
   return (
     <div className={styles.container}>
-      {content.prompt && <p className={styles.prompt}>{content.prompt}</p>}
+      {preamble && <p className={styles.prompt}>{preamble}</p>}
 
       {initialResponse?._legacy && (
         <aside className={styles.legacyBanner} role="note">
@@ -63,13 +65,15 @@ export function StructuredTextExercise({
         {content.questions.map((q, index) => {
           const inputId = `${idPrefix}-${q.id}`
           const value = answers[q.id] ?? ''
-          const required = (q.min_length ?? 1) >= 1
+          // Renderer accepts either `prompt` (new canonical key) or legacy `label`.
+          const promptText = q.prompt ?? q.label ?? ''
+          const isRequired = q.required ?? (q.min_length ?? 1) >= 1
           return (
             <div key={q.id} className={styles.field}>
               <label htmlFor={inputId} className={styles.label}>
                 <span className={styles.questionNum}>{index + 1}.</span>{' '}
-                {q.label}
-                {required && <span className={styles.requiredMark} aria-hidden="true"> *</span>}
+                {promptText}
+                {isRequired && <span className={styles.requiredMark} aria-hidden="true"> *</span>}
               </label>
               <textarea
                 id={inputId}
@@ -81,7 +85,7 @@ export function StructuredTextExercise({
                 onChange={(e) => handleChange(q.id, e.target.value)}
                 onBlur={(e) => handleChange(q.id, e.target.value)}
                 rows={4}
-                aria-label={q.label}
+                aria-label={promptText}
               />
             </div>
           )

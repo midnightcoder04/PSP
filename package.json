@@ -14,7 +14,8 @@
     "type-check": "tsc --noEmit",
     "check:no-bypass": "bash scripts/check-no-bypass.sh",
     "test:rpc": "vitest run scripts/rpc.test.ts",
-    "audit:security": "tsx --env-file=.env.local scripts/audit-security.ts"
+    "audit:security": "tsx --env-file=.env.local scripts/audit-security.ts",
+    "validate:seed": "tsx scripts/validate-seed.ts db/seeds/course-content.json"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -24,14 +24,25 @@ export interface SectionFraming {
 
 export interface StructuredTextQuestion {
   id: string
-  label: string
+  // `prompt` is the canonical field per contracts/seed-json.md (004-content-restructure).
+  // `label` is the legacy field used by Iter 4 seed entries; renderer reads
+  // `prompt ?? label` for backward compatibility during the seed rewrite.
+  prompt?: string
+  label?: string
   placeholder?: string
+  required?: boolean
   min_length?: number
   max_length?: number
 }
 
 export interface StructuredTextContent {
-  prompt: string
+  // Top-level prompt is optional in the new contract — the per-question contract
+  // (questions[].prompt) is canonical. `intro` is the new name for the preamble;
+  // `prompt` is preserved here for backward compatibility with legacy seed rows.
+  prompt?: string
+  intro?: string
+  combined?: boolean
+  combined_rationale?: string
   questions: StructuredTextQuestion[]
 }
 
@@ -204,6 +215,9 @@ export interface Database {
           order_index: number
           icon_name: string | null
           framing: SectionFraming | null
+          // group_slug added by migration 014 (004-content-restructure). Nullable to
+          // support the "Unassigned" fallback band on /course (spec.md Edge Cases).
+          group_slug: 'self-awareness' | 'goal-setting' | 'strategic-planning' | null
         }
         Insert: {
           id?: string
@@ -214,6 +228,7 @@ export interface Database {
           order_index: number
           icon_name?: string | null
           framing?: SectionFraming | null
+          group_slug?: 'self-awareness' | 'goal-setting' | 'strategic-planning' | null
         }
         Update: {
           title?: string
@@ -222,6 +237,7 @@ export interface Database {
           order_index?: number
           icon_name?: string | null
           framing?: SectionFraming | null
+          group_slug?: 'self-awareness' | 'goal-setting' | 'strategic-planning' | null
         }
         Relationships: []
       }
@@ -452,3 +468,14 @@ export type Exercise = Tables<'exercises'>
 export type Response = Tables<'responses'>
 export type Progress = Tables<'progress'>
 export type Testimonial = Tables<'testimonials'>
+
+// SectionGroup is a logical entity derived from sections.group_slug + GROUP_META
+// (no separate DB table — see specs/004-content-restructure/research.md R1).
+// Returned by useSectionGroups().
+export interface SectionGroup {
+  slug: 'self-awareness' | 'goal-setting' | 'strategic-planning' | 'unassigned'
+  title: string
+  description: string
+  order: number
+  sections: Section[]
+}

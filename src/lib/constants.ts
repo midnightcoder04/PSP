@@ -20,16 +20,52 @@ export const ROUTES = {
   COURSE_COMPLETE: '/course/complete',
 } as const
 
+// 9-section vocabulary (post-migration 014). nextSectionSlug walks this array to
+// resolve the "Continue → next section" target; the order must match
+// public.sections.order_index (1..9) per specs/004-content-restructure/data-model.md.
 export const SECTION_SLUGS = [
   'personality',
-  'attitudes',
+  'attitude',
   'values',
-  'roles',
-  'skills',
-  'goal-setting',
+  'roles-and-demands',
+  'transferable-skills',
+  'specific-goals',
+  'goal-impact-matrix',
+  'visualization',
+  'removing-obstacles-achieving-goals',
 ] as const
 
 export type SectionSlug = (typeof SECTION_SLUGS)[number]
+
+// Group metadata for the three pedagogical phases (004-content-restructure US1).
+// Single source of truth for /course group bands and the section-page group-context affordance.
+export const GROUP_SLUGS = ['self-awareness', 'goal-setting', 'strategic-planning'] as const
+
+export type GroupSlug = (typeof GROUP_SLUGS)[number]
+
+export interface GroupMeta {
+  title: string
+  description: string
+  order: number
+}
+
+export const GROUP_META: Record<GroupSlug, GroupMeta> = {
+  'self-awareness': {
+    title: 'Self Awareness',
+    description: 'The five PSP™ Filters that surface who you already are.',
+    order: 1,
+  },
+  'goal-setting': {
+    title: 'Goal Setting',
+    description: 'Naming what you want, weighing trade-offs, and visualising the outcome.',
+    order: 2,
+  },
+  'strategic-planning': {
+    title: 'Strategic Planning',
+    description: 'Removing obstacles and committing to actions.',
+    order: 3,
+  },
+}
 
 export const ROLE = {
   ADMIN: 'admin',

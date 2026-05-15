@@ -1,11 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { createElement } from 'react'
 import { renderHook, act } from '@testing-library/react'
-import {
-  useExerciseSave,
-  LocalResponseUpdateContext,
-  type LocalResponseUpdater,
-} from './useExerciseSave'
+import { useExerciseSave } from './useExerciseSave'
 
 const mockUpsert = vi.fn().mockResolvedValue({ error: null })
 
