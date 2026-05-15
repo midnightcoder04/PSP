@@ -12,6 +12,7 @@ vi.mock('@/hooks/useAuth', () => ({
 
 vi.mock('@/hooks/useExerciseSave', () => ({
   useExerciseSave: () => ({ save: vi.fn(), saveImmediate: vi.fn(), status: 'idle' }),
+  LocalResponseUpdateContext: { Provider: ({ children }: { children: React.ReactNode }) => children },
 }))
 
 const mockSection = {

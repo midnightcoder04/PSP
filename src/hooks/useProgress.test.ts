@@ -97,4 +97,45 @@ describe('useProgress', () => {
     await waitFor(() => expect(result.current.loading).toBe(false))
     expect(typeof result.current.refetch).toBe('function')
   })
+
+  it('deduplicates progress rows by section_id, keeping the most recent', async () => {
+    // Belt-and-suspenders client guard against legacy duplicate rows from
+    // before migration 013. The new NULLS NOT DISTINCT index prevents fresh
+    // duplicates, but a teammate's local DB or stale snapshot might still
+    // return them — the hook must collapse them deterministically.
+    const older = '2026-05-01T00:00:00.000Z'
+    const newer = '2026-05-10T00:00:00.000Z'
+    currentChain = makeChain([
+      {
+        id: 'prog-old',
+        participant_id: 'user-1',
+        section_id: 'sec-1',
+        session_id: null,
+        completed_exercises: 1,
+        total_exercises: 3,
+        section_completed_at: null,
+        last_exercise_id: 'ex-1',
+        last_activity_at: older,
+      },
+      {
+        id: 'prog-new',
+        participant_id: 'user-1',
+        section_id: 'sec-1',
+        session_id: null,
+        completed_exercises: 3,
+        total_exercises: 3,
+        section_completed_at: newer,
+        last_exercise_id: 'ex-3',
+        last_activity_at: newer,
+      },
+    ])
+
+    const { result } = renderHook(() => useProgress({ participantId: 'user-1' }))
+
+    await waitFor(() => expect(result.current.loading).toBe(false))
+
+    expect(result.current.progress).toHaveLength(1)
+    expect(result.current.progress[0].id).toBe('prog-new')
+    expect(result.current.progress[0].section_completed_at).toBe(newer)
+  })
 })

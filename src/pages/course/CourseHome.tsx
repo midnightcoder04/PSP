@@ -17,6 +17,7 @@ export default function CourseHome() {
   const navigate = useNavigate()
   const [sections, setSections] = useState<Section[]>([])
   const [sectionsLoading, setSectionsLoading] = useState(true)
+  const [resumeSlug, setResumeSlug] = useState<string | null>(null)
 
   const { progress, loading: progressLoading } = useProgress({
     participantId: profile?.id ?? '',
@@ -42,8 +43,8 @@ export default function CourseHome() {
 
   const locks = useSectionLock({ sections, progressMap })
 
-  // Resume position: only redirect when the first available (unlocked, in-progress) section
-  // exists. Don't auto-redirect past a locked boundary.
+  // Resolve a resume target without auto-navigating. We surface a "Continue"
+  // CTA so the participant can always see the full 6-section overview first.
   useEffect(() => {
     if (!profile?.id) return
     supabase
@@ -53,11 +54,18 @@ export default function CourseHome() {
           const { section_slug } = data[0]
           const target = locks.find((l) => l.section.slug === section_slug)
           if (target && !target.isLocked) {
-            navigate(`/course/${section_slug}`, { replace: false })
+            setResumeSlug(section_slug)
+            return
           }
         }
+        setResumeSlug(null)
       })
-  }, [profile?.id, navigate, locks])
+  }, [profile?.id, locks])
+
+  const resumeTitle = resumeSlug
+    ? locks.find((l) => l.section.slug === resumeSlug)?.section.title ?? null
+    : null
+  const hasAnyProgress = progress.some((p) => p.completed_exercises > 0)
 
   const overallPct =
     sections.length > 0
@@ -93,6 +101,19 @@ export default function CourseHome() {
           <span className={styles.overallLabel}>Overall</span>
         </div>
       </div>
+
+      {resumeSlug && (
+        <div className={styles.continueRow}>
+          <button
+            type="button"
+            className={styles.continueBtn}
+            onClick={() => navigate(`/course/${resumeSlug}`)}
+          >
+            {hasAnyProgress ? 'Continue' : 'Start'}
+            {resumeTitle ? ` — ${resumeTitle}` : ''} →
+          </button>
+        </div>
+      )}
 
       <div className={styles.grid}>
         {locks.map(({ section, isLocked, prereqTitle }) => {

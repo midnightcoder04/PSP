@@ -39,7 +39,18 @@ export function useProgress({ participantId, sessionId }: UseProgressOptions): U
     if (fetchError) {
       setError(fetchError.message)
     } else {
-      setProgress(data ?? [])
+      // Belt-and-suspenders dedup. Migration 013 added a NULLS NOT DISTINCT
+      // unique index that prevents fresh duplicates, but legacy snapshots and
+      // un-migrated local DBs can still surface them. Collapse to one row per
+      // section_id, keeping the most recent by last_activity_at.
+      const dedup = new Map<string, Progress>()
+      for (const p of data ?? []) {
+        const existing = dedup.get(p.section_id)
+        if (!existing || (p.last_activity_at ?? '') > (existing.last_activity_at ?? '')) {
+          dedup.set(p.section_id, p)
+        }
+      }
+      setProgress(Array.from(dedup.values()))
     }
     setLoading(false)
   }, [participantId, sessionId])

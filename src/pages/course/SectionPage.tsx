@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { useSlideState } from '@/hooks/useSlideState'
+import { LocalResponseUpdateContext, type LocalResponseUpdater } from '@/hooks/useExerciseSave'
 import { PageShell } from '@/components/layout/PageShell'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { Spinner } from '@/components/ui/Spinner'
@@ -16,7 +17,7 @@ import { RatingPickerExercise } from '@/components/exercise/RatingPickerExercise
 import { SectionIntroSlide } from '@/components/section/SectionIntroSlide'
 import { SectionClosingSlide } from '@/components/section/SectionClosingSlide'
 import { SlideNav } from '@/components/section/SlideNav'
-import { SECTION_SLUGS } from '@/lib/constants'
+import { SECTION_SLUGS, ROUTES } from '@/lib/constants'
 import { groupExercisesBySlide } from '@/lib/exerciseCompletion'
 import type { Section, Exercise, Response } from '@/types/database'
 import styles from './SectionPage.module.css'
@@ -98,6 +99,33 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
     load()
   }, [sectionSlug, profile?.id, navigate])
 
+  // Synchronously mirror exercise saves into the local responses map so the
+  // slide gate (which reads from `responses`) flips to is_complete=true
+  // immediately when the participant clicks an option, without waiting for
+  // the Supabase round-trip.
+  const localUpdate = useCallback<LocalResponseUpdater>(
+    (exerciseId, responseJson, isComplete) => {
+      setResponses((prev) => {
+        const existing = prev[exerciseId]
+        const now = new Date().toISOString()
+        const next: Response = existing
+          ? { ...existing, response_json: responseJson as Response['response_json'], is_complete: isComplete, updated_at: now }
+          : {
+              id: `optimistic-${exerciseId}`,
+              participant_id: profile!.id,
+              exercise_id: exerciseId,
+              session_id: null,
+              response_json: responseJson as Response['response_json'],
+              is_complete: isComplete,
+              created_at: now,
+              updated_at: now,
+            }
+        return { ...prev, [exerciseId]: next }
+      })
+    },
+    [profile?.id]
+  )
+
   const slideGroups = useMemo(() => groupExercisesBySlide(exercises), [exercises])
 
   const introEnabled = !!section?.framing
@@ -119,6 +147,62 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   const completed = exercises.filter((e) => responses[e.id]?.is_complete).length
   const total = exercises.filter((e) => e.type !== 'info').length
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0
+
+  const nextSlug = nextSectionSlug(sectionSlug)
+  const prevSlug = prevSectionSlug(sectionSlug)
+  const isLastSection = nextSlug === null
+
+  // Boundary-aware nav: at the intro slide, Previous crosses back to the prior
+  // section. At the closing slide, Next advances to the next section (or to
+  // the course-complete page on the final section).
+  const handlePrev = useCallback(() => {
+    if (isAtIntro) {
+      if (prevSlug) navigate(`/course/${prevSlug}`)
+      return
+    }
+    goPrev()
+  }, [isAtIntro, prevSlug, navigate, goPrev])
+
+  const handleNext = useCallback(() => {
+    if (isAtClosing) {
+      if (isLastSection) navigate(ROUTES.COURSE_COMPLETE)
+      else if (nextSlug) navigate(`/course/${nextSlug}`)
+      return
+    }
+    goNext()
+  }, [isAtClosing, isLastSection, nextSlug, navigate, goNext])
+
+  const effectiveCanGoPrev = canGoPrev || (isAtIntro && !!prevSlug)
+  const effectiveCanGoNext = canGoNext
+
+  // Arrow-key navigation. Skip when focus is in a text field so typing isn't
+  // hijacked.
+  useEffect(() => {
+    function isTypingTarget(el: EventTarget | null): boolean {
+      if (!(el instanceof HTMLElement)) return false
+      const tag = el.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true
+      if (el.isContentEditable) return true
+      return false
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+      if (isTypingTarget(e.target)) return
+      if (e.key === 'ArrowRight') {
+        if (effectiveCanGoNext) {
+          e.preventDefault()
+          handleNext()
+        }
+      } else if (e.key === 'ArrowLeft') {
+        if (effectiveCanGoPrev) {
+          e.preventDefault()
+          handlePrev()
+        }
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [effectiveCanGoNext, effectiveCanGoPrev, handleNext, handlePrev])
 
   if (loading) {
     return (
@@ -210,9 +294,6 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
     }
   }
 
-  const nextSlug = nextSectionSlug(sectionSlug)
-  const isLastSection = nextSlug === null
-
   const slideHint =
     !canGoNext && !isAtIntro && !isAtClosing
       ? 'Complete the exercise to continue'
@@ -224,6 +305,7 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
 
   return (
     <PageShell title={section?.title}>
+      <LocalResponseUpdateContext.Provider value={localUpdate}>
       <div className={styles.progressBar}>
         <ProgressRing pct={pct} size={48} strokeWidth={4} />
         <span className={styles.progressLabel}>
@@ -291,10 +373,10 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
       </div>
 
       <SlideNav
-        onPrev={goPrev}
-        onNext={goNext}
-        canGoPrev={canGoPrev}
-        canGoNext={canGoNext}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        canGoPrev={effectiveCanGoPrev}
+        canGoNext={effectiveCanGoNext}
         nextLabel={nextLabel}
         hint={slideHint}
       />
@@ -304,6 +386,7 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
           ← Back to course
         </button>
       </div>
+      </LocalResponseUpdateContext.Provider>
     </PageShell>
   )
 }
@@ -313,4 +396,11 @@ function nextSectionSlug(currentSlug: string | undefined): string | null {
   const idx = SECTION_SLUGS.indexOf(currentSlug as (typeof SECTION_SLUGS)[number])
   if (idx === -1 || idx === SECTION_SLUGS.length - 1) return null
   return SECTION_SLUGS[idx + 1]
+}
+
+function prevSectionSlug(currentSlug: string | undefined): string | null {
+  if (!currentSlug) return null
+  const idx = SECTION_SLUGS.indexOf(currentSlug as (typeof SECTION_SLUGS)[number])
+  if (idx <= 0) return null
+  return SECTION_SLUGS[idx - 1]
 }
