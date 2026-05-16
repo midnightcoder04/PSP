@@ -20,6 +20,7 @@ import { SectionGroupContext } from '@/components/section/SectionGroupContext'
 import { SlideNav } from '@/components/section/SlideNav'
 import { SECTION_SLUGS, GROUP_SLUGS, ROUTES, type GroupSlug } from '@/lib/constants'
 import { groupExercisesBySlide } from '@/lib/exerciseCompletion'
+import { resolveCoreStyleFromResponses } from '@/lib/coreStyle'
 import type { Section, Exercise, Response } from '@/types/database'
 import styles from './SectionPage.module.css'
 
@@ -163,6 +164,12 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
     slideGroups,
     responses,
     resumeExerciseId,
+    // 005-iter5-ux-fixes / US3 + FR-020: reset slide state when the
+    // participant navigates between sections (e.g. Personality → Attitudes).
+    // Without this, currentSlide carries over from the previously-viewed
+    // section because the SectionPage component instance is reused across
+    // /course/:sectionSlug param changes.
+    resetKey: sectionSlug,
   })
 
   const completed = exercises.filter((e) => responses[e.id]?.is_complete).length
@@ -287,13 +294,33 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
             initialResponse={resp?.response_json as Parameters<typeof TableExercise>[0]['initialResponse']}
           />
         )
-      case 'info':
+      case 'info': {
+        // 005-iter5-ux-fixes / US5 (FR-051): Personality's `core-style-result`
+        // row carries `content.computed === 'core_style'` and a pair of
+        // `content.computed_inputs` referencing the two upstream quiz slugs.
+        // Read those responses live and substitute `{result}` in the content
+        // string with the resolved Core Style sentence.
+        const infoContent = content as { content: string; attribution?: string | null; computed?: string; computed_inputs?: string[] }
+        let renderedContent = infoContent.content
+        if (infoContent.computed === 'core_style' && Array.isArray(infoContent.computed_inputs) && infoContent.computed_inputs.length === 2) {
+          const [q1Slug, q2Slug] = infoContent.computed_inputs
+          const q1Ex = exercises.find((e) => e.slug === q1Slug)
+          const q2Ex = exercises.find((e) => e.slug === q2Slug)
+          const q1Resp = q1Ex ? (responses[q1Ex.id]?.response_json as { selected_ids?: string[] } | undefined) : undefined
+          const q2Resp = q2Ex ? (responses[q2Ex.id]?.response_json as { selected_ids?: string[] } | undefined) : undefined
+          const result = resolveCoreStyleFromResponses(q1Resp, q2Resp)
+          const sentence = result
+            ? `Your Core Style is **${result.letter} — ${result.name}**.`
+            : 'Answer both questions above to see your Core Style.'
+          renderedContent = infoContent.content.replace('{result}', sentence)
+        }
         return (
           <InfoExercise
-            content={content as Parameters<typeof InfoExercise>[0]['content']}
+            content={{ content: renderedContent, attribution: infoContent.attribution }}
             attribution={exercise.attribution}
           />
         )
+      }
       case 'structured-text':
         return (
           <StructuredTextExercise
@@ -407,13 +434,8 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         canGoNext={effectiveCanGoNext}
         nextLabel={nextLabel}
         hint={slideHint}
+        onBackToCourse={() => navigate('/course')}
       />
-
-      <div className={styles.navButtons}>
-        <button className={styles.backBtn} onClick={() => navigate('/course')}>
-          ← Back to course
-        </button>
-      </div>
       </LocalResponseUpdateContext.Provider>
     </PageShell>
   )

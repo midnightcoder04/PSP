@@ -143,3 +143,57 @@ All `attribution` strings from the legacy seed are preserved verbatim on the cor
 - [x] New exercises carry appropriate Compass / Sam Koshy attribution.
 - [x] No PSP™ trademark altered, removed, or relocated.
 - [ ] Facilitator (Bijo Abraham) sign-off pending — to be obtained out-of-band before public participant rollout.
+
+---
+
+## 10. Iteration 5 review block — Personality two-question quiz + DISC read-throughs (`005-iter5-ux-fixes`)
+
+**Review date**: 2026-05-16
+**Reviewer initials**: Bijo Abraham (facilitator) — sign-off pending out-of-band confirmation; technical review by automation 2026-05-16
+**Scope**: Personality section content reshape (migration 015). All other sections unchanged.
+
+### 10.1 Rows removed from Personality (5)
+
+| slug | workbook source removed | reason |
+|---|---|---|
+| `identifying-personal-style` | `psp_content.md:366–434` (quick D/I/S/C self-rate) | Superseded by the two-question Core Style quiz per `psp_content.md:408–432` |
+| `disc-core-style-d` | `psp_content.md:468–536` (HIGH D checklist) | Re-rendered as a read-through `info` exercise (`disc-profile-d`) per spec FR-052 |
+| `disc-core-style-i` | `psp_content.md:540–614` (HIGH I checklist) | Re-rendered as `disc-profile-i` |
+| `disc-core-style-s` | `psp_content.md:618–680` (HIGH S checklist) | Re-rendered as `disc-profile-s` |
+| `disc-core-style-c` | `psp_content.md:684–747` (HIGH C checklist) | Re-rendered as `disc-profile-c` |
+
+### 10.2 Rows added to Personality (7)
+
+| slug | workbook source | type | attribution |
+|---|---|---|---|
+| `core-style-q1-extroversion` | `psp_content.md:414` (Q1) | checkbox (`allow_multiple: false`) | TTI — verbatim |
+| `core-style-q2-orientation` | `psp_content.md:415` (Q2) | checkbox (`allow_multiple: false`) | TTI — verbatim |
+| `core-style-result` | `psp_content.md:417–432` (Core Style mapping table) | info (computed) | TTI — verbatim |
+| `disc-profile-d` | `psp_content.md:468–536` | info (read-through prose) | TTI — verbatim |
+| `disc-profile-i` | `psp_content.md:540–614` | info (read-through prose) | TTI — verbatim |
+| `disc-profile-s` | `psp_content.md:618–680` | info (read-through prose) | TTI — verbatim |
+| `disc-profile-c` | `psp_content.md:684–747` | info (read-through prose) | TTI — verbatim |
+
+(`TTI` = `(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)`)
+
+### 10.3 Rows preserved (2)
+
+| slug | change |
+|---|---|
+| `disc-introduction` | `slide_group` 1 (was NULL); `content_json` byte-identical |
+| `my-core-style` | `order_index` 7 → 9, `slide_group` NULL → 6; `type='text'`, `attribution: null`, `is_scored: false` all preserved; `content_json` byte-identical (single-textarea reflection) |
+
+### 10.4 Attribution preservation audit (SC-IP-1)
+
+- All seven newly authored info / checkbox rows carry the TTI attribution string verbatim.
+- The preserved row `my-core-style` retains its existing `attribution: null` — this is a participant reflection prompt, not adapted content, and was never attributed in the legacy seed.
+- The preserved row `disc-introduction` retains its TTI attribution verbatim.
+- SQL invariant `015_personality_exercises_invariants.sql §IP-attribution invariant (SC-IP-1)` asserts the above programmatically.
+
+### 10.5 Sign-off
+
+- [x] Workbook line ranges verified against `psp_content.md` (state at 2026-05-16).
+- [x] TTI attribution string preserved verbatim on every adapted row.
+- [x] No PSP™ trademark altered, removed, or relocated.
+- [x] D.I.S.C. credit (Bill Bonnstetter / Target Training International) preserved on all DISC-derived rows.
+- [ ] Facilitator (Bijo Abraham) sign-off pending — to be obtained out-of-band before public participant rollout.

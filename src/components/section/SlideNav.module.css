@@ -1,14 +1,25 @@
 .slideNav {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
+  flex-direction: column;
+  gap: var(--space-2);
   padding: var(--space-3) 0;
   margin-top: var(--space-4);
   border-top: 1px solid var(--color-border);
   position: sticky;
   bottom: 0;
   background: var(--color-bg);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.backRow {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .prev,
@@ -59,8 +70,29 @@
   font-style: italic;
 }
 
+.backLink {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.backLink:hover {
+  color: var(--color-trust);
+  background: var(--color-trust-light, transparent);
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 2px;
+}
+
 @media (max-width: 480px) {
-  .slideNav {
+  .row {
     flex-direction: column;
     gap: var(--space-2);
   }

@@ -34,623 +34,129 @@
           "content_json": {
             "content": "The D.I.S.C. MODEL was developed by Bill Bonnstetter at Target Training International, Phoenix, Arizona. It is based on the psychology of Carl Jung and William Moulton Marston and is widely accepted as an effective tool for enhancing performance in all areas of life.\n\nThrough the combined Nature/Nurture process of growing, you have developed specific ways of interacting with the world. This is your Personal Behavioural Style, or CORE STYLE.\n\nThe D.I.S.C. model uses four factors to determine behaviour:\n\n1. THE DOMINANCE FACTOR (D) \u2014 How you handle problems and challenges\n2. THE INFLUENCE FACTOR (I) \u2014 How you handle people and influence others\n3. THE STEADINESS FACTOR (S) \u2014 How you handle and pace yourself\n4. THE COMPLIANCE FACTOR (C) \u2014 How you handle the rules set by others\n\nHow you will benefit:\n\u2022 Increased Self Understanding\n\u2022 Increased Understanding of Others\n\u2022 Increased Communication Skills\n\u2022 Less Stress\n\u2022 Decreased Tension\n\u2022 Improved Relationships (Family, Work/Business, Social)",
             "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)"
-          }
+          },
+          "slide_group": 1
         },
         {
-          "slug": "identifying-personal-style",
-          "title": "EXERCISE: Identifying Your Own Personal Style",
+          "slug": "core-style-q1-extroversion",
+          "title": "EXERCISE: Core Style \u2014 Question 1 (Extroversion)",
           "type": "checkbox",
           "order_index": 2,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "In the following four categories (D, I, S, C), check which of the statements you tend to agree with more. Rate how strongly (1 to 10) you agree with each statement. Your highest rating indicates your BASIC CORE STYLE.",
+            "prompt": "Question 1: Are you predominantly EXTROVERTED or INTROVERTED?",
             "options": [
               {
-                "id": "opt_d",
-                "label": "D \u2014 Dominance: You tend to be very active and aggressive in gaining results. You will go directly at the problem with little or no fear. (How you handle problems and challenges)",
+                "id": "q1_extroverted",
+                "label": "Extroverted \u2014 I gain energy from interacting with people and the outside world.",
                 "value": 1
               },
               {
-                "id": "opt_i",
-                "label": "I \u2014 Influence: You usually are very approachable and open to others. Outgoing, social, very verbally persuasive. (How you interact with other people)",
-                "value": 2
-              },
-              {
-                "id": "opt_s",
-                "label": "S \u2014 Steadiness: You prefer a structured and more predictable environment, having the parameters and boundaries clearly defined. Prefer a secure situation. (How you handle a steady pace and your workplace)",
-                "value": 3
-              },
-              {
-                "id": "opt_c",
-                "label": "C \u2014 Compliance: You tend to follow rules set by others and you are very aware of the consequences of not complying with rules or following procedures. (How you respond to rules and procedures imposed by others)",
-                "value": 4
+                "id": "q1_introverted",
+                "label": "Introverted \u2014 I gain energy from quiet reflection and my inner world.",
+                "value": 1
               }
             ],
             "allow_multiple": false
           }
         },
         {
-          "slug": "disc-core-style-d",
-          "title": "HIGH D \u2014 Dominance Core Style Profile",
+          "slug": "core-style-q2-orientation",
+          "title": "EXERCISE: Core Style \u2014 Question 2 (Orientation)",
           "type": "checkbox",
           "order_index": 3,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on D \u2014 Dominance, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH D.",
+            "prompt": "Question 2: Are you predominantly PEOPLE-ORIENTED or TASK-ORIENTED?",
             "options": [
               {
-                "id": "d_char_1",
-                "label": "Able to make decisions quickly",
+                "id": "q2_people",
+                "label": "People-oriented \u2014 I focus on relationships, collaboration, and how people feel.",
                 "value": 1
               },
               {
-                "id": "d_char_2",
-                "label": "Willing to state unpopular opinions",
-                "value": 1
-              },
-              {
-                "id": "d_char_3",
-                "label": "Risk taking",
-                "value": 1
-              },
-              {
-                "id": "d_env_1",
-                "label": "I thrive with freedom from controls, supervision and details",
-                "value": 1
-              },
-              {
-                "id": "d_env_2",
-                "label": "I prefer evaluation based on results, not process or method",
-                "value": 1
-              },
-              {
-                "id": "d_env_3",
-                "label": "I prefer an innovative and futuristic oriented environment",
-                "value": 1
-              },
-              {
-                "id": "d_env_4",
-                "label": "I prefer non-routine work with challenge and opportunity",
-                "value": 1
-              },
-              {
-                "id": "d_env_5",
-                "label": "I need a forum to express my ideas and viewpoints",
-                "value": 1
-              },
-              {
-                "id": "d_trait_1",
-                "label": "Ambitious",
-                "value": 1
-              },
-              {
-                "id": "d_trait_2",
-                "label": "Forceful",
-                "value": 1
-              },
-              {
-                "id": "d_trait_3",
-                "label": "Decisive",
-                "value": 1
-              },
-              {
-                "id": "d_trait_4",
-                "label": "Direct",
-                "value": 1
-              },
-              {
-                "id": "d_trait_5",
-                "label": "Independent",
-                "value": 1
-              },
-              {
-                "id": "d_trait_6",
-                "label": "Challenging",
-                "value": 1
-              },
-              {
-                "id": "d_trait_7",
-                "label": "Results oriented",
-                "value": 1
-              },
-              {
-                "id": "d_trait_8",
-                "label": "I have a desire to win",
-                "value": 1
-              },
-              {
-                "id": "d_trait_9",
-                "label": "Argumentative",
-                "value": 1
-              },
-              {
-                "id": "d_trait_10",
-                "label": "Fast paced",
-                "value": 1
-              },
-              {
-                "id": "d_trait_11",
-                "label": "I tend to juggle a lot at once",
-                "value": 1
-              },
-              {
-                "id": "d_trait_12",
-                "label": "I am quick to accept challenge",
-                "value": 1
-              },
-              {
-                "id": "d_trait_13",
-                "label": "I usually interrupt and am impatient with long explanations",
-                "value": 1
-              },
-              {
-                "id": "d_trait_14",
-                "label": "I tend to act or speak before thinking",
-                "value": 1
-              },
-              {
-                "id": "d_trait_15",
-                "label": "I am not afraid of high risk",
-                "value": 1
-              },
-              {
-                "id": "d_trait_16",
-                "label": "I tend to create fear in others",
-                "value": 1
-              },
-              {
-                "id": "d_trait_17",
-                "label": "I tend to be impatient",
+                "id": "q2_task",
+                "label": "Task-oriented \u2014 I focus on results, structure, and getting things done.",
                 "value": 1
               }
             ],
-            "allow_multiple": true
+            "allow_multiple": false
           }
         },
         {
-          "slug": "disc-core-style-i",
-          "title": "HIGH I \u2014 Influence Core Style Profile",
-          "type": "checkbox",
+          "slug": "core-style-result",
+          "title": "Your Core Style",
+          "type": "info",
           "order_index": 4,
-          "is_scored": true,
+          "slide_group": 3,
+          "is_scored": false,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on I \u2014 Influence, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH I.",
-            "options": [
-              {
-                "id": "i_char_1",
-                "label": "A natural optimist",
-                "value": 1
-              },
-              {
-                "id": "i_char_2",
-                "label": "Trusting of others",
-                "value": 1
-              },
-              {
-                "id": "i_char_3",
-                "label": "Able to make others feel welcome and/or included",
-                "value": 1
-              },
-              {
-                "id": "i_env_1",
-                "label": "I thrive with assignments involving a high degree of people contacts",
-                "value": 1
-              },
-              {
-                "id": "i_env_2",
-                "label": "I enjoy tasks involving motivating groups and establishing a network of contacts",
-                "value": 1
-              },
-              {
-                "id": "i_env_3",
-                "label": "I prefer a democratic supervisor with whom I can associate",
-                "value": 1
-              },
-              {
-                "id": "i_env_4",
-                "label": "I need freedom from control and detail",
-                "value": 1
-              },
-              {
-                "id": "i_env_5",
-                "label": "I need freedom of movement",
-                "value": 1
-              },
-              {
-                "id": "i_env_6",
-                "label": "I prefer multi-changing work tasks",
-                "value": 1
-              },
-              {
-                "id": "i_trait_1",
-                "label": "Expressive",
-                "value": 1
-              },
-              {
-                "id": "i_trait_2",
-                "label": "Enthusiastic",
-                "value": 1
-              },
-              {
-                "id": "i_trait_3",
-                "label": "Friendly",
-                "value": 1
-              },
-              {
-                "id": "i_trait_4",
-                "label": "Demonstrative",
-                "value": 1
-              },
-              {
-                "id": "i_trait_5",
-                "label": "Talkative",
-                "value": 1
-              },
-              {
-                "id": "i_trait_6",
-                "label": "Stimulating",
-                "value": 1
-              },
-              {
-                "id": "i_trait_7",
-                "label": "I have a good sense of humor",
-                "value": 1
-              },
-              {
-                "id": "i_trait_8",
-                "label": "I treat everyone as a friend",
-                "value": 1
-              },
-              {
-                "id": "i_trait_9",
-                "label": "I am fun loving",
-                "value": 1
-              },
-              {
-                "id": "i_trait_10",
-                "label": "I am a creative problem solver",
-                "value": 1
-              },
-              {
-                "id": "i_trait_11",
-                "label": "I am usually very optimistic",
-                "value": 1
-              },
-              {
-                "id": "i_trait_12",
-                "label": "I tend to talk before thinking",
-                "value": 1
-              },
-              {
-                "id": "i_trait_13",
-                "label": "I very often lose track of time",
-                "value": 1
-              },
-              {
-                "id": "i_trait_14",
-                "label": "I prefer to back away from conflict",
-                "value": 1
-              },
-              {
-                "id": "i_trait_15",
-                "label": "I tend to be disorganized",
-                "value": 1
-              },
-              {
-                "id": "i_trait_16",
-                "label": "I am very trusting of others",
-                "value": 1
-              }
-            ],
-            "allow_multiple": true
+            "content": "Based on your two answers, your Core Style maps to one of the four D.I.S.C. types per the workbook's mapping rule:\n\n1. Extroverted + Task-oriented = Core D \u2014 Dominance\n2. Extroverted + People-oriented = Core I \u2014 Influence\n3. Introverted + People-oriented = Core S \u2014 Steadiness\n4. Introverted + Task-oriented = Core C \u2014 Compliance\n\n{result}\n\nOn the next slides you'll read through each style's strengths, ideal environment, and comfort zones \u2014 not just your own. Knowing how other styles work makes every relationship easier.",
+            "computed": "core_style",
+            "computed_inputs": [
+              "core-style-q1-extroversion",
+              "core-style-q2-orientation"
+            ]
           }
         },
         {
-          "slug": "disc-core-style-s",
-          "title": "HIGH S \u2014 Steadiness Core Style Profile",
-          "type": "checkbox",
+          "slug": "disc-profile-d",
+          "title": "HIGH D \u2014 Dominance Profile",
+          "type": "info",
           "order_index": 5,
-          "is_scored": true,
+          "slide_group": 4,
+          "is_scored": false,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on S \u2014 Steadiness, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH S.",
-            "options": [
-              {
-                "id": "s_char_1",
-                "label": "A tenacity for order",
-                "value": 1
-              },
-              {
-                "id": "s_char_2",
-                "label": "A natural ability to organize tasks",
-                "value": 1
-              },
-              {
-                "id": "s_env_1",
-                "label": "I thrive in jobs where standards and methods are established",
-                "value": 1
-              },
-              {
-                "id": "s_env_2",
-                "label": "I prefer environments where long-standing relationships can be developed",
-                "value": 1
-              },
-              {
-                "id": "s_env_3",
-                "label": "I need personal attention and recognition for tasks completed and well done",
-                "value": 1
-              },
-              {
-                "id": "s_env_4",
-                "label": "I prefer a stable and predictable environment",
-                "value": 1
-              },
-              {
-                "id": "s_env_5",
-                "label": "I need environments that allow time for change",
-                "value": 1
-              },
-              {
-                "id": "s_env_6",
-                "label": "I prefer environments where I can deal with people on a personal, intimate basis",
-                "value": 1
-              },
-              {
-                "id": "s_trait_1",
-                "label": "Methodical",
-                "value": 1
-              },
-              {
-                "id": "s_trait_2",
-                "label": "Systematic",
-                "value": 1
-              },
-              {
-                "id": "s_trait_3",
-                "label": "Reliable",
-                "value": 1
-              },
-              {
-                "id": "s_trait_4",
-                "label": "Steady",
-                "value": 1
-              },
-              {
-                "id": "s_trait_5",
-                "label": "Relaxed",
-                "value": 1
-              },
-              {
-                "id": "s_trait_6",
-                "label": "Modest",
-                "value": 1
-              },
-              {
-                "id": "s_trait_7",
-                "label": "I need secure situations",
-                "value": 1
-              },
-              {
-                "id": "s_trait_8",
-                "label": "I'm a good planner",
-                "value": 1
-              },
-              {
-                "id": "s_trait_9",
-                "label": "I need closure",
-                "value": 1
-              },
-              {
-                "id": "s_trait_10",
-                "label": "I'm a great listener",
-                "value": 1
-              },
-              {
-                "id": "s_trait_11",
-                "label": "I am usually calm and stabilize others",
-                "value": 1
-              },
-              {
-                "id": "s_trait_12",
-                "label": "I mask my emotions",
-                "value": 1
-              },
-              {
-                "id": "s_trait_13",
-                "label": "I tend to be indirect to avoid conflict",
-                "value": 1
-              },
-              {
-                "id": "s_trait_14",
-                "label": "I tend to be possessive of things",
-                "value": 1
-              },
-              {
-                "id": "s_trait_15",
-                "label": "I tend to be too low risk",
-                "value": 1
-              },
-              {
-                "id": "s_trait_16",
-                "label": "I tend to hold a grudge",
-                "value": 1
-              },
-              {
-                "id": "s_trait_17",
-                "label": "I tend to adapt very quickly to others",
-                "value": 1
-              },
-              {
-                "id": "s_trait_18",
-                "label": "I tend to resist changes",
-                "value": 1
-              }
-            ],
-            "allow_multiple": true
+            "content": "HIGH D \u2014 Dominance\n\nIf you are HIGH D, you are able to make decisions quickly, willing to state unpopular opinions, and naturally risk-taking. You are direct, decisive, and results-oriented.\n\nIdeal environment\nYou thrive with freedom from controls, supervision and details. You prefer evaluation based on results \u2014 not process or method \u2014 and gravitate toward innovative, futuristic, non-routine work that gives you challenge and opportunity. You need a forum where you can express your ideas and viewpoints.\n\nCharacteristics\nAmbitious, forceful, decisive, direct, independent, challenging, results-oriented. You carry a strong desire to win, work at a fast pace, and tend to juggle several things at once. You are quick to accept a challenge, are not afraid of high risk, and may interrupt or speak before thinking. Others sometimes find your style impatient or fear-inducing \u2014 useful to know when you collaborate.\n\nComfort zone with other styles\n\u2022 With another D \u2014 the same approach, but your shared need to have your own way narrows the comfort zone.\n\u2022 With an I \u2014 both extroverted; the I's verbal skill and people focus widens interaction comfortably.\n\u2022 With an S \u2014 low comfort zone; the S tends to back down from your assertive style and both can feel frustrated.\n\u2022 With a C \u2014 your need for immediate results clashes with the C's drive to analyse and test first."
           }
         },
         {
-          "slug": "disc-core-style-c",
-          "title": "HIGH C \u2014 Compliance Core Style Profile",
-          "type": "checkbox",
+          "slug": "disc-profile-i",
+          "title": "HIGH I \u2014 Influence Profile",
+          "type": "info",
           "order_index": 6,
-          "is_scored": true,
+          "slide_group": 4,
+          "is_scored": false,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on C \u2014 Compliance, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH C.",
-            "options": [
-              {
-                "id": "c_char_1",
-                "label": "A natural systems developer",
-                "value": 1
-              },
-              {
-                "id": "c_char_2",
-                "label": "A good quality control person",
-                "value": 1
-              },
-              {
-                "id": "c_char_3",
-                "label": "Willing to dig for information",
-                "value": 1
-              },
-              {
-                "id": "c_env_1",
-                "label": "I thrive where critical thinking is needed and rewarded",
-                "value": 1
-              },
-              {
-                "id": "c_env_2",
-                "label": "I prefer assignments that can be followed through to completion",
-                "value": 1
-              },
-              {
-                "id": "c_env_3",
-                "label": "I prefer technical, task-oriented, specialized work",
-                "value": 1
-              },
-              {
-                "id": "c_env_4",
-                "label": "I prefer environments where noise and people are at a minimum",
-                "value": 1
-              },
-              {
-                "id": "c_env_5",
-                "label": "I prefer close relationships with a small group of people",
-                "value": 1
-              },
-              {
-                "id": "c_env_6",
-                "label": "I thrive where quality and/or standards are important",
-                "value": 1
-              },
-              {
-                "id": "c_trait_1",
-                "label": "Analytical",
-                "value": 1
-              },
-              {
-                "id": "c_trait_2",
-                "label": "Contemplative",
-                "value": 1
-              },
-              {
-                "id": "c_trait_3",
-                "label": "Conservative",
-                "value": 1
-              },
-              {
-                "id": "c_trait_4",
-                "label": "Exacting",
-                "value": 1
-              },
-              {
-                "id": "c_trait_5",
-                "label": "Careful",
-                "value": 1
-              },
-              {
-                "id": "c_trait_6",
-                "label": "Deliberate",
-                "value": 1
-              },
-              {
-                "id": "c_trait_7",
-                "label": "I like to organize and analyze",
-                "value": 1
-              },
-              {
-                "id": "c_trait_8",
-                "label": "I work well alone",
-                "value": 1
-              },
-              {
-                "id": "c_trait_9",
-                "label": "I have high expectations",
-                "value": 1
-              },
-              {
-                "id": "c_trait_10",
-                "label": "I like to follow rules",
-                "value": 1
-              },
-              {
-                "id": "c_trait_11",
-                "label": "I am self-competitive",
-                "value": 1
-              },
-              {
-                "id": "c_trait_12",
-                "label": "I can solve complex problems",
-                "value": 1
-              },
-              {
-                "id": "c_trait_13",
-                "label": "I live my life by rules of behaving",
-                "value": 1
-              },
-              {
-                "id": "c_trait_14",
-                "label": "I tend to want as much data as possible",
-                "value": 1
-              },
-              {
-                "id": "c_trait_15",
-                "label": "I tend to be hard on myself",
-                "value": 1
-              },
-              {
-                "id": "c_trait_16",
-                "label": "I never take unnecessary chances",
-                "value": 1
-              },
-              {
-                "id": "c_trait_17",
-                "label": "I tend to feel emotions are very irrational",
-                "value": 1
-              },
-              {
-                "id": "c_trait_18",
-                "label": "I tend to see faults in others",
-                "value": 1
-              },
-              {
-                "id": "c_trait_19",
-                "label": "I tend to analyze things to death",
-                "value": 1
-              }
-            ],
-            "allow_multiple": true
+            "content": "HIGH I \u2014 Influence\n\nIf you are HIGH I, you are a natural optimist, trusting of others, and able to make others feel welcome and included. You are expressive, enthusiastic, and persuasive.\n\nIdeal environment\nYou thrive on assignments with a high degree of people contact \u2014 motivating groups, building networks. You prefer a democratic supervisor you can associate with, freedom from control and detail, freedom of movement, and multi-changing work tasks.\n\nCharacteristics\nExpressive, enthusiastic, friendly, demonstrative, talkative, stimulating. You have a good sense of humour, treat everyone as a friend, are fun-loving and a creative problem solver. You are usually optimistic, may talk before thinking, sometimes lose track of time, prefer to back away from conflict, can tend toward disorganisation, and are very trusting of others.\n\nComfort zone with other styles\n\u2022 With a D \u2014 both extroverted; your verbal skills and people focus widen the comfort zone.\n\u2022 With another I \u2014 high comfort zone, maximised by mutual enjoyment of personal interaction.\n\u2022 With an S \u2014 both people-oriented, but the S's social conscience may irritate you, and the S may perceive you as unfeeling.\n\u2022 With a C \u2014 your people skills and high trust threshold relax the C's need to establish rationale for trust."
+          }
+        },
+        {
+          "slug": "disc-profile-s",
+          "title": "HIGH S \u2014 Steadiness Profile",
+          "type": "info",
+          "order_index": 7,
+          "slide_group": 5,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "content": "HIGH S \u2014 Steadiness\n\nIf you are HIGH S, you have a tenacity for order and a natural ability to organize tasks. You are steady, reliable, and calming to those around you.\n\nIdeal environment\nYou thrive in jobs where standards and methods are established, where long-standing relationships develop, and where you receive personal attention and recognition for tasks completed well. You prefer a stable, predictable environment that allows time for change, and where people can be dealt with on a personal, intimate basis.\n\nCharacteristics\nMethodical, systematic, reliable, steady, relaxed, modest. You need secure situations, are a good planner, need closure, and listen well. You usually stabilize others, may mask your emotions, tend to be indirect to avoid conflict, can be possessive of things, prefer low risk, occasionally hold a grudge, adapt quickly to others, and tend to resist changes.\n\nComfort zone with other styles\n\u2022 With a D \u2014 low comfort zone; you tend to back down from the D's assertive style and both can feel frustrated.\n\u2022 With an I \u2014 both people-oriented, but your social conscience may irritate the I, and you may perceive the I as unfeeling.\n\u2022 With another S \u2014 very high comfort zone; similar opinions plus high tolerance and sociability.\n\u2022 With a C \u2014 your high respect for others and tolerance of differences let you approach a C without alarming their introverted response."
+          }
+        },
+        {
+          "slug": "disc-profile-c",
+          "title": "HIGH C \u2014 Compliance Profile",
+          "type": "info",
+          "order_index": 8,
+          "slide_group": 5,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "content": "HIGH C \u2014 Compliance\n\nIf you are HIGH C, you are a natural systems developer, a good quality-control person, and willing to dig for information. You are analytical, careful, and precise.\n\nIdeal environment\nYou thrive where critical thinking is needed and rewarded, where assignments can be followed through to completion, in technical, task-oriented, specialized work. You prefer environments where noise and people are at a minimum, with close relationships among a small group, and where quality and standards matter.\n\nCharacteristics\nAnalytical, contemplative, conservative, exacting, careful, deliberate. You like to organize and analyse, work well alone, hold high expectations, follow rules, are self-competitive, and can solve complex problems. You like as much data as possible, are hard on yourself, never take unnecessary chances, may see emotions as irrational, tend to see faults in others, and can analyse things to death.\n\nComfort zone with other styles\n\u2022 With a D \u2014 the D's need for immediate results clashes with your drive to analyse first.\n\u2022 With an I \u2014 the I's people skills and high trust threshold relax your need to establish rationale for trust.\n\u2022 With an S \u2014 the S's respect for others and tolerance of differences let them approach you without alarming your introverted response.\n\u2022 With another C \u2014 high comfort zone; mutual respect for rules and protocol plus a shared desire to avoid conflict."
           }
         },
         {
           "slug": "my-core-style",
           "title": "My Core Style \u2014 People Reading",
           "type": "text",
-          "order_index": 7,
+          "order_index": 9,
           "is_scored": false,
           "attribution": null,
           "content_json": {
@@ -658,7 +164,8 @@
             "placeholder": "My Core Style is ___ because...",
             "min_length": 10,
             "max_length": 2000
-          }
+          },
+          "slide_group": 6
         }
       ]
     },

@@ -1,6 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useExerciseSave } from '@/hooks/useExerciseSave'
+import { deriveWatusiCounts, WATUSI_TIEBREAK_ORDER } from '@/hooks/useWatusiCounts'
 import styles from './CheckboxExercise.module.css'
+
+const WATUSI_LABELS: Record<(typeof WATUSI_TIEBREAK_ORDER)[number], string> = {
+  w: 'W — Theoretical',
+  a: 'A — Aesthetic',
+  t: 'T — Traditional',
+  u: 'U — Utilitarian',
+  s: 'S — Social',
+  i: 'I — Individualistic',
+}
 
 interface Option {
   id: string
@@ -62,9 +72,44 @@ export function CheckboxExercise({
     })
   }
 
+  const isWatusi = useMemo(
+    () =>
+      content.options.some((o) => {
+        const sep = o.id.indexOf('_')
+        if (sep <= 0) return false
+        return (WATUSI_TIEBREAK_ORDER as readonly string[]).includes(o.id.slice(0, sep))
+      }),
+    [content.options]
+  )
+
+  const watusiCounts = useMemo(
+    () => (isWatusi ? deriveWatusiCounts(Array.from(selected)) : null),
+    [isWatusi, selected]
+  )
+
   return (
     <div className={styles.container}>
       <p className={styles.prompt}>{content.prompt}</p>
+      {watusiCounts && (
+        <div
+          className={styles.tally}
+          role="status"
+          aria-live="polite"
+          aria-label="Attitude group counts"
+        >
+          {WATUSI_TIEBREAK_ORDER.map((g) => (
+            <span
+              key={g}
+              className={styles.tallyChip}
+              data-active={watusiCounts[g] > 0}
+              title={WATUSI_LABELS[g]}
+            >
+              <span className={styles.tallyKey}>{g.toUpperCase()}</span>
+              <span className={styles.tallyValue}>{watusiCounts[g]}</span>
+            </span>
+          ))}
+        </div>
+      )}
       <ul className={styles.options} role="group" aria-label={content.prompt}>
         {content.options.map((opt) => {
           const checked = selected.has(opt.id)

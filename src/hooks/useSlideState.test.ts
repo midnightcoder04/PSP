@@ -129,6 +129,80 @@ describe('useSlideState', () => {
     expect(result.current.currentSlide).toBe(-1)
   })
 
+  // ── 005-iter5-ux-fixes / US3 — resetKey semantics ────────────────────
+  // Per contracts/slide-state.md §Test matrix (T5, T6, T7).
+
+  it('T5: re-derives initialSlide when resetKey changes mid-test (Personality→Attitude hand-off)', () => {
+    const personalityGroups = [[ex('p1', 0, 0)], [ex('p2', 1, 1)], [ex('p3', 2, 2)], [ex('p4', 3, 3)]]
+    const attitudeGroups = [[ex('a1', 0, 0)], [ex('a2', 1, 1)], [ex('a3', 2, 2)]]
+    const { result, rerender } = renderHook(
+      ({ slideGroups, resetKey }: { slideGroups: Exercise[][]; resetKey: string }) =>
+        useSlideState({
+          intro: true,
+          slideGroups,
+          responses: {},
+          resumeExerciseId: null,
+          resetKey,
+        }),
+      { initialProps: { slideGroups: personalityGroups, resetKey: 'personality' } }
+    )
+    expect(result.current.currentSlide).toBe(-1)
+    // Advance to the closing slide on Personality
+    act(() => result.current.goNext()) // -1 → 0
+    expect(result.current.canGoNext).toBe(false) // p1 not complete; can't advance further
+
+    // Now navigate to Attitude (different slug + different data shape)
+    rerender({ slideGroups: attitudeGroups, resetKey: 'attitude' })
+    // MUST land on Attitude intro (-1), NOT carry over Personality's currentSlide=0
+    expect(result.current.currentSlide).toBe(-1)
+    expect(result.current.isAtIntro).toBe(true)
+  })
+
+  it('T6: does NOT reset when resetKey changes but slideGroups is empty (data not ready yet)', () => {
+    const { result, rerender } = renderHook(
+      ({ slideGroups, resetKey }: { slideGroups: Exercise[][]; resetKey: string }) =>
+        useSlideState({
+          intro: true,
+          slideGroups,
+          responses: {},
+          resumeExerciseId: null,
+          resetKey,
+        }),
+      { initialProps: { slideGroups: groups, resetKey: 'first' } }
+    )
+    // Advance off intro so we can observe whether a reset happens
+    act(() => result.current.goNext())
+    expect(result.current.currentSlide).toBe(0)
+
+    // Rerender with empty slideGroups + new resetKey — must NOT reset
+    rerender({ slideGroups: [], resetKey: 'second' })
+    expect(result.current.currentSlide).toBe(0)
+  })
+
+  it('T7: after advancing to closing, a resetKey change re-derives to intro (not preserved as closing)', () => {
+    const initial = [[ex('x', 0, 0)]]
+    const next = [[ex('y', 0, 0)], [ex('z', 1, 1)]]
+    const responses: Record<string, Response> = { x: resp('x', true) } // initial is allDone → starts at closing
+    const { result, rerender } = renderHook(
+      ({ slideGroups, resetKey, responses }: { slideGroups: Exercise[][]; resetKey: string; responses: Record<string, Response> }) =>
+        useSlideState({
+          intro: true,
+          slideGroups,
+          responses,
+          resumeExerciseId: null,
+          resetKey,
+        }),
+      { initialProps: { slideGroups: initial, resetKey: 'first', responses } }
+    )
+    expect(result.current.currentSlide).toBe(1) // closing on 1-group section
+    expect(result.current.isAtClosing).toBe(true)
+
+    // Section change to a section that is NOT allDone — must derive to intro
+    rerender({ slideGroups: next, resetKey: 'second', responses: {} })
+    expect(result.current.currentSlide).toBe(-1)
+    expect(result.current.isAtIntro).toBe(true)
+  })
+
   it('groups exercises with the same slide_group together for gating', () => {
     // Two exercises in slide_group=0; gating requires both complete.
     const linkedGroups = [[ex('a', 0, 0), ex('b', 0, 1)], [ex('c', 1, 2)]]

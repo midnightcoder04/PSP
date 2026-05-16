@@ -51,10 +51,13 @@ function computeDerivedOrder(
     return { order: content.items.map((i) => i.id), counts: null }
   }
   const payload = derivesFromResponse?.response_json as
-    | { checked?: string[] }
+    | { selected_ids?: string[]; checked?: string[] }
     | null
     | undefined
-  const checked = payload?.checked ?? []
+  // CheckboxExercise persists `selected_ids`; older payloads used `checked`.
+  // Reading both keeps the count badge live as the participant ticks options
+  // upstream (005-iter5 / FR-040 follow-up).
+  const checked = payload?.selected_ids ?? payload?.checked ?? []
   const counts = deriveWatusiCounts(checked)
   const derivedOrder = watusiOrderFromCounts(counts)
   const itemIds = new Set(content.items.map((i) => i.id))
@@ -103,7 +106,7 @@ function SortableItem({ id, rank, label, count, showCount }: SortableItemProps) 
     >
       <span className={styles.rank}>{rank}</span>
       <span className={styles.label}>{label}</span>
-      {showCount && count != null && (
+      {showCount && count != null && count > 0 && (
         <span className={styles.countBadge} aria-label={`Count: ${count}`}>
           {count}
         </span>
@@ -213,7 +216,7 @@ export function RankingExercise({
               <li key={id} className={styles.item}>
                 <span className={styles.rank}>{index + 1}</span>
                 <span className={styles.label}>{itemMap[id] ?? id}</span>
-                {showCounts && count != null && (
+                {showCounts && count != null && count > 0 && (
                   <span className={styles.countBadge} aria-label={`Count: ${count}`}>
                     {count}
                   </span>

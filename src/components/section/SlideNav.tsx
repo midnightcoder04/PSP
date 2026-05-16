@@ -8,6 +8,7 @@ export interface SlideNavProps {
   nextLabel?: string
   prevLabel?: string
   hint?: string | null
+  onBackToCourse?: () => void
 }
 
 export function SlideNav({
@@ -18,9 +19,11 @@ export function SlideNav({
   nextLabel,
   prevLabel,
   hint,
+  onBackToCourse,
 }: SlideNavProps) {
   return (
     <nav className={styles.slideNav} aria-label="Slide navigation">
+      <div className={styles.row}>
       <button
         type="button"
         onClick={onPrev}
@@ -46,6 +49,18 @@ export function SlideNav({
       >
         {nextLabel ?? 'Next →'}
       </button>
+      </div>
+      {onBackToCourse && (
+        <div className={styles.backRow}>
+          <button
+            type="button"
+            onClick={onBackToCourse}
+            className={styles.backLink}
+          >
+            ← Back to course
+          </button>
+        </div>
+      )}
     </nav>
   )
 }

@@ -10,6 +10,11 @@
   flex-direction: column;
   min-width: 0;
   margin-left: var(--sidebar-width);
+  transition: margin-left var(--sidebar-transition-duration) var(--sidebar-transition-easing);
+}
+
+.shell[data-sidebar-collapsed='true'] .main {
+  margin-left: var(--sidebar-collapsed-width);
 }
 
 .content {
@@ -21,7 +26,8 @@
 }
 
 @media (max-width: 768px) {
-  .main {
+  .main,
+  .shell[data-sidebar-collapsed='true'] .main {
     margin-left: 0;
   }
 
