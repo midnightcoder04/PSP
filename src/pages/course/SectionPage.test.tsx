@@ -12,6 +12,7 @@ vi.mock('@/hooks/useAuth', () => ({
 
 vi.mock('@/hooks/useExerciseSave', () => ({
   useExerciseSave: () => ({ save: vi.fn(), saveImmediate: vi.fn(), status: 'idle' }),
+  LocalResponseUpdateContext: { Provider: ({ children }: { children: React.ReactNode }) => children },
 }))
 
 const mockSection = {
@@ -21,7 +22,17 @@ const mockSection = {
   subtitle: 'Understand your natural style',
   order_index: 1,
   framing: null,
+  group_slug: 'self-awareness',
 }
+
+// Self-awareness has 5 sections; personality is #1 of 5.
+const mockSelfAwarenessPeers = [
+  { slug: 'personality', order_index: 1 },
+  { slug: 'attitude', order_index: 2 },
+  { slug: 'values', order_index: 3 },
+  { slug: 'roles-and-demands', order_index: 4 },
+  { slug: 'transferable-skills', order_index: 5 },
+]
 
 const mockExercises = [
   {
@@ -54,24 +65,28 @@ const mockExercises = [
   },
 ]
 
-function makeChain(data: unknown) {
+// Builds a chain where single()/maybeSingle() return `singleData` and the
+// awaitable then-path returns `listData`. Lets us model both the "fetch one
+// section by slug" and the "fetch peer sections by group_slug" calls without
+// re-wiring the mock per call.
+function makeChain(singleData: unknown, listData: unknown = singleData) {
   return {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     in: vi.fn().mockReturnThis(),
     is: vi.fn().mockReturnThis(),
-    order: vi.fn().mockReturnThis(),
-    single: vi.fn().mockResolvedValue({ data, error: null }),
-    maybeSingle: vi.fn().mockResolvedValue({ data, error: null }),
+    order: vi.fn().mockImplementation(() => Promise.resolve({ data: listData, error: null })),
+    single: vi.fn().mockResolvedValue({ data: singleData, error: null }),
+    maybeSingle: vi.fn().mockResolvedValue({ data: singleData, error: null }),
     then: (cb: (v: { data: unknown; error: null }) => void) =>
-      Promise.resolve({ data, error: null }).then(cb),
+      Promise.resolve({ data: listData, error: null }).then(cb),
   }
 }
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: vi.fn((table: string) => {
-      if (table === 'sections') return makeChain(mockSection)
+      if (table === 'sections') return makeChain(mockSection, mockSelfAwarenessPeers)
       if (table === 'exercises') return makeChain(mockExercises)
       if (table === 'responses') return makeChain([])
       return makeChain(null)
@@ -146,6 +161,14 @@ describe('SectionPage (slide-based)', () => {
     renderSectionPage()
     await waitFor(() => {
       expect(screen.getByText(/back to course/i)).toBeInTheDocument()
+    })
+  })
+
+  // US5 — group-context affordance in the section header (004-content-restructure)
+  it('renders a group-context affordance "Self Awareness · 1 of 5" for personality', async () => {
+    renderSectionPage()
+    await waitFor(() => {
+      expect(screen.getByText(/Self Awareness · 1 of 5/)).toBeInTheDocument()
     })
   })
 })

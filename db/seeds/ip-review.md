@@ -86,3 +86,60 @@ Per CLAUDE.md: The workshop is **adapted and facilitated** (not owned) by Bijo A
 Select HR Solutions. Content is used under arrangement with Sam Koshy / Compass Career Life
 Solutions. The platform MUST NOT represent Bijo Abraham as the author or creator of the PSP
 framework.
+
+---
+
+## 9. Iteration 5 (004-content-restructure) IP Review — 2026-05-16
+
+**Reviewer**: Claude Code (drafting), pending facilitator sign-off
+**Scope**: Restructure into three groups / nine sections / per-question answer fields. Migration 014 applied to live project (okedskadkspeiyxjslqc) — section count 6 → 9; exercise count 30 → 33.
+
+### 9.1 New exercises authored from `psp_content.md` (verbatim where required)
+
+| Section | Exercise | Workbook source | Attribution preserved | Notes |
+|---|---|---|---|---|
+| visualization | `visualization-practice` (info) | psp_content.md:1598–1615 | ✓ "Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada." | 9 bullet-pointed visualization steps + daily-practice closing paragraph reproduced verbatim. |
+| visualization | `visualization-journal` (structured-text, 4 q) | psp_content.md:1607–1611 (introspective prompts implicit in workbook) | ✓ same as above | Four reflection prompts drafted to surface what the participant saw in the visualization; IDs `what_seen`, `who_present`, `place_details`, `one_action`. |
+| removing-obstacles-achieving-goals | `goal-introspection` (structured-text, 6 q) | psp_content.md:1623–1632 | ✓ Compass / Sam Koshy | Six mandatory reflection prompts (importance, long_term, feel_attained, feel_not, chances, if_fail) asked once for all 8 goals in aggregate per research.md R5 (workbook intends one reflection pass). |
+| removing-obstacles-achieving-goals | `removing-obstacles` (structured-text, 64 q) | psp_content.md:1669–1697 × 8 goals | ✓ Compass / Sam Koshy | 8 goals × 8 prompts (4 personal + 4 world). Drops the workbook's obstacle→action mapping table; paired with `achieving-goal-actions` per research.md R5. |
+| removing-obstacles-achieving-goals | `achieving-goal-actions` (structured-text, 40 q) | psp_content.md:1699–1706 × 8 goals | ✓ Compass / Sam Koshy | 8 goals × 5 concrete-action prompts. |
+
+### 9.2 Reshaped / renamed exercises
+
+| Exercise | Change | Source | Notes |
+|---|---|---|---|
+| `top-three-values` | Promoted `text` → `structured-text` (3 prompts) | psp_content.md:918–924 | IDs `top_1`, `top_2`, `top_3`. Per-question contract (FR-010) satisfied. |
+| `favorite-strongest-skills` | Promoted `text` → `structured-text` (6 prompts) | psp_content.md:1341–1369 | IDs `skill_1`..`skill_6`. Workbook explicitly numbers 6 separate prompts. |
+| `past-experience-inventory` | `label` → `prompt` rename on 14 questions | psp_content.md:1058–1144 | No prompt-count change; existing IDs `q1`..`q14` preserved. |
+| `contract-with-myself` | `label` → `prompt` rename on 6 questions | psp_content.md:1146–1188 | IDs `article_1`..`article_6` preserved. |
+| `mission-statement` | `label` → `prompt` rename on 5 questions | psp_content.md:1190–1222 | IDs `vision`, `self`, `others`, `world`, `one_sentence` preserved. |
+| `goal-achievement-plan` | Reshaped into `goal-introspection` | (see 9.1) | Renamed and trimmed from 10 questions to 6 mandatory reflection prompts. |
+| `attitude-power-points` | Audited; kept as `text` (1 reflection prompt) | psp_content.md:810–832 | Workbook 6 "Power Points" are declarative statements about attitudes, not 6 separate questions; existing single-prompt reflection summarising them is the correct shape. R9 audit decision documented. |
+| `transferable-skills-information` | Audited; kept as merged `rating-picker` | psp_content.md:1299–1339 | Workbook framing combines Gather + Manage + Store into one rated skill set; splitting would lose the workbook's intent. R9 audit decision documented. |
+
+### 9.3 Section slug renames (FR-009)
+
+| Old slug | New slug | Title change |
+|---|---|---|
+| `attitudes` | `attitude` | "Attitudes" → "Attitude" |
+| `roles` | `roles-and-demands` | "Roles & Their Demands" → "Roles and Demands" |
+| `skills` | `transferable-skills` | "Transferable Skills" → "Transferable Marketable Skills" |
+| `goal-setting` | — (dissolved into 4 new sections) | — |
+
+### 9.4 Removed from section flow
+
+| Legacy exercise | Reason | New home |
+|---|---|---|
+| `copyright-footer` (info) | Duplicates `CourseClosing.tsx` on `/course/complete` | `/course/complete` page (no code change needed; already renders equivalent content). |
+
+### 9.5 Attribution preservation audit (FR-020)
+
+All `attribution` strings from the legacy seed are preserved verbatim on the corresponding new exercise (by content equivalence). Newly authored exercises (`visualization-practice`, `visualization-journal`, `goal-introspection`, `removing-obstacles`, `achieving-goal-actions`) carry the canonical Compass / Sam Koshy attribution string. The TTI attribution remains on all D.I.S.C. and attitude-related exercises.
+
+### 9.6 Sign-off
+
+- [x] Workbook line ranges verified against `psp_content.md` (state at 2026-05-16).
+- [x] Attribution lines preserved verbatim on all retained exercises.
+- [x] New exercises carry appropriate Compass / Sam Koshy attribution.
+- [x] No PSP™ trademark altered, removed, or relocated.
+- [ ] Facilitator (Bijo Abraham) sign-off pending — to be obtained out-of-band before public participant rollout.

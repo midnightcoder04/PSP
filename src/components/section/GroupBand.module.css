@@ -1,0 +1,51 @@
+.band {
+  margin-bottom: var(--space-8);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.band[data-group='self-awareness'] {
+  background: var(--color-trust-light);
+}
+
+.band[data-group='goal-setting'] {
+  background: var(--color-warmth-light);
+}
+
+.band[data-group='strategic-planning'] {
+  background: var(--color-growth-light);
+}
+
+.band[data-group='unassigned'] {
+  background: var(--color-surface);
+  border-style: dashed;
+}
+
+.band:last-child {
+  margin-bottom: var(--space-4);
+}
+
+.header {
+  margin-bottom: var(--space-3);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.description {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-3);
+}

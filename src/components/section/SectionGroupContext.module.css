@@ -1,0 +1,7 @@
+.context {
+  display: inline-block;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  margin-bottom: var(--space-2);
+}
