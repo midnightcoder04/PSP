@@ -2,17 +2,20 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
 import { useProgress } from './useProgress'
 
-const mockSupabaseChain = {
-  select: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  is: vi.fn(),
+// Builds a Supabase-like query chain that resolves with the given data/error.
+// Every chain method returns `this`; the object itself is a thenable so
+// `await chain` (or `await chain.eq(...)`) resolves with { data, error }.
+function makeChain<T>(data: T | null, error: { message: string } | null = null) {
+  const result = { data, error }
+  const chain: Record<string, unknown> = {
+    select: vi.fn(() => chain),
+    eq: vi.fn(() => chain),
+    is: vi.fn(() => chain),
+    then: (onFulfilled: (v: typeof result) => unknown) =>
+      Promise.resolve(result).then(onFulfilled),
+  }
+  return chain
 }
-
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: vi.fn(() => mockSupabaseChain),
-  },
-}))
 
 const mockProgress = [
   {
@@ -28,12 +31,19 @@ const mockProgress = [
   },
 ]
 
+// supabase.from(...) is mocked per-test; assigning to this ref lets each
+// test choose what data the chain resolves with.
+let currentChain: ReturnType<typeof makeChain> = makeChain(mockProgress)
+
+vi.mock('@/lib/supabase', () => ({
+  supabase: {
+    from: vi.fn(() => currentChain),
+  },
+}))
+
 describe('useProgress', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockSupabaseChain.select.mockReturnThis()
-    mockSupabaseChain.eq.mockReturnThis()
-    mockSupabaseChain.is.mockResolvedValue({ data: mockProgress, error: null })
+    currentChain = makeChain(mockProgress)
   })
 
   it('fetches progress rows for a participant', async () => {
@@ -50,34 +60,31 @@ describe('useProgress', () => {
   })
 
   it('filters by sessionId when provided', async () => {
-    mockSupabaseChain.is.mockReturnThis()
-    mockSupabaseChain.eq.mockResolvedValueOnce({ data: [], error: null })
-      .mockResolvedValueOnce({ data: [], error: null })
-
-    // Re-setup: is() not called, second eq() is terminal
-    mockSupabaseChain.select.mockReturnThis()
-    mockSupabaseChain.eq.mockReturnThis()
-    // Last eq call is the terminal one
-    const terminalEq = vi.fn().mockResolvedValue({ data: mockProgress, error: null })
-    mockSupabaseChain.eq.mockReturnValueOnce(mockSupabaseChain)
-      .mockReturnValueOnce({ ...mockSupabaseChain, eq: terminalEq })
+    currentChain = makeChain(mockProgress)
 
     const { result } = renderHook(() =>
       useProgress({ participantId: 'user-1', sessionId: 'session-1' })
     )
 
     await waitFor(() => expect(result.current.loading).toBe(false))
+
     expect(result.current.error).toBeNull()
+    expect(result.current.progress).toEqual(mockProgress)
+    // When sessionId is provided, the hook calls .eq('session_id', ...)
+    // instead of .is('session_id', null). Verify is() was NOT called.
+    expect(currentChain.is).not.toHaveBeenCalled()
+    expect(currentChain.eq).toHaveBeenCalledWith('session_id', 'session-1')
   })
 
   it('surfaces error when fetch fails', async () => {
-    mockSupabaseChain.is.mockResolvedValue({ data: null, error: { message: 'Fetch failed' } })
+    currentChain = makeChain(null, { message: 'Fetch failed' })
 
     const { result } = renderHook(() =>
       useProgress({ participantId: 'user-1' })
     )
 
     await waitFor(() => expect(result.current.loading).toBe(false))
+
     expect(result.current.error).toBe('Fetch failed')
     expect(result.current.progress).toEqual([])
   })

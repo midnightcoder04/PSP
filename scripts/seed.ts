@@ -6,14 +6,42 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL ?? ''
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.VITE_SUPABASE_ANON_KEY ?? ''
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY environment variables')
+const secretKey =
+  process.env.SUPABASE_SECRET_KEY ??
+  process.env.VITE_SUPABASE_SECRET_KEY ??
+  process.env.SUPABASE_SERVICE_ROLE_KEY ??
+  ''
+
+const usedVar = process.env.SUPABASE_SECRET_KEY
+  ? 'SUPABASE_SECRET_KEY'
+  : process.env.VITE_SUPABASE_SECRET_KEY
+    ? 'VITE_SUPABASE_SECRET_KEY (⚠ rename to SUPABASE_SECRET_KEY — VITE_ prefix would leak this key into a browser build)'
+    : process.env.SUPABASE_SERVICE_ROLE_KEY
+      ? 'SUPABASE_SERVICE_ROLE_KEY (legacy)'
+      : '(none)'
+
+if (!supabaseUrl || !secretKey) {
+  console.error('Missing VITE_SUPABASE_URL or a server-side secret key.')
+  console.error('Set SUPABASE_SECRET_KEY (sb_secret_… prefix) in .env.local or your shell.')
   process.exit(1)
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+if (secretKey.startsWith('sb_publishable_')) {
+  console.error(
+    'Refusing to seed: a publishable key (sb_publishable_…) was supplied. Seeding requires the secret key (sb_secret_…) — RLS would block writes to sections/exercises with the publishable key.'
+  )
+  process.exit(1)
+}
+
+console.log(`→ Supabase URL: ${supabaseUrl}`)
+console.log(`→ Using key from: ${usedVar}`)
+const keyPrefix = secretKey.slice(0, 12)
+console.log(`→ Key prefix: ${keyPrefix}…`)
+
+const supabase = createClient(supabaseUrl, secretKey, {
+  auth: { persistSession: false, autoRefreshToken: false },
+})
 
 interface ExerciseSeed {
   slug: string
@@ -25,6 +53,15 @@ interface ExerciseSeed {
   content_json: unknown
 }
 
+interface SectionFramingSeed {
+  opening_quote: { text: string; attribution: string }
+  opening_question: string
+  facilitator_says: string
+  why_it_matters: string
+  closing_reflection: string
+  bridge_to_next: string | null
+}
+
 interface SectionSeed {
   slug: string
   title: string
@@ -32,6 +69,7 @@ interface SectionSeed {
   description: string | null
   order_index: number
   icon_name: string | null
+  framing?: SectionFramingSeed | null
   exercises: ExerciseSeed[]
 }
 

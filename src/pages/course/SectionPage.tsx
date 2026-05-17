@@ -10,6 +10,9 @@ import { TextExercise } from '@/components/exercise/TextExercise'
 import { RankingExercise } from '@/components/exercise/RankingExercise'
 import { TableExercise } from '@/components/exercise/TableExercise'
 import { InfoExercise } from '@/components/exercise/InfoExercise'
+import { SectionOpening } from '@/components/section/SectionOpening'
+import { SectionClosing } from '@/components/section/SectionClosing'
+import { SECTION_SLUGS } from '@/lib/constants'
 import type { Section, Exercise, Response } from '@/types/database'
 import styles from './SectionPage.module.css'
 
@@ -148,6 +151,8 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         <p className={styles.filterLabel}>{section.subtitle}</p>
       )}
 
+      <SectionOpening framing={section?.framing ?? null} />
+
       <div className={styles.exerciseList}>
         {exercises.map((exercise, index) => (
           <section key={exercise.id} className={styles.exerciseCard} id={`exercise-${exercise.slug}`}>
@@ -167,6 +172,12 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         ))}
       </div>
 
+      <SectionClosing
+        framing={section?.framing ?? null}
+        nextSectionSlug={nextSectionSlug(sectionSlug)}
+        showContinue={!readOnly}
+      />
+
       <div className={styles.navButtons}>
         <button className={styles.backBtn} onClick={() => navigate('/course')}>
           ← Back to course
@@ -174,4 +185,11 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
       </div>
     </PageShell>
   )
+}
+
+function nextSectionSlug(currentSlug: string | undefined): string | null {
+  if (!currentSlug) return null
+  const idx = SECTION_SLUGS.indexOf(currentSlug as (typeof SECTION_SLUGS)[number])
+  if (idx === -1 || idx === SECTION_SLUGS.length - 1) return null
+  return SECTION_SLUGS[idx + 1]
 }

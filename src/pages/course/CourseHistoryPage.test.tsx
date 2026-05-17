@@ -30,22 +30,33 @@ const mockEnrollments = [
   },
 ]
 
-const makeChain = (data: unknown) => ({
-  select: vi.fn().mockReturnThis(),
-  eq: vi.fn().mockReturnThis(),
-  order: vi.fn().mockReturnThis(),
-  then: (cb: (v: { data: unknown; error: null }) => void) =>
-    Promise.resolve({ data, error: null }).then(cb),
-})
+// Builds a Supabase-like query chain that resolves with the given data.
+// Every chain method returns the chain itself; the chain is a thenable
+// so `.then(cb)` calls cb with { data, error: null }.
+function makeChain<T>(data: T) {
+  const result = { data, error: null as null }
+  const chain: Record<string, unknown> = {
+    select: vi.fn(() => chain),
+    eq: vi.fn(() => chain),
+    order: vi.fn(() => chain),
+    then: (onFulfilled: (v: typeof result) => unknown) =>
+      Promise.resolve(result).then(onFulfilled),
+  }
+  return chain
+}
+
+let currentChainData: typeof mockEnrollments | [] = mockEnrollments
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
-    from: vi.fn(() => makeChain(mockEnrollments)),
+    from: vi.fn(() => makeChain(currentChainData)),
   },
 }))
 
 describe('CourseHistoryPage', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    currentChainData = mockEnrollments
+  })
 
   it('renders a list of past enrollments with session titles', async () => {
     render(
@@ -101,27 +112,18 @@ describe('CourseHistoryPage', () => {
   })
 
   it('shows empty state when there are no past enrollments', async () => {
-    vi.mock('@/lib/supabase', () => ({
-      supabase: {
-        from: vi.fn(() => makeChain([])),
-      },
-    }))
+    currentChainData = []
 
-    const { rerender } = render(
+    render(
       <MemoryRouter>
         <CourseHistoryPage />
       </MemoryRouter>
     )
 
-    // The page shows enrollments from the outer mock setup (2 items)
     await waitFor(() => {
-      expect(screen.getByText('PSP Batch 7')).toBeInTheDocument()
+      expect(screen.getByText(/No past sessions yet/i)).toBeInTheDocument()
     })
 
-    rerender(
-      <MemoryRouter>
-        <CourseHistoryPage />
-      </MemoryRouter>
-    )
+    expect(screen.getByRole('button', { name: /Go to My Course/i })).toBeInTheDocument()
   })
 })

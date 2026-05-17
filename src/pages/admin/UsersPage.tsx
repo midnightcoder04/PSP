@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import type { Profile } from '@/types/database'
+import { UserCreateModal } from './UserCreateModal'
 import styles from './UsersPage.module.css'
 
 export default function UsersPage() {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   const [toggling, setToggling] = useState<string | null>(null)
+  const [showCreate, setShowCreate] = useState(false)
 
   async function load() {
     setLoading(true)
@@ -48,11 +50,12 @@ export default function UsersPage() {
     <PageShell title="Users">
       <div className={styles.toolbar}>
         <p className={styles.count}>{profiles.length} users</p>
+        <Button onClick={() => setShowCreate(true)}>Add user</Button>
       </div>
 
       {profiles.length === 0 ? (
         <div className={styles.empty}>
-          <p>No users yet. Users are created when accounts are provisioned through Supabase Admin.</p>
+          <p>No users yet. Click <strong>Add user</strong> to create the first account.</p>
         </div>
       ) : (
         <div className={styles.tableWrap}>
@@ -91,6 +94,16 @@ export default function UsersPage() {
           </table>
         </div>
       )}
+
+      {showCreate ? (
+        <UserCreateModal
+          onClose={() => setShowCreate(false)}
+          onCreated={() => {
+            setShowCreate(false)
+            load()
+          }}
+        />
+      ) : null}
     </PageShell>
   )
 }

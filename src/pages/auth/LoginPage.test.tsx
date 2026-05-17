@@ -14,6 +14,16 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 
+// Disable dev bypass for these tests so signInWithPassword is exercised
+// (the real .env.local sets VITE_DEV_BYPASS=true for local UI dev).
+vi.mock('@/lib/devAuth', () => ({
+  DEV_BYPASS: false,
+  resolveDevRole: () => 'participant',
+  devLogin: vi.fn(),
+  devLogout: vi.fn(),
+  getDevProfile: () => null,
+}))
+
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ profile: null, signOut: vi.fn(), loading: false }),
 }))

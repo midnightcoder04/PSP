@@ -35,8 +35,17 @@ These feed into a **Goal Setting** section (Life Goal Inventory, Cross-Impact Ma
 - The workshop is adapted and facilitated (not owned) by Bijo Abraham / Select HR Solutions (`share@risewithpsp.com`)
 - Preserve all attribution lines, copyright notices, and "adapted with permission" language when editing content
 
+## Working Discipline
+
+- **Documentation-first when in doubt**: When uncertain about a library's behaviour, an API's contract, a framework feature, a CLI flag, or a schema convention, **consult the official documentation before writing or guessing code**. Prefer the project's docs site, then the package's TypeScript definitions, then a minimal verifiable test in the repo. Only fall back to memory or pattern-matching after the docs path has been exhausted. State the doc you consulted in the commit message or PR when the answer was non-obvious.
+  - Examples that should trigger this rule: Supabase client method signatures, supabase-js Database type shape, Vite env var conventions, Vitest mock hoisting semantics, React Router data API surface, Recharts responsive-container quirks, Postgres function definitions in migrations.
+
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-specs/001-psp-course-platform/plan.md
+specs/002-iter2-fixes/plan.md
+
+(The Iteration 1+2 plan at specs/001-psp-course-platform/plan.md remains the
+canonical source for the platform's technology choices and architecture; the
+current plan above only adds the RPC test suite + security audit on top.)
 <!-- SPECKIT END -->

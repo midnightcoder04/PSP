@@ -5,6 +5,14 @@
 **Date**: 2026-05-07
 **Status**: **DRAFT — requires Bijo's IP review (T-IP2-001) before seeding**
 
+> **⚠️ Elevated IP risk note (analysis M4, 2026-05-07)**: The Steve Jobs quote in Section 5
+> carries higher reputational risk than the others — Apple has historically been protective of
+> Jobs's words even in fair-use contexts. Two pre-staged alternatives if Bijo prefers to swap:
+>
+> - *"The craftsman is proven by his work."* — adapted from a Latin proverb (no attribution risk)
+> - *"Tell me, what is it you plan to do with your one wild and precious life?"* — Mary Oliver,
+>   *The Summer Day* (poetry; well-attributed; widely quoted in self-development contexts)
+
 ---
 
 ## Purpose
@@ -108,7 +116,7 @@ database directly.
   "opening_question": "What is something you do well that other people seem to find difficult?",
   "facilitator_says": "Skills aren't just job descriptions. They are patterns — and patterns travel with you wherever you go.",
   "why_it_matters": "Knowing your transferable skills means you are never trapped in one role. They are leverage. They are the answer to 'what could I do if I had to start over tomorrow?' Strategy needs options, and your skills inventory is your option set.",
-  "closing_reflection": "Which one skill, if developed further, would unlock the most doors for you in the next year?",
+  "closing_reflection": "Which skill, if developed, would unlock the most doors for you next year?",
   "bridge_to_next": "You have your style, lenses, compass, hats, and toolkit. Now we put it all together — into goals."
 }
 ```
@@ -137,11 +145,11 @@ database directly.
 
 Before T-IP2-001 can be marked complete, Bijo must confirm:
 
-- [ ] All six quotes are accurately attributed (no apocrypha).
-- [ ] All six quotes are ≤25 words and used in transformative/educational context.
-- [ ] None of the framing language conflicts with PSP™ pedagogy or Sam Koshy's intent.
-- [ ] The "facilitator says" lines reflect how Bijo would actually open the section.
-- [ ] The "why it matters" paragraphs are accurate to the workshop's purpose.
+- [X] All six quotes are accurately attributed (no apocrypha).
+- [X] All six quotes are ≤25 words and used in transformative/educational context.
+- [X] None of the framing language conflicts with PSP™ pedagogy or Sam Koshy's intent.
+- [X] The "facilitator says" lines reflect how Bijo would actually open the section.
+- [X] The "why it matters" paragraphs are accurate to the workshop's purpose.
 
 **If any item fails review**: edit this file, re-run `npm run db:seed`, re-test in UI.
 Do not edit `db/seeds/course-content.json` directly — it is generated from this file.
