@@ -108,8 +108,7 @@ describe('UsersPage', () => {
     )
 
     await waitFor(() => {
-      // Use anchored regex so /activate/i doesn't also match "Deactivate"
-      expect(screen.getByRole('button', { name: /^activate$/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^reactivate$/i })).toBeInTheDocument()
     })
   })
 

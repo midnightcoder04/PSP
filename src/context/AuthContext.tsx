@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import type { Profile } from '@/types/database'
-import { DEV_BYPASS, getDevProfile, devLogout } from '@/lib/devAuth'
 
 interface AuthState {
   session: Session | null
@@ -63,18 +62,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    if (DEV_BYPASS) {
-      const devProfile = getDevProfile()
-      if (devProfile) {
-        // Synthesize a minimal session-like object so AuthGuard passes
-        dispatch({ type: 'SET_SESSION', session: {} as Session, user: {} as User })
-        dispatch({ type: 'SET_PROFILE', profile: devProfile })
-      } else {
-        dispatch({ type: 'SET_LOADING', loading: false })
-      }
-      return
-    }
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       dispatch({ type: 'SET_SESSION', session, user: session?.user ?? null })
       if (session?.user) {
@@ -97,11 +84,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [fetchProfile])
 
   const signOut = useCallback(async () => {
-    if (DEV_BYPASS) {
-      devLogout()
-      dispatch({ type: 'SIGN_OUT' })
-      return
-    }
     await supabase.auth.signOut()
     dispatch({ type: 'SIGN_OUT' })
   }, [])

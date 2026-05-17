@@ -37,10 +37,6 @@ const yesNoOptions = [
   { value: 'No', label: 'No' },
 ]
 
-function emptyRows(count: number, cols: number): string[][] {
-  return Array.from({ length: count }, () => Array(cols).fill(''))
-}
-
 function normalizeRows(content: TableContent, initialResponse?: TableResponse | null): string[][] {
   const colCount = content.headers.length
   const savedRows = initialResponse?.rows ?? []

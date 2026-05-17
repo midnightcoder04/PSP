@@ -197,3 +197,40 @@ All `attribution` strings from the legacy seed are preserved verbatim on the cor
 - [x] No PSP™ trademark altered, removed, or relocated.
 - [x] D.I.S.C. credit (Bill Bonnstetter / Target Training International) preserved on all DISC-derived rows.
 - [ ] Facilitator (Bijo Abraham) sign-off pending — to be obtained out-of-band before public participant rollout.
+
+---
+
+## §11 — Iteration 6: Personality matched-style deep-dive + WATUSI sorted listing (2026-05-16)
+
+**Scope of changes**: 4 new exercise rows added to the Personality section (after the existing four DISC profile read-throughs); 1 row soft-hidden (`my-core-style`); WATUSI ranking exercise flipped to a read-only sorted-listing interaction mode. No content removed from the rendered slide track other than `my-core-style`'s text question.
+
+### Rows added (all carry TTI attribution)
+
+| Slug | Type | slide_group | Source (verbatim from psp_content.md) |
+|---|---|---|---|
+| `core-style-characteristics` | info | 7 | §HIGH D/I/S/C "If you are HIGH X, you..." bullets — lines 470–474 (D), 511–514 (I), 552–555 (S), 594–597 (C) |
+| `core-style-ideal-environment` | info | 8 | §IDEAL ENVIRONMENT FOR THE HIGH X — lines 475–480 (D), 516–522 (I), 556–562 (S), 599–605 (C) |
+| `core-style-traits-checklist` | checkbox | 9 | §HIGH X Characteristics Checklist — D=17 items (lines 483–499), I=16 (525–540), S=18 (565–582), C=19 (608–626). Option IDs follow `{style}_t{n}` convention for analytics. |
+| `core-style-comfort-zones` | info | 10 | §COMFORT ZONES for HIGH X — lines 501–505 (D), 542–546 (I), 584–588 (S), 628–632 (C) |
+
+### Rows modified
+
+| Slug | Change | Rationale |
+|---|---|---|
+| `my-core-style` | `slide_group: NULL`, `order_index: 99` | Excluded from rendered slide track; row preserved + iter5 responses retained per FR-017 (no DELETE, no cascade). |
+| `attitude-types-watusi` | `content_json.interaction: 'sorted'` (was `'drag'`) | Opt-in to the new read-only sorted-listing mode added in iter6 / US1. Items + attribution unchanged. |
+
+### Attribution audit
+
+- [x] All 4 new info rows carry the TTI attribution string verbatim.
+- [x] The new `core-style-traits-checklist` row carries the TTI attribution string verbatim.
+- [x] No DISC trademark altered (HIGH D/I/S/C labels preserved exactly).
+- [x] No PSP™ trademark altered.
+- [x] D.I.S.C. credit (Bill Bonnstetter / Target Training International) preserved on all DISC-derived rows.
+- [x] Content sourced VERBATIM from `psp_content.md` §HIGH D/I/S/C (lines 468–632); option labels preserve workshop wording byte-for-byte.
+
+### Deviation note (per plan.md Constitution Check)
+
+Per Constitution §V, an IP review SHOULD precede implementation. Iter6 follows the iter5 precedent of post-implementation review for content sourced verbatim from `psp_content.md` (the upstream-approved source). All net-new strings introduced here are 1-to-1 transcriptions; the review surface reduces to "did we copy it right and carry attribution?" — verified above. PR 2 (content + migration) merge gated on facilitator sign-off below.
+
+- [ ] Facilitator (Bijo Abraham) sign-off pending — to be obtained out-of-band before public participant rollout. (Iter5 §10 sign-off also pending; iter6 inherits the same gate.)

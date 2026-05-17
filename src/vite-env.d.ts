@@ -12,7 +12,6 @@ interface ImportMetaEnv {
    * Read with a deprecation warning during transition.
    */
   readonly VITE_SUPABASE_ANON_KEY?: string
-  readonly VITE_DEV_BYPASS?: string
 }
 
 interface ImportMeta {

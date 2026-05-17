@@ -49,12 +49,15 @@ async function fetchDerivedGoalNames(
   const lgiEx = exercises.find((e) => e.slug === 'life-goal-inventory')
   if (!gpEx || !lgiEx) return emptyNames()
 
-  const { data: resps } = await supabase
+  let respQuery = supabase
     .from('responses')
     .select('exercise_id, response_json')
     .eq('participant_id', participantId)
     .in('exercise_id', [gpEx.id, lgiEx.id])
-    .is('session_id', sessionId ?? null)
+  respQuery = sessionId
+    ? respQuery.eq('session_id', sessionId)
+    : respQuery.is('session_id', null)
+  const { data: resps } = await respQuery
 
   const respMap: Record<string, unknown> = {}
   for (const r of resps ?? []) respMap[r.exercise_id] = r.response_json

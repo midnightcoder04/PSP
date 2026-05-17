@@ -20,7 +20,7 @@ if (browserKey.startsWith('sb_secret_')) {
   )
 }
 
-if ((!supabaseUrl || !browserKey) && !import.meta.env.VITE_DEV_BYPASS) {
+if (!supabaseUrl || !browserKey) {
   throw new Error(
     'Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY environment variables'
   )
