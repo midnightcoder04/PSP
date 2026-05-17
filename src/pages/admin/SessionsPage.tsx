@@ -35,6 +35,7 @@ export default function SessionsPage() {
         facilitator:profiles!facilitator_id(display_name),
         enrollments(count)
       `)
+      .eq('enrollments.is_active', true)
       .order('created_at', { ascending: false })
 
     const rows: SessionRow[] = (data ?? []).map((s) => ({
@@ -44,7 +45,7 @@ export default function SessionsPage() {
       scheduled_end: s.scheduled_end,
       is_active: s.is_active,
       facilitator_name: (s.facilitator as { display_name: string } | null)?.display_name ?? 'Unassigned',
-      enrollment_count: (s.enrollments as Array<{ count: number }>)?.[0]?.count ?? 0,
+      enrollment_count: Number((s.enrollments as Array<{ count: number | string }>)?.[0]?.count ?? 0),
     }))
 
     setSessions(rows)

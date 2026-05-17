@@ -32,30 +32,29 @@
 }
 
 .slideTrack {
-  display: grid;
-  grid-template-columns: 1fr;
-  max-width: var(--max-content);
+  width: 100%;
+  /* 006-iter6 / US2 (T021): bottom padding so the last row's count chip
+     (and any other content) can scroll clear of the sticky SlideNav. */
+  padding-bottom: var(--space-12);
 }
 
+/*
+  005-iter5-ux-fixes / US2 (FR-010 / FR-011):
+  Previously this used a CSS grid stack so all slides occupied the same cell;
+  inactive slides were "position: absolute; visibility: hidden;" but still
+  contributed indirectly to layout sizing in some browsers and visually
+  inactive slides would leave a phantom gap below short slides. Replace with
+  display: none on inactive slides — they are removed from layout flow and
+  the slide-track sizes to the active slide's height exactly.
+*/
 .slide {
-  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.slide[data-slide-active='true'] {
-  opacity: 1;
-  pointer-events: auto;
-  position: static;
 }
 
 .slide[data-slide-active='false'] {
-  position: absolute;
-  visibility: hidden;
+  display: none;
 }
 
 .exerciseCard {
@@ -109,20 +108,3 @@
   /* body content */
 }
 
-.navButtons {
-  margin-top: var(--space-8);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
-}
-
-.backBtn {
-  background: none;
-  border: none;
-  color: var(--color-trust);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  cursor: pointer;
-  padding: 0;
-}
-
-.backBtn:hover { text-decoration: underline; }

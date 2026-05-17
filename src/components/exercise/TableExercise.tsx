@@ -10,6 +10,7 @@ interface TableContent {
   rows: number
   col_types?: ('text' | 'number' | 'currency')[]
   total_target?: number
+  items?: string[]
 }
 
 interface TableResponse {
@@ -30,6 +31,23 @@ function emptyRows(count: number, cols: number): string[][] {
   return Array.from({ length: count }, () => Array(cols).fill(''))
 }
 
+function normalizeRows(content: TableContent, initialResponse?: TableResponse | null): string[][] {
+  const colCount = content.headers.length
+  const savedRows = initialResponse?.rows ?? []
+
+  if (!content.items?.length) {
+    return savedRows.length > 0 ? savedRows : emptyRows(content.rows, colCount)
+  }
+
+  return Array.from({ length: content.rows }, (_, rowIdx) => {
+    const savedRow = savedRows[rowIdx] ?? []
+    const nextRow = Array.from({ length: colCount }, (_, colIdx) => savedRow[colIdx] ?? '')
+    nextRow[0] = String(rowIdx + 1)
+    if (colCount > 1) nextRow[1] = content.items?.[rowIdx] ?? ''
+    return nextRow
+  })
+}
+
 export function TableExercise({
   exerciseId,
   content,
@@ -39,13 +57,11 @@ export function TableExercise({
   readOnly = false,
 }: TableExerciseProps) {
   const colCount = content.headers.length
-  const [rows, setRows] = useState<string[][]>(
-    initialResponse?.rows ?? emptyRows(content.rows, colCount)
-  )
+  const [rows, setRows] = useState<string[][]>(() => normalizeRows(content, initialResponse))
   const { save } = useExerciseSave({ exerciseId, participantId, sessionId })
 
   useEffect(() => {
-    setRows(initialResponse?.rows ?? emptyRows(content.rows, colCount))
+    setRows(normalizeRows(content, initialResponse))
   }, [initialResponse, content.rows, colCount])
 
   const currencyColumnIndex = useMemo(() => {
@@ -106,7 +122,9 @@ export function TableExercise({
                       className={styles.td}
                       data-col-type={colType}
                     >
-                      {readOnly ? (
+                      {content.items?.length && colIdx < 2 ? (
+                        <span className={styles.cellText}>{cell}</span>
+                      ) : readOnly ? (
                         <span className={styles.cellText}>{cell}</span>
                       ) : (
                         <input

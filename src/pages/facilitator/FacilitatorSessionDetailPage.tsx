@@ -4,8 +4,9 @@ import { supabase } from '@/lib/supabase'
 import { useRealtimeSession } from '@/hooks/useRealtimeSession'
 import { PageShell } from '@/components/layout/PageShell'
 import { Badge } from '@/components/ui/Badge'
-import { ProgressRing } from '@/components/ui/ProgressRing'
+import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { BulkAddModal } from '@/components/admin/BulkAddModal'
 import styles from './FacilitatorSessionDetailPage.module.css'
 
 interface ParticipantRow {
@@ -21,11 +22,74 @@ interface SessionInfo {
   is_active: boolean
 }
 
+const SECTION_LABELS: Record<string, string> = {
+  'personality':                        'Personality',
+  'attitude':                           'Attitude',
+  'values':                             'Values',
+  'roles-and-demands':                  'Roles & Demands',
+  'transferable-skills':                'Transferable Skills',
+  'specific-goals':                     'Specific Goals',
+  'goal-impact-matrix':                 'Goal Impact',
+  'visualization':                      'Visualization',
+  'removing-obstacles-achieving-goals': 'Removing Obstacles',
+}
+
+const SECTION_ABBR: Record<string, string> = {
+  'personality':                        'Personality',
+  'attitude':                           'Attitudes',
+  'values':                             'Values',
+  'roles-and-demands':                  'Roles & Demands',
+  'transferable-skills':                'Skills',
+  'specific-goals':                     'Specific Goals',
+  'goal-impact-matrix':                 'Goal Impact',
+  'visualization':                      'Visualization',
+  'removing-obstacles-achieving-goals': 'Obstacles',
+}
+
+function sectionLabel(slug: string) {
+  return SECTION_LABELS[slug] ?? slug.replace(/-/g, ' ').replace(/^\w/, (c) => c.toUpperCase())
+}
+
+function OverallPct({ pct }: { pct: number }) {
+  const rounded = Math.round(pct ?? 0)
+  const state = rounded >= 100 ? 'done' : rounded > 0 ? 'partial' : 'empty'
+  return (
+    <span className={styles.overallPill} data-state={state}>
+      {rounded === 100 ? '✓ 100%' : `${rounded}%`}
+    </span>
+  )
+}
+
+function SectionStrip({ sections }: { sections: ParticipantRow['sections'] }) {
+  const valid = sections.filter((s) => s.slug != null)
+  return (
+    <div className={styles.strip}>
+      {valid.map((s) => {
+        const pct = s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0
+        const state = pct === 100 ? 'done' : pct > 0 ? 'partial' : 'empty'
+        const abbr = SECTION_ABBR[s.slug] ?? s.slug.slice(0, 2)
+        return (
+          <div
+            key={s.slug}
+            className={styles.segmentWrap}
+            title={`${sectionLabel(s.slug)}: ${pct}%`}
+          >
+            <div className={styles.segment} data-state={state} />
+            <span className={styles.segmentKey}>{abbr}</span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function FacilitatorSessionDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [session, setSession] = useState<SessionInfo | null>(null)
   const [participants, setParticipants] = useState<ParticipantRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [maxBulkAdd, setMaxBulkAdd] = useState(1)
+  const [showBulkAdd, setShowBulkAdd] = useState(false)
 
   const isArchived = session
     ? !session.is_active || (session.scheduled_end ? new Date(session.scheduled_end) < new Date() : false)
@@ -49,6 +113,18 @@ export default function FacilitatorSessionDetailPage() {
         setLoading(false)
       })
     loadStats()
+    // Fetch own max_bulk_add to determine if bulk-add UI should be shown
+    supabase.auth.getUser().then(({ data: authData }) => {
+      if (!authData?.user) return
+      supabase
+        .from('profiles')
+        .select('max_bulk_add')
+        .eq('id', authData.user.id)
+        .single()
+        .then(({ data: profile }) => {
+          if (profile?.max_bulk_add) setMaxBulkAdd(profile.max_bulk_add)
+        })
+    })
   }, [id, loadStats])
 
   useRealtimeSession({
@@ -56,8 +132,6 @@ export default function FacilitatorSessionDetailPage() {
     onUpdate: loadStats,
     enabled: !!id && !isArchived,
   })
-
-  const sectionSlugs = participants[0]?.sections?.map((s) => s.slug) ?? []
 
   if (loading) {
     return (
@@ -70,10 +144,26 @@ export default function FacilitatorSessionDetailPage() {
   return (
     <PageShell title={session?.title ?? 'Session'}>
       <div className={styles.header}>
-        {isArchived && <Badge variant="muted">Session Archived</Badge>}
-        {!isArchived && <Badge variant="success">Live</Badge>}
-        <span className={styles.participantCount}>{participants.length} participants</span>
+        {isArchived
+          ? <Badge variant="muted">Session Archived</Badge>
+          : <Badge variant="success">Live</Badge>}
+        <span className={styles.participantCount}>{participants.length} participant{participants.length !== 1 ? 's' : ''}</span>
+        {maxBulkAdd > 1 ? (
+          <Button size="sm" variant="secondary" onClick={() => setShowBulkAdd(true)}>
+            Add members
+          </Button>
+        ) : null}
       </div>
+
+      {showBulkAdd ? (
+        <BulkAddModal
+          sessionId={id!}
+          sessionTitle={session?.title ?? ''}
+          maxBulkAdd={maxBulkAdd}
+          onClose={() => setShowBulkAdd(false)}
+          onAdded={() => { setShowBulkAdd(false); loadStats() }}
+        />
+      ) : null}
 
       {participants.length === 0 ? (
         <div className={styles.empty}>No participants enrolled in this session yet.</div>
@@ -82,32 +172,28 @@ export default function FacilitatorSessionDetailPage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Participant</th>
-                <th>Overall</th>
-                {sectionSlugs.map((slug) => (
-                  <th key={slug} className={styles.sectionHeader}>
-                    {slug.charAt(0).toUpperCase() + slug.slice(1)}
-                  </th>
-                ))}
+                <th className={styles.colParticipant}>Participant</th>
+                <th className={styles.colOverall}>Overall</th>
+                <th className={styles.colSections}>
+                  Sections
+                  <span className={styles.sectionLegend}>
+                    <span data-state="done"    className={styles.legendDot} /> Done
+                    <span data-state="partial" className={styles.legendDot} /> Partial
+                    <span data-state="empty"   className={styles.legendDot} /> Not started
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {participants.map((p) => (
                 <tr key={p.participant_id}>
                   <td className={styles.name}>{p.display_name}</td>
-                  <td>
-                    <div className={styles.overallCell}>
-                      <ProgressRing pct={p.overall_pct ?? 0} size={36} strokeWidth={3} />
-                    </div>
+                  <td className={styles.overallCell}>
+                    <OverallPct pct={p.overall_pct ?? 0} />
                   </td>
-                  {(p.sections ?? []).map((s) => {
-                    const pct = s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0
-                    return (
-                      <td key={s.slug} className={styles.sectionCell}>
-                        <span className={pct === 100 ? styles.done : ''}>{pct}%</span>
-                      </td>
-                    )
-                  })}
+                  <td>
+                    <SectionStrip sections={p.sections ?? []} />
+                  </td>
                 </tr>
               ))}
             </tbody>

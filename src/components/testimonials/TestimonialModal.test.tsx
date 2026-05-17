@@ -3,7 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestimonialModal } from './TestimonialModal'
 
-const upsertMock = vi.fn().mockResolvedValue({ error: null })
+const insertMock = vi.fn().mockResolvedValue({ error: null })
+const updateMock = vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: null }) })
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -25,7 +26,8 @@ vi.mock('@/lib/supabase', () => ({
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
           maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
-          upsert: upsertMock,
+          insert: insertMock,
+          update: updateMock,
         }
       }
       return { select: vi.fn().mockReturnThis() }
@@ -35,7 +37,8 @@ vi.mock('@/lib/supabase', () => ({
 
 describe('TestimonialModal', () => {
   beforeEach(() => {
-    upsertMock.mockClear()
+    insertMock.mockClear()
+    updateMock.mockClear()
   })
 
   it('does not render when open=false', () => {
@@ -75,9 +78,9 @@ describe('TestimonialModal', () => {
     expect(submit).not.toBeDisabled()
     await user.click(submit)
     await waitFor(() => {
-      expect(upsertMock).toHaveBeenCalledTimes(1)
+      expect(insertMock).toHaveBeenCalledTimes(1)
     })
-    const args = upsertMock.mock.calls[0][0]
+    const args = insertMock.mock.calls[0][0]
     expect(args.participant_id).toBe('p-1')
     expect(args.session_id).toBe('sess-123')
     expect(args.content).toBe(longContent)

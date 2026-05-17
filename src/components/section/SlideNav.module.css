@@ -1,14 +1,31 @@
 .slideNav {
+  position: fixed;
+  bottom: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  z-index: 50;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  padding: 24px var(--space-4);
+}
+
+:global([data-sidebar-collapsed='true']) .slideNav {
+  left: var(--sidebar-collapsed-width);
+}
+
+.row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  margin-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
-  position: sticky;
-  bottom: 0;
-  background: var(--color-bg);
+  gap: var(--space-2);
+  max-width: var(--max-dashboard);
+  margin: 0 auto;
+}
+
+.leftGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 .prev,
@@ -16,8 +33,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--text-base);
+  padding: 14px 21px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
@@ -25,6 +42,7 @@
   color: var(--color-text);
   cursor: pointer;
   transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
 }
 
 .next {
@@ -59,14 +77,30 @@
   font-style: italic;
 }
 
-@media (max-width: 480px) {
+.backLink {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.backLink:hover {
+  color: var(--color-trust);
+  background: var(--color-trust-light, transparent);
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
   .slideNav {
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-  .prev,
-  .next {
-    width: 100%;
-    justify-content: center;
+    left: 0;
+    padding: 8px var(--space-2);
   }
 }

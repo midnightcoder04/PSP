@@ -34,6 +34,9 @@
   --max-content: 720px;          /* Reading width */
   --max-dashboard: 1200px;       /* Dashboard width */
   --sidebar-width: 240px;
+  --sidebar-collapsed-width: 56px;
+  --sidebar-transition-duration: 200ms;
+  --sidebar-transition-easing: cubic-bezier(0.22, 1, 0.36, 1);
   --topbar-height: 60px;
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -76,5 +79,6 @@
     --transition-fast: 0ms;
     --transition-base: 0ms;
     --transition-slow: 0ms;
+    --sidebar-transition-duration: 0ms;
   }
 }

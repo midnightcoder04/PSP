@@ -3,16 +3,59 @@
   background: var(--color-surface);
   border-left: 3px solid var(--color-trust);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  /*
+    005-iter5-ux-fixes / US6 (FR-060 / FR-061):
+    Defensive resets to guarantee a single-column reading flow regardless of
+    any ancestor multi-column rules. Stretch to the full card content area.
+  */
+  column-count: 1;
+  columns: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 .text {
   font-size: var(--text-base);
   color: var(--color-text);
   line-height: var(--leading-relaxed);
+  column-count: 1;
+  columns: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
+.text p,
+.text li { break-inside: avoid; column-span: all; }
 .text p { margin-bottom: var(--space-2); }
 .text p:last-child { margin-bottom: 0; }
+
+/* 005-iter5-ux-fixes / US6 (FR-062): numbered lists render as <ol> with
+   block-level list-items so each numbered item occupies its own row at
+   every viewport width. */
+.numberedList {
+  list-style-position: outside;
+  margin: 0 0 var(--space-2) 0;
+  padding-left: var(--space-3);
+}
+.numberedList li {
+  margin-bottom: var(--space-1);
+}
+.numberedList li:last-child {
+  margin-bottom: 0;
+}
+
+.bulletList {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin: 0 0 var(--space-2) 0;
+  padding-left: var(--space-3);
+}
+.bulletList li {
+  margin-bottom: var(--space-1);
+}
+.bulletList li:last-child {
+  margin-bottom: 0;
+}
 
 .attribution {
   margin-top: var(--space-3);

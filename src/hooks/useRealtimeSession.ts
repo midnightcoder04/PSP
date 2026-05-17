@@ -14,13 +14,23 @@ export function useRealtimeSession({ sessionId, onUpdate, enabled = true }: UseR
     if (!enabled) return
 
     const channel = supabase
-      .channel(`session:${sessionId}:progress`)
+      .channel(`session:${sessionId}:activity`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'progress',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        () => stableOnUpdate()
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'enrollments',
           filter: `session_id=eq.${sessionId}`,
         },
         () => stableOnUpdate()

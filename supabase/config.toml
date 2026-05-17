@@ -26,3 +26,12 @@ enable_confirmations = false
 
 [analytics]
 enabled = false
+
+[functions.bulk-create-users]
+verify_jwt = true
+
+[functions.claim-invite]
+verify_jwt = false
+
+[functions.delete-user]
+verify_jwt = true

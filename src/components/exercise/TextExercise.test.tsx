@@ -80,4 +80,56 @@ describe('TextExercise', () => {
     await user.keyboard('test')
     expect(mockSave).not.toHaveBeenCalled()
   })
+
+  // ── 006-iter6 / US4 — prompt parser ──────────────────────────────────────
+
+  it('US4-a: prompt with numbered lines renders as <ol> with one <li> per item', () => {
+    render(
+      <TextExercise
+        {...defaultProps}
+        content={{ prompt: '1. first\n2. second\n3. third' }}
+      />
+    )
+    const lis = screen.getAllByRole('listitem')
+    expect(lis).toHaveLength(3)
+    expect(lis[0]).toHaveTextContent('first')
+    expect(lis[1]).toHaveTextContent('second')
+    expect(lis[2]).toHaveTextContent('third')
+    expect(lis[0].closest('ol')).not.toBeNull()
+  })
+
+  it('US4-b: prompt with bullet lines renders as <ul>', () => {
+    render(
+      <TextExercise
+        {...defaultProps}
+        content={{ prompt: '• alpha\n• beta' }}
+      />
+    )
+    const lis = screen.getAllByRole('listitem')
+    expect(lis).toHaveLength(2)
+    expect(lis[0].closest('ul')).not.toBeNull()
+  })
+
+  it('US4-c: mixed prose + numbered list renders prose as <p> and list as <ol>', () => {
+    render(
+      <TextExercise
+        {...defaultProps}
+        content={{ prompt: 'Reflect on:\n1. one\n2. two\nTail prose' }}
+      />
+    )
+    expect(screen.getByText(/Reflect on:/)).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+    expect(screen.getByText(/Tail prose/)).toBeInTheDocument()
+  })
+
+  it('US4-d: prompt without lists renders unchanged (regression guard)', () => {
+    render(
+      <TextExercise
+        {...defaultProps}
+        content={{ prompt: 'Describe your personal values' }}
+      />
+    )
+    expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
+    expect(screen.getByText('Describe your personal values')).toBeInTheDocument()
+  })
 })

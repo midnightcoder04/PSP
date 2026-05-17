@@ -1,7 +1,10 @@
 .widget {
   position: fixed;
-  bottom: var(--space-3);
-  right: var(--space-3);
+  /* Centered horizontally and raised above the sticky slide nav on larger screens */
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
+  /* bottom: calc(var(--space-3)); */
   z-index: 50;
   display: flex;
   flex-direction: column;
@@ -52,9 +55,13 @@
 
 @media (max-width: 640px) {
   .widget {
-    left: var(--space-2);
-    right: var(--space-2);
-    bottom: var(--space-2);
-    min-width: 0;
+    /* On small screens keep the widget compact and tuck into the bottom-right */
+    left: auto;
+    transform: none;
+    right: var(--space-3);
+    bottom: calc(var(--space-3) + 96px);
+    min-width: 140px;
+    padding: var(--space-1) var(--space-2);
+    font-size: calc(var(--text-sm) - 1px);
   }
 }

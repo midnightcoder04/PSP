@@ -10,18 +10,24 @@
   flex-direction: column;
   min-width: 0;
   margin-left: var(--sidebar-width);
+  transition: margin-left var(--sidebar-transition-duration) var(--sidebar-transition-easing);
+}
+
+.shell[data-sidebar-collapsed='true'] .main {
+  margin-left: var(--sidebar-collapsed-width);
 }
 
 .content {
   flex: 1;
-  padding: var(--space-6) var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-2);
   max-width: var(--max-dashboard);
   width: 100%;
   margin: 0 auto;
 }
 
 @media (max-width: 768px) {
-  .main {
+  .main,
+  .shell[data-sidebar-collapsed='true'] .main {
     margin-left: 0;
   }
 

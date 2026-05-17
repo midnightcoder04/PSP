@@ -197,7 +197,7 @@ export default function CourseHome() {
 
       <p className={styles.attribution}>
         Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada. All rights reserved.
-        Workshop facilitated by Bijo Abraham (Career &amp; Life Strategist), Select HR Solutions.
+        Workshop facilitated by Bijo Abraham (Career &amp; Life Strategist), Rise with PSP™.
       </p>
     </PageShell>
   )

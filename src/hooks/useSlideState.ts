@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import type { Exercise, Response } from '@/types/database'
 
 export interface UseSlideStateArgs {
@@ -6,6 +6,15 @@ export interface UseSlideStateArgs {
   slideGroups: Exercise[][]
   responses: Record<string, Response>
   resumeExerciseId?: string | null
+  /**
+   * 005-iter5-ux-fixes / US3: caller-provided identity for the surrounding
+   * section (typically `sectionSlug`). When this changes AND `slideGroups`
+   * is ready, the hook re-derives `initialSlide` and resets `currentSlide`.
+   * Leaving this undefined preserves the pre-iter5 behaviour for any
+   * caller that hasn't opted in.
+   * Contract: specs/005-iter5-ux-fixes/contracts/slide-state.md
+   */
+  resetKey?: string
 }
 
 export interface UseSlideStateResult {
@@ -20,9 +29,17 @@ export interface UseSlideStateResult {
 }
 
 function groupComplete(group: Exercise[], responses: Record<string, Response>): boolean {
-  return group.every(
-    (ex) => ex.type === 'info' || responses[ex.id]?.is_complete === true
-  )
+  return group.every((ex) => {
+    if (ex.type === 'info') return true
+    // 006-iter6 / US3 (T042b): narrow optional-checkbox rule scoped to the
+    // matched-style traits checklist dispatcher. All other checkboxes retain
+    // the standard "needs a complete response" contract.
+    if (ex.type === 'checkbox') {
+      const cj = ex.content_json as { computed?: string } | null | undefined
+      if (cj?.computed === 'core_style_options') return true
+    }
+    return responses[ex.id]?.is_complete === true
+  })
 }
 
 function findGroupIndex(groups: Exercise[][], exerciseId: string): number {
@@ -32,24 +49,40 @@ function findGroupIndex(groups: Exercise[][], exerciseId: string): number {
   return -1
 }
 
-export function useSlideState(args: UseSlideStateArgs): UseSlideStateResult {
+function deriveInitialSlide(args: UseSlideStateArgs): number {
   const { intro, slideGroups, responses, resumeExerciseId } = args
   const totalGroups = slideGroups.length
+  if (resumeExerciseId) {
+    const idx = findGroupIndex(slideGroups, resumeExerciseId)
+    if (idx >= 0) return idx
+  }
+  const allDone =
+    totalGroups > 0 && slideGroups.every((g) => groupComplete(g, responses))
+  if (allDone) return totalGroups
+  return intro ? -1 : 0
+}
 
-  const initialSlide = useMemo(() => {
-    if (resumeExerciseId) {
-      const idx = findGroupIndex(slideGroups, resumeExerciseId)
-      if (idx >= 0) return idx
-    }
-    const allDone =
-      totalGroups > 0 && slideGroups.every((g) => groupComplete(g, responses))
-    if (allDone) return totalGroups
-    return intro ? -1 : 0
-    // We only want the initial value — intentionally omit responses from deps.
+export function useSlideState(args: UseSlideStateArgs): UseSlideStateResult {
+  const { intro, slideGroups, responses, resetKey } = args
+  const totalGroups = slideGroups.length
+
+  // Stash latest args in a ref so the reset effect always reads fresh values
+  // without re-running on every response tick.
+  const argsRef = useRef(args)
+  argsRef.current = args
+
+  const [currentSlide, setCurrentSlide] = useState<number>(() => deriveInitialSlide(args))
+
+  // 005-iter5-ux-fixes / US3: when the host section changes (resetKey) AND
+  // data is ready (slideGroups is non-empty), re-derive the initial slide.
+  // Deliberately depends on resetKey + slideGroups.length only — not on
+  // responses or resumeExerciseId — to avoid mid-section jumps.
+  useEffect(() => {
+    if (resetKey === undefined) return
+    if (slideGroups.length === 0) return
+    setCurrentSlide(deriveInitialSlide(argsRef.current))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const [currentSlide, setCurrentSlide] = useState<number>(initialSlide)
+  }, [resetKey, slideGroups.length])
 
   const canGoNext = useMemo(() => {
     if (currentSlide === -1) return true

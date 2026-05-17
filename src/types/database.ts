@@ -63,15 +63,50 @@ export interface RatingPickerResponse {
 
 export interface RankingDerivesFrom {
   source_exercise_slug: string
-  group_by: 'id_prefix'
+  group_by: 'id_prefix' | 'values_pair_sum' | 'goal_inventory_rows'
 }
 
 export interface RankingContent {
   prompt: string
   items: { id: string; label: string }[]
-  interaction?: 'drag' | 'buttons'
+  /**
+   * 006-iter6 / US1: `'sorted'` opts the exercise into the read-only
+   * sorted-listing branch. Requires `derives_from` to be set.
+   */
+  interaction?: 'drag' | 'buttons' | 'sorted'
   derives_from?: RankingDerivesFrom
   show_counts?: boolean
+}
+
+/**
+ * 006-iter6 / US3: info exercise whose body is keyed by the participant's
+ * resolved core style (D / I / S / C). See
+ * specs/006-iter6-personality-watusi-polish/contracts/personality-deep-dive.md
+ */
+export interface CoreStyleSectionContent {
+  /** Fallback prose when the quiz answers are missing. */
+  content: string
+  computed: 'core_style_section'
+  /** [q1_id, q2_id] — exercise IDs (not slugs) of the two quiz questions. */
+  computed_inputs: [string, string]
+  /** Body to render via parseBlocks, keyed by the resolved style. */
+  sections_by_style: Record<'D' | 'I' | 'S' | 'C', string>
+  attribution?: string | null
+}
+
+/**
+ * 006-iter6 / US3: checkbox exercise whose option list is keyed by the
+ * participant's resolved core style.
+ */
+export interface CoreStyleChecklistContent {
+  prompt: string
+  allow_multiple: true
+  computed: 'core_style_options'
+  computed_inputs: [string, string]
+  options_by_style: Record<
+    'D' | 'I' | 'S' | 'C',
+    { id: string; label: string; value?: number }[]
+  >
 }
 
 export interface TableContent {
@@ -97,6 +132,7 @@ export interface Database {
           display_name: string
           email: string
           is_active: boolean
+          max_bulk_add: number
           created_at: string
           updated_at: string
         }
@@ -106,6 +142,7 @@ export interface Database {
           display_name: string
           email: string
           is_active?: boolean
+          max_bulk_add?: number
           created_at?: string
           updated_at?: string
         }
@@ -115,6 +152,7 @@ export interface Database {
           display_name?: string
           email?: string
           is_active?: boolean
+          max_bulk_add?: number
           updated_at?: string
         }
         Relationships: []
@@ -199,6 +237,51 @@ export interface Database {
           {
             foreignKeyName: 'enrollments_participant_id_fkey'
             columns: ['participant_id']
+            isOneToOne: false
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      session_invites: {
+        Row: {
+          id: string
+          session_id: string
+          token: string
+          created_by: string
+          max_uses: number
+          use_count: number
+          expires_at: string | null
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          token?: string
+          created_by: string
+          max_uses?: number
+          use_count?: number
+          expires_at?: string | null
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: {
+          is_active?: boolean
+          max_uses?: number
+          expires_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'session_invites_session_id_fkey'
+            columns: ['session_id']
+            isOneToOne: false
+            referencedRelation: 'sessions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'session_invites_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
             referencedRelation: 'profiles'
             referencedColumns: ['id']
@@ -391,7 +474,7 @@ export interface Database {
         Row: {
           id: string
           participant_id: string
-          session_id: string
+          session_id: string | null
           content: string
           rating: number | null
           submitted_at: string
@@ -400,7 +483,7 @@ export interface Database {
         Insert: {
           id?: string
           participant_id: string
-          session_id: string
+          session_id?: string | null
           content: string
           rating?: number | null
           submitted_at?: string
@@ -463,6 +546,7 @@ export type Tables<T extends keyof Database['public']['Tables']> =
 export type Profile = Tables<'profiles'>
 export type Session = Tables<'sessions'>
 export type Enrollment = Tables<'enrollments'>
+export type SessionInvite = Tables<'session_invites'>
 export type Section = Tables<'sections'>
 export type Exercise = Tables<'exercises'>
 export type Response = Tables<'responses'>

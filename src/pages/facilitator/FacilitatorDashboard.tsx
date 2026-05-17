@@ -31,7 +31,7 @@ export default function FacilitatorDashboard() {
 
     const { data: sessionData } = await supabase
       .from('sessions')
-      .select('id, title, scheduled_start, scheduled_end, is_active, enrollments(count)')
+      .select('id, title, scheduled_start, scheduled_end, is_active')
       .eq('facilitator_id', profile.id)
       .order('created_at', { ascending: false })
 
@@ -51,7 +51,8 @@ export default function FacilitatorDashboard() {
         scheduled_start: s.scheduled_start,
         scheduled_end: s.scheduled_end,
         is_active: s.is_active,
-        enrollment_count: (s.enrollments as Array<{ count: number }>)?.[0]?.count ?? 0,
+        // get_session_stats only returns active enrollments, so its length is the correct count
+        enrollment_count: stats?.length ?? 0,
         overall_pct,
       })
     }

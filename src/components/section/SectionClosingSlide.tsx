@@ -1,7 +1,5 @@
-import { useNavigate } from 'react-router-dom'
 import type { SectionFraming } from '@/types/database'
 import { SectionClosing } from './SectionClosing'
-import { ROUTES } from '@/lib/constants'
 import styles from './SectionClosingSlide.module.css'
 
 interface SectionClosingSlideProps {
@@ -15,61 +13,15 @@ export function SectionClosingSlide({
   nextSectionSlug,
   isLastSection,
 }: SectionClosingSlideProps) {
-  const navigate = useNavigate()
-
-  if (!framing) {
-    // Section has no framing — still surface a navigation control.
-    return (
-      <div className={styles.container}>
-        <div className={styles.actions}>
-          {isLastSection ? (
-            <button
-              type="button"
-              className={styles.continueBtn}
-              onClick={() => navigate(ROUTES.COURSE_COMPLETE)}
-            >
-              Finish course →
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={styles.continueBtn}
-              onClick={() => navigate(`/course/${nextSectionSlug}`)}
-            >
-              Continue to next section →
-            </button>
-          )}
-        </div>
-      </div>
-    )
-  }
+  if (!framing) return null
 
   return (
     <div className={styles.container}>
       <SectionClosing
         framing={framing}
         nextSectionSlug={isLastSection ? null : nextSectionSlug}
-        showContinue={false}
+        showContinue={true}
       />
-      <div className={styles.actions}>
-        {isLastSection ? (
-          <button
-            type="button"
-            className={styles.continueBtn}
-            onClick={() => navigate(ROUTES.COURSE_COMPLETE)}
-          >
-            Finish course →
-          </button>
-        ) : (
-          <button
-            type="button"
-            className={styles.continueBtn}
-            onClick={() => navigate(`/course/${nextSectionSlug}`)}
-          >
-            Continue to next section →
-          </button>
-        )}
-      </div>
     </div>
   )
 }

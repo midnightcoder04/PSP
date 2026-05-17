@@ -33,38 +33,31 @@ export function TestimonialModal({ open, participantId, onClose }: TestimonialMo
       setLoading(true)
       setError(null)
 
-      // Resolve most recent active enrollment → session_id
-      const { data: enrollment, error: enrErr } = await supabase
+      // Best-effort: resolve most recent active enrollment → session_id.
+      // If no enrollment exists (self-directed participant) we continue with
+      // session_id = null so they can still leave a testimonial.
+      const { data: enrollment } = await supabase
         .from('enrollments')
-        .select('session_id, enrolled_at')
+        .select('session_id')
         .eq('participant_id', participantId)
         .eq('is_active', true)
         .order('enrolled_at', { ascending: false })
         .limit(1)
         .maybeSingle()
 
-      if (enrErr) {
-        setError(enrErr.message)
-        setLoading(false)
-        return
-      }
+      const sid = enrollment?.session_id ?? null
+      setSessionId(sid)
 
-      if (!enrollment) {
-        setError('No active session — please contact your facilitator.')
-        setSessionId(null)
-        setLoading(false)
-        return
-      }
-
-      setSessionId(enrollment.session_id)
-
-      // Prefill existing testimonial (if any)
-      const { data: row } = await supabase
+      // Look for an existing testimonial for this participant + session combo
+      const query = supabase
         .from('testimonials')
         .select('*')
         .eq('participant_id', participantId)
-        .eq('session_id', enrollment.session_id)
-        .maybeSingle()
+
+      const { data: row } = await (sid
+        ? query.eq('session_id', sid)
+        : query.is('session_id', null)
+      ).maybeSingle()
 
       if (row) {
         setExisting(row)
@@ -82,27 +75,37 @@ export function TestimonialModal({ open, participantId, onClose }: TestimonialMo
   if (!open) return null
 
   const contentLen = draft.content.trim().length
-  const canSubmit = !!sessionId && contentLen >= MIN_LEN && contentLen <= MAX_LEN && !submitting
+  const canSubmit = contentLen >= MIN_LEN && contentLen <= MAX_LEN && !submitting
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!sessionId || !canSubmit) return
+    if (!canSubmit) return
     setSubmitting(true)
     setError(null)
-    const { error: upErr } = await supabase
-      .from('testimonials')
-      .upsert(
-        {
+
+    let err: { message: string } | null = null
+
+    if (existing?.id) {
+      const { error: upErr } = await supabase
+        .from('testimonials')
+        .update({ content: draft.content.trim(), rating: draft.rating })
+        .eq('id', existing.id)
+      err = upErr
+    } else {
+      const { error: insErr } = await supabase
+        .from('testimonials')
+        .insert({
           participant_id: participantId,
           session_id: sessionId,
           content: draft.content.trim(),
           rating: draft.rating,
-        },
-        { onConflict: 'participant_id,session_id' }
-      )
+        })
+      err = insErr
+    }
+
     setSubmitting(false)
-    if (upErr) {
-      setError(upErr.message)
+    if (err) {
+      setError(err.message)
       return
     }
     setSuccess(true)

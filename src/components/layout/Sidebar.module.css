@@ -10,11 +10,19 @@
   flex-direction: column;
   z-index: 100;
   overflow-y: auto;
+  overflow-x: hidden;
+  transition: width var(--sidebar-transition-duration) var(--sidebar-transition-easing);
+}
+
+.sidebar[data-collapsed='true'] {
+  width: var(--sidebar-collapsed-width);
 }
 
 .brand {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
   padding: var(--space-4) var(--space-3);
   border-bottom: 1px solid var(--color-border);
 }
@@ -24,6 +32,42 @@
   font-weight: var(--weight-bold);
   color: var(--color-trust);
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity var(--sidebar-transition-duration) var(--sidebar-transition-easing);
+}
+
+.sidebar[data-collapsed='true'] .brandMark {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.toggle:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 2px;
 }
 
 .nav {
@@ -48,6 +92,24 @@
   color: var(--color-text-muted);
   text-decoration: none;
   transition: background-color var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.label {
+  transition: opacity var(--sidebar-transition-duration) var(--sidebar-transition-easing);
+}
+
+.sidebar[data-collapsed='true'] .navLink {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.sidebar[data-collapsed='true'] .label {
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  overflow: hidden;
 }
 
 .navLink:hover {
@@ -87,10 +149,18 @@
   padding: 4px 10px;
   border-radius: var(--radius-full);
   border: 1px solid var(--color-border);
+  white-space: nowrap;
+  transition: opacity var(--sidebar-transition-duration) var(--sidebar-transition-easing);
+}
+
+.sidebar[data-collapsed='true'] .rolePill {
+  opacity: 0;
+  pointer-events: none;
 }
 
 @media (max-width: 768px) {
-  .sidebar {
+  .sidebar,
+  .sidebar[data-collapsed='true'] {
     display: none;
   }
 }
