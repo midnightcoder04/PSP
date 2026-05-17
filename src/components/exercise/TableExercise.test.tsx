@@ -19,7 +19,7 @@ const valuesContent = {
   prompt: 'Values Shopping Spree',
   headers: ['#', 'Item', 'Amount Budgeted ($)'],
   rows: 2,
-  col_types: ['number', 'text', 'currency'] as const,
+  col_types: ['number', 'text', 'currency'] as ('number' | 'text' | 'currency')[],
   total_target: 100000,
   items: ['A process guaranteed to rid the world of prejudice and racism.', 'An opportunity to help the sick and impoverished and allow them happier lives.'],
 }
