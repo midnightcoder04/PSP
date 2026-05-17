@@ -5,11 +5,11 @@ import { useRealtimeSession } from './useRealtimeSession'
 let capturedHandler: (() => void) | null = null
 
 const mockSubscribe = vi.fn().mockReturnThis()
-const mockOn = vi.fn().mockImplementation((_event, _filter, handler) => {
-  capturedHandler = handler
-  return { subscribe: mockSubscribe }
-})
-const mockChannel = vi.fn().mockImplementation(() => ({ on: mockOn, subscribe: mockSubscribe }))
+
+// on() must return an object with both .on() and .subscribe() so the hook can
+// chain two .on() calls (progress + enrollments) before calling .subscribe().
+const mockOn = vi.fn()
+const mockChannel = vi.fn()
 const mockRemoveChannel = vi.fn()
 
 vi.mock('@/lib/supabase', () => ({
@@ -23,20 +23,25 @@ describe('useRealtimeSession', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     capturedHandler = null
-    mockOn.mockImplementation((_event: unknown, _filter: unknown, handler: () => void) => {
-      capturedHandler = handler
-      return { subscribe: mockSubscribe }
+
+    const chainable = {
+      on: mockOn,
+      subscribe: mockSubscribe,
+    }
+    mockOn.mockImplementation((_event: unknown, _filter: unknown, handler?: () => void) => {
+      if (handler) capturedHandler = handler
+      return chainable
     })
-    mockChannel.mockImplementation(() => ({ on: mockOn, subscribe: mockSubscribe }))
+    mockChannel.mockImplementation(() => chainable)
   })
 
-  it('subscribes to the progress channel for the given session', () => {
+  it('subscribes to the activity channel for the given session', () => {
     const onUpdate = vi.fn()
     renderHook(() =>
       useRealtimeSession({ sessionId: 'session-123', onUpdate })
     )
 
-    expect(mockChannel).toHaveBeenCalledWith('session:session-123:progress')
+    expect(mockChannel).toHaveBeenCalledWith('session:session-123:activity')
     expect(mockOn).toHaveBeenCalledWith(
       'postgres_changes',
       expect.objectContaining({

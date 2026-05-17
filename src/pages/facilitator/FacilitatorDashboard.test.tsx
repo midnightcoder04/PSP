@@ -70,11 +70,10 @@ describe('FacilitatorDashboard', () => {
       </MemoryRouter>
     )
 
+    // enrollment_count is derived from get_session_stats length (mockStats has 2 entries)
     await waitFor(() => {
-      expect(screen.getByText(/8 participant/i)).toBeInTheDocument()
+      expect(screen.getAllByText(/2 participant/i).length).toBeGreaterThan(0)
     })
-
-    expect(screen.getByText(/3 participant/i)).toBeInTheDocument()
   })
 
   it('shows Active badge for active sessions', async () => {

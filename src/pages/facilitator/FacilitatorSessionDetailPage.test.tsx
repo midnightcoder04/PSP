@@ -29,7 +29,7 @@ const mockStats = [
     overall_pct: 75,
     sections: [
       { slug: 'personality', completed: 3, total: 4, completed_at: null },
-      { slug: 'attitudes', completed: 2, total: 3, completed_at: null },
+      { slug: 'attitude', completed: 2, total: 3, completed_at: null },
     ],
   },
   {
@@ -55,6 +55,9 @@ vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: vi.fn(() => makeSessionChain()),
     rpc: vi.fn().mockImplementation(() => Promise.resolve({ data: mockStats, error: null })),
+    auth: {
+      getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'fac-1' } }, error: null }),
+    },
   },
 }))
 

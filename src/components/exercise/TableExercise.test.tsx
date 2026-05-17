@@ -89,7 +89,7 @@ describe('TableExercise', () => {
   })
 
   it('renders values shopping spree items as fixed rows', () => {
-    render(<TableExercise {...defaultProps}  />)
+    render(<TableExercise {...defaultProps} content={valuesContent} />)
 
     expect(screen.getByText('1')).toBeInTheDocument()
     expect(screen.getByText(valuesContent.items[0])).toBeInTheDocument()
