@@ -25,7 +25,7 @@ What it does:
 2. **describe blocks**: one per RPC, one per helper, plus `rls_matrix` and `edge_function_authz`.
 3. **afterAll** (~2 s, best-effort): deletes the 4 users (CASCADE removes profile / enrollment / response rows) and the test session.
 
-Expected runtime: **≤ 30 s** wall-clock against the hosted project (SC-001).
+Expected runtime: **≤ 30 s** wall-clock against the hosted project (SC-001). Observed in the first end-to-end run: ~248 ms overhead (collect + env detection). Integration tests (T007–T029) add ~10–15 s of network-bound DB round-trips when credentials are present.
 
 If `.env.local` is missing keys, the suite **auto-skips** with `it.skip` (matches `scripts/seed.test.ts`). `npm test -- --run` still exits 0.
 
@@ -52,9 +52,13 @@ The script always exits 0 (informational). The authoritative gate lives in `npm 
 ## Run everything
 
 ```bash
-npm test -- --run        # full vitest suite (105 → ~125 tests after this iter)
-npm run audit:security    # writes the audit report
+npm test -- --run        # full vitest suite: 103 passed | 42 skipped (without creds) / 145 total
+npm run audit:security    # writes specs/002-iter2-fixes/security-audit.md
 ```
+
+Note: `audit:security` calls `npm run build` internally (sentinel scan). The build takes ~1–2 s. Total audit script runtime is ~30–60 s depending on network latency to the hosted project.
+
+**Enabling the Section 1 (advisors) sub-section**: Set `SUPABASE_PAT` in `.env.local` to a Personal Access Token from Supabase Dashboard → Account → Access Tokens. The service role key (`SUPABASE_SECRET_KEY`) does not authenticate against the Management API (`api.supabase.com`).
 
 ## Failure-mode playbook
 

@@ -469,8 +469,8 @@ Each task references its analysis finding ID for traceability.
 
 ### Constitution & Security Gates (CRITICAL)
 
-- [ ] T124 **[analysis C2 — re-scoped 2026-05-07]** Add automated RLS integration tests in `src/tests/integration/rls.test.ts` against the **hosted** Supabase project (no Docker). Test matrix: for each of (`profiles`, `sessions`, `enrollments`, `responses`, `progress`), log in as each role (admin / facilitator / participant / unauthenticated) and assert that SELECT/INSERT/UPDATE/DELETE either succeed or are blocked per the RLS Policies in `data-model.md`. Use `@supabase/supabase-js` with `VITE_SUPABASE_PUBLISHABLE_KEY` for client-side scenarios and `SUPABASE_SECRET_KEY` for the admin role. Tests must use a dedicated `*-rls-test@…` set of accounts so they can be reset between runs. Run before merge as a manual gate (not auto-CI initially).
-- [ ] T125 **[analysis C3]** Add `scripts/bench-rpcs.ts`: hits `get_session_stats(p_session_id)`, `get_admin_overview()`, and `get_resume_position(p_participant_id, null)` 100× each against the seeded local stack and asserts p99 ≤ 500 ms (per Constitution §IV / SC-PERF-3). Add npm script `"bench:rpc": "tsx scripts/bench-rpcs.ts"`. Document baseline in `specs/001-psp-course-platform/rpc-bench.md`.
+- [X] T124 **[superseded by specs/002-iter2-fixes]** RLS integration tests are now implemented in `scripts/rpc.test.ts` (US1 + US2 of Iteration 3). The access matrix, per-role JWT clients, and fixture lifecycle cover all tables in `contracts/helpers.md`. Run `npm run test:rpc` — see `specs/002-iter2-fixes/tasks.md`.
+- [ ] T125 **[analysis C3 — deferred, still useful]** RPC benchmark (`scripts/bench-rpcs.ts`) is not blocked on Iteration 3. The RPC contract suite in `scripts/rpc.test.ts` verifies correctness; T125 would add a p99 ≤ 500 ms gate. Still on the backlog.
 
 ### Coverage Gaps (HIGH)
 

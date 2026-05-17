@@ -20,10 +20,10 @@ export function SectionOpening({ framing }: SectionOpeningProps) {
         <p>{framing.opening_question}</p>
       </aside>
 
-      <div className={styles.facilitatorNote}>
+      {/* <div className={styles.facilitatorNote}>
         <span className={styles.label}>Facilitator says</span>
         <p>{framing.facilitator_says}</p>
-      </div>
+      </div> */}
 
       <div className={styles.whyItMatters}>
         <span className={styles.label}>Why this matters</span>

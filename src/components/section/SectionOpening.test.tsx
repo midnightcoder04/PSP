@@ -38,10 +38,9 @@ describe('SectionOpening', () => {
     expect(screen.getByText(sample.opening_question)).toBeInTheDocument()
   })
 
-  it('renders the facilitator_says cue', () => {
-    render(<SectionOpening framing={sample} />)
-    expect(screen.getByText(sample.facilitator_says)).toBeInTheDocument()
-  })
+  // Note: facilitator_says is intentionally NOT rendered to participants
+  // (per spec 003 AC-1 — the intro shows only quote, opening question,
+  // why-it-matters, and the optional reading_material block).
 
   it('renders the why_it_matters paragraph', () => {
     render(<SectionOpening framing={sample} />)
