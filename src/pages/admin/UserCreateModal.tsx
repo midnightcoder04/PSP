@@ -15,6 +15,7 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
   const [displayName, setDisplayName] = useState('')
   const [role, setRole] = useState<Role>('participant')
   const [password, setPassword] = useState('')
+  const [maxBulkAdd, setMaxBulkAdd] = useState(1)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -34,16 +35,27 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
       },
     })
 
-    setSubmitting(false)
     if (fnError) {
+      setSubmitting(false)
       setError(fnError.message)
       return
     }
-    const errPayload = (data as { error?: string; detail?: string } | null)
+    const errPayload = (data as { error?: string; detail?: string; user?: { id: string } } | null)
     if (errPayload?.error) {
+      setSubmitting(false)
       setError(errPayload.detail ? `${errPayload.error}: ${errPayload.detail}` : errPayload.error)
       return
     }
+
+    // Set max_bulk_add for facilitators after account is created
+    if (role === 'facilitator' && errPayload?.user?.id) {
+      await supabase
+        .from('profiles')
+        .update({ max_bulk_add: maxBulkAdd })
+        .eq('id', errPayload.user.id)
+    }
+
+    setSubmitting(false)
     onCreated()
     onClose()
   }
@@ -98,6 +110,20 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
             <option value="facilitator">Facilitator</option>
             <option value="admin">Admin</option>
           </select>
+
+          {role === 'facilitator' ? (
+            <>
+              <label htmlFor="cu-bulk">Max bulk add per operation</label>
+              <input
+                id="cu-bulk"
+                type="number"
+                className={styles.input}
+                min={1}
+                value={maxBulkAdd}
+                onChange={(e) => setMaxBulkAdd(Math.max(1, parseInt(e.target.value, 10) || 1))}
+              />
+            </>
+          ) : null}
 
           <label htmlFor="cu-pass">Initial password (≥ 8 chars)</label>
           <input

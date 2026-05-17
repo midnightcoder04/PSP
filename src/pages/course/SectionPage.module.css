@@ -33,6 +33,9 @@
 
 .slideTrack {
   width: 100%;
+  /* 006-iter6 / US2 (T021): bottom padding so the last row's count chip
+     (and any other content) can scroll clear of the sticky SlideNav. */
+  padding-bottom: var(--space-12);
 }
 
 /*

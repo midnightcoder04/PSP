@@ -1,3 +1,4 @@
+import { parseBlocks } from '@/lib/markdownBlocks'
 import styles from './InfoExercise.module.css'
 
 interface InfoContent {
@@ -8,47 +9,6 @@ interface InfoContent {
 interface InfoExerciseProps {
   content: InfoContent
   attribution?: string | null
-}
-
-/**
- * 005-iter5-ux-fixes / US6 (FR-062):
- * Group consecutive numbered (`1.`, `2.`) lines into a single <ol> and
- * consecutive bullet (`•`, `-`, `*`) lines into a single <ul>. Other lines
- * render as <p>. Each list item / paragraph occupies its own row.
- */
-type Block =
-  | { kind: 'p'; text: string }
-  | { kind: 'br' }
-  | { kind: 'ol'; items: string[] }
-  | { kind: 'ul'; items: string[] }
-
-const NUMBERED = /^\s*\d+\.\s+(.*)$/
-const BULLET = /^\s*[•\-*]\s+(.*)$/
-
-function parseBlocks(content: string): Block[] {
-  const lines = content.split('\n')
-  const blocks: Block[] = []
-  for (const raw of lines) {
-    const line = raw
-    if (line === '') {
-      blocks.push({ kind: 'br' })
-      continue
-    }
-    const numMatch = line.match(NUMBERED)
-    const bulMatch = !numMatch ? line.match(BULLET) : null
-
-    const last = blocks[blocks.length - 1]
-    if (numMatch) {
-      if (last && last.kind === 'ol') last.items.push(numMatch[1])
-      else blocks.push({ kind: 'ol', items: [numMatch[1]] })
-    } else if (bulMatch) {
-      if (last && last.kind === 'ul') last.items.push(bulMatch[1])
-      else blocks.push({ kind: 'ul', items: [bulMatch[1]] })
-    } else {
-      blocks.push({ kind: 'p', text: line })
-    }
-  }
-  return blocks
 }
 
 export function InfoExercise({ content, attribution }: InfoExerciseProps) {

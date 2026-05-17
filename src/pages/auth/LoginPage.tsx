@@ -61,7 +61,7 @@ export default function LoginPage() {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <span className={styles.logo}>PSP™</span>
+          <span className={styles.logo}>Rise with PSP™</span>
           <h1 className={styles.title}>Personal Strategic Planning</h1>
           <p className={styles.subtitle}>Sign in to continue your journey</p>
         </div>
@@ -117,7 +117,7 @@ export default function LoginPage() {
         )}
       </div>
       <p className={styles.attribution}>
-        Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions
+        Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions · Facilitated by Rise with PSP™
       </p>
     </div>
   )

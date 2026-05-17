@@ -203,6 +203,57 @@ describe('useSlideState', () => {
     expect(result.current.isAtIntro).toBe(true)
   })
 
+  // ── 006-iter6 / US3 (T042a) — narrow optional-checkbox rule ──────────────
+  // Per FR-013 (U1 resolution): a checkbox whose content_json.computed ===
+  // 'core_style_options' is treated as always-complete. Other checkboxes
+  // (including those with is_scored=false) retain the standard contract.
+
+  function exCheckbox(id: string, computed: string | undefined, slideGroup = 0): Exercise {
+    return {
+      id,
+      section_id: 'sec-1',
+      slug: `ex-${id}`,
+      title: `Exercise ${id}`,
+      type: 'checkbox',
+      content_json: computed ? { prompt: 'p', options: [], computed } : { prompt: 'p', options: [] },
+      order_index: 0,
+      slide_group: slideGroup,
+      is_scored: false,
+      attribution: null,
+    }
+  }
+
+  it("T042a-1: checkbox with computed='core_style_options' is always complete (no response needed)", () => {
+    const optionalCheckbox = exCheckbox('opt', 'core_style_options')
+    const sg = [[optionalCheckbox]]
+    const { result } = renderHook(() =>
+      useSlideState({ intro: false, slideGroups: sg, responses: {}, resumeExerciseId: 'opt' })
+    )
+    expect(result.current.canGoNext).toBe(true)
+  })
+
+  it('T042a-2: checkbox without that computed flag still requires a complete response', () => {
+    const plainCheckbox = exCheckbox('plain', undefined)
+    const sg = [[plainCheckbox]]
+    const { result: r1 } = renderHook(() =>
+      useSlideState({ intro: false, slideGroups: sg, responses: {}, resumeExerciseId: 'plain' })
+    )
+    expect(r1.current.canGoNext).toBe(false)
+    const { result: r2 } = renderHook(() =>
+      useSlideState({ intro: false, slideGroups: sg, responses: { plain: resp('plain', true) }, resumeExerciseId: 'plain' })
+    )
+    expect(r2.current.canGoNext).toBe(true)
+  })
+
+  it('T042a-3: checkbox with computed=some-other-value is NOT auto-complete', () => {
+    const otherCheckbox = exCheckbox('other', 'some_other_computed')
+    const sg = [[otherCheckbox]]
+    const { result } = renderHook(() =>
+      useSlideState({ intro: false, slideGroups: sg, responses: {}, resumeExerciseId: 'other' })
+    )
+    expect(result.current.canGoNext).toBe(false)
+  })
+
   it('groups exercises with the same slide_group together for gating', () => {
     // Two exercises in slide_group=0; gating requires both complete.
     const linkedGroups = [[ex('a', 0, 0), ex('b', 0, 1)], [ex('c', 1, 2)]]

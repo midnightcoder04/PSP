@@ -90,12 +90,92 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
-  height: 24px;
-  padding: 0 8px;
+  min-width: 24px;
+  height: 22px;
+  padding: 2px 8px;
   border-radius: 999px;
   background: var(--color-warmth-light);
   color: var(--color-text);
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
+  /* 006-iter6 / US2 (T020): inline-flow + pinned right so the chip never
+     floats absolutely over the sticky SlideNav Next button. */
+  position: static;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* 006-iter6 / US1 (T015, T017): read-only sorted listing mode. */
+.sortedList {
+  list-style: none;
+  padding: 0;
+}
+
+.sortedItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.countSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.summaryChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}
+
+.summaryKey {
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+}
+
+.summaryValue {
+  min-width: 1.25em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.recordLimitDivider {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+
+.recordLimitDivider::before,
+.recordLimitDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.emptyState {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: var(--space-2) 0;
 }

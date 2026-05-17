@@ -210,16 +210,62 @@ export function validate(seed: Seed): ValidationResult {
         if (typeof cj.content !== 'string' || cj.content.length === 0) {
           push(`I6: ${loc} (info): content_json.content required (non-empty string)`)
         }
-      } else if (e.type === 'checkbox') {
-        if (!Array.isArray(cj.options) || cj.options.length < 1) {
-          push(`I6: ${loc} (checkbox): content_json.options must have ≥1 entry`)
+        // 006-iter6 / US3: info may carry a per-style sections map for the
+        // matched-style deep-dive renderer.
+        if (cj.computed === 'core_style_section') {
+          const sbs = cj.sections_by_style as Record<string, unknown> | undefined
+          if (!sbs || typeof sbs !== 'object') {
+            push(`I6: ${loc} (info, core_style_section): content_json.sections_by_style required`)
+          } else {
+            for (const key of ['D', 'I', 'S', 'C'] as const) {
+              const v = sbs[key]
+              if (typeof v !== 'string' || v.length === 0) {
+                push(`I6: ${loc} (info, core_style_section): sections_by_style.${key} must be a non-empty string`)
+              }
+            }
+          }
+          if (!Array.isArray(cj.computed_inputs) || cj.computed_inputs.length !== 2) {
+            push(`I6: ${loc} (info, core_style_section): content_json.computed_inputs must be [q1_id, q2_id]`)
+          }
         }
-        if (typeof cj.allow_multiple !== 'boolean') {
-          push(`I6: ${loc} (checkbox): content_json.allow_multiple boolean required`)
+      } else if (e.type === 'checkbox') {
+        // 006-iter6 / US3: checkbox may use computed='core_style_options' with
+        // per-style options_by_style maps instead of a flat options list.
+        if (cj.computed === 'core_style_options') {
+          const obs = cj.options_by_style as Record<string, unknown> | undefined
+          const expected: Record<'D' | 'I' | 'S' | 'C', number> = { D: 17, I: 16, S: 18, C: 19 }
+          if (!obs || typeof obs !== 'object') {
+            push(`I6: ${loc} (checkbox, core_style_options): content_json.options_by_style required`)
+          } else {
+            for (const key of ['D', 'I', 'S', 'C'] as const) {
+              const arr = obs[key]
+              if (!Array.isArray(arr)) {
+                push(`I6: ${loc} (checkbox, core_style_options): options_by_style.${key} must be an array`)
+              } else if (arr.length !== expected[key]) {
+                push(
+                  `I6: ${loc} (checkbox, core_style_options): options_by_style.${key} must have exactly ${expected[key]} entries (found ${arr.length})`,
+                )
+              }
+            }
+          }
+          if (!Array.isArray(cj.computed_inputs) || cj.computed_inputs.length !== 2) {
+            push(`I6: ${loc} (checkbox, core_style_options): content_json.computed_inputs must be [q1_id, q2_id]`)
+          }
+        } else {
+          if (!Array.isArray(cj.options) || cj.options.length < 1) {
+            push(`I6: ${loc} (checkbox): content_json.options must have ≥1 entry`)
+          }
+          if (typeof cj.allow_multiple !== 'boolean') {
+            push(`I6: ${loc} (checkbox): content_json.allow_multiple boolean required`)
+          }
         }
       } else if (e.type === 'ranking') {
         if (!Array.isArray(cj.items) || cj.items.length < 2) {
           push(`I6: ${loc} (ranking): content_json.items must have ≥2 entries`)
+        }
+        // 006-iter6 / US1: interaction='sorted' requires derives_from
+        if (cj.interaction === 'sorted' && !cj.derives_from) {
+          push(`I6: ${loc} (ranking): interaction='sorted' requires content_json.derives_from to be set`)
         }
       } else if (e.type === 'table') {
         if (!Array.isArray(cj.headers) || cj.headers.length === 0) {

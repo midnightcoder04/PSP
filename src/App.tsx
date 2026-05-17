@@ -5,6 +5,7 @@ import { AuthGuard } from '@/components/layout/AuthGuard'
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary'
 import { Spinner } from '@/components/ui/Spinner'
 
+const InvitePage               = lazy(() => import('@/pages/invite/InvitePage'))
 const LoginPage                = lazy(() => import('@/pages/auth/LoginPage'))
 const ResetPasswordPage        = lazy(() => import('@/pages/auth/ResetPasswordPage'))
 const AdminDashboard           = lazy(() => import('@/pages/admin/AdminDashboard'))
@@ -38,6 +39,7 @@ export default function App() {
               {/* Public */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/invite/:token" element={<InvitePage />} />
 
               {/* Admin */}
               <Route path="/admin" element={

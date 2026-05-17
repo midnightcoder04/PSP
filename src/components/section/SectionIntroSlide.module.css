@@ -49,21 +49,36 @@
 }
 
 .beginBtn {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-  border-radius: var(--radius-md);
-  background: var(--color-trust);
-  color: var(--color-on-trust, white);
-  border: none;
+  appearance: none;
   cursor: pointer;
+  font: inherit;
+  font-size: var(--text-md);
+  font-style: italic;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  color: var(--color-trust);
+
+  background: color-mix(in srgb, var(--color-trust) 7%, var(--color-surface));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid color-mix(in srgb, var(--color-trust) 35%, transparent);
+  border-radius: var(--radius-full);
+  padding: 15px 25px;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--color-trust) 12%, transparent);
+
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .beginBtn:hover {
-  filter: brightness(0.96);
+  background: color-mix(in srgb, var(--color-trust) 14%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-trust) 55%, transparent);
+  box-shadow: 0 4px 22px color-mix(in srgb, var(--color-trust) 22%, transparent);
 }
 
 .beginBtn:focus-visible {
   outline: 2px solid var(--color-trust);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -29,6 +29,17 @@ interface RankingResponse {
   order: string[]
 }
 
+interface DerivedRankingData {
+  order: string[]
+  /** Dynamically-derived items; null means use content.items as-is. */
+  items: { id: string; label: string }[] | null
+  metrics: Record<string, number> | null
+  metricLabel: string | null
+  metricFormat: 'count' | 'currency' | null
+  /** Only the first N items in order are persisted; null = no limit. */
+  recordLimit: number | null
+}
+
 interface RankingExerciseProps {
   exerciseId: string
   content: RankingContent
@@ -43,13 +54,69 @@ interface RankingExerciseProps {
   derivesFromResponse?: Response | null
 }
 
+const GOAL_INVENTORY_GOAL_COL = 1  // "Specific Goal" column index
+
 function computeDerivedOrder(
   content: RankingContent,
   derivesFromResponse: Response | null | undefined
-): { order: string[]; counts: Record<string, number> | null } {
-  if (!content.derives_from || content.derives_from.group_by !== 'id_prefix') {
-    return { order: content.items.map((i) => i.id), counts: null }
+): DerivedRankingData {
+  // goal_inventory_rows: derive draggable items from the Life Goal Inventory table response.
+  if (content.derives_from?.group_by === 'goal_inventory_rows') {
+    const payload = derivesFromResponse?.response_json as { rows?: string[][] } | null | undefined
+    const rows = payload?.rows ?? []
+    const filledGoals = rows
+      .map((row, idx) => ({
+        id: `goal_row_${idx}`,
+        label: (row[GOAL_INVENTORY_GOAL_COL] ?? '').trim(),
+      }))
+      .filter((item) => item.label !== '')
+    return {
+      order: filledGoals.map((item) => item.id),
+      items: filledGoals,
+      metrics: null,
+      metricLabel: null,
+      metricFormat: null,
+      recordLimit: 10,
+    }
   }
+
+  if (!content.derives_from || content.derives_from.group_by !== 'id_prefix') {
+    if (content.derives_from?.group_by !== 'values_pair_sum') {
+      return { order: content.items.map((i) => i.id), items: null, metrics: null, metricLabel: null, metricFormat: null, recordLimit: null }
+    }
+  }
+
+  if (content.derives_from?.group_by === 'values_pair_sum') {
+    const payload = derivesFromResponse?.response_json as
+      | { rows?: string[][] }
+      | null
+      | undefined
+    const rows = payload?.rows ?? []
+    const pairCount = content.items.length
+    const orderIndex = new Map(content.items.map((item, index) => [item.id, index]))
+    const metrics = Object.fromEntries(
+      content.items.map((item, index) => {
+        const firstRow = rows[index] ?? []
+        const secondRow = rows[index + pairCount] ?? []
+        const parse = (value: string | undefined) => {
+          const cleaned = String(value ?? '').replace(/[\s,$]/g, '')
+          const parsed = parseFloat(cleaned)
+          return Number.isFinite(parsed) ? parsed : 0
+        }
+        const total = parse(firstRow[firstRow.length - 1]) + parse(secondRow[secondRow.length - 1])
+        return [item.id, total]
+      })
+    ) as Record<string, number>
+    const order = [...content.items]
+      .map((item) => item.id)
+      .sort((left, right) => {
+        const diff = (metrics[right] ?? 0) - (metrics[left] ?? 0)
+        if (diff !== 0) return diff
+        return (orderIndex.get(left) ?? 0) - (orderIndex.get(right) ?? 0)
+      })
+    return { order, items: null, metrics, metricLabel: 'Spent', metricFormat: 'currency', recordLimit: null }
+  }
+
   const payload = derivesFromResponse?.response_json as
     | { selected_ids?: string[]; checked?: string[] }
     | null
@@ -64,20 +131,32 @@ function computeDerivedOrder(
   // Only keep ids that exist in this exercise's items; preserve derived order.
   return {
     order: derivedOrder.filter((id) => itemIds.has(id)),
-    counts: counts as unknown as Record<string, number>,
+    items: null,
+    metrics: counts as unknown as Record<string, number>,
+    metricLabel: 'Count',
+    metricFormat: 'count',
+    recordLimit: null,
   }
 }
 
-function countForItemId(
+function metricForItemId(
   itemId: string,
-  counts: Record<string, number> | null
+  metrics: Record<string, number> | null
 ): number | null {
-  if (!counts) return null
+  if (!metrics) return null
+  if (itemId in metrics) return metrics[itemId]
   // attitude_w → key "w"
   const parts = itemId.split('_')
   const key = parts[parts.length - 1]
-  if (key in counts) return counts[key as keyof typeof counts]
+  if (key in metrics) return metrics[key as keyof typeof metrics]
   return null
+}
+
+function formatMetricValue(value: number, metricFormat: DerivedRankingData['metricFormat']): string {
+  if (metricFormat === 'currency') {
+    return `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+  }
+  return String(value)
 }
 
 interface SortableItemProps {
@@ -133,15 +212,30 @@ export function RankingExercise({
     [content, derivesFromResponse]
   )
 
-  // Initial order: existing saved order > derived prefilled order > content order.
+  // Merge saved top-N with all derived items so items added to the inventory
+  // after the first save still appear below the recorded boundary.
+  function mergeWithDerived(saved: string[], allDerived: string[]): string[] {
+    const savedSet = new Set(saved)
+    const validSaved = saved.filter((id) => allDerived.includes(id))
+    const remaining = allDerived.filter((id) => !savedSet.has(id))
+    return [...validSaved, ...remaining]
+  }
+
+  // Initial order: merge saved top-N with full derived list > derived list > content items.
   const [order, setOrder] = useState<string[]>(() => {
+    if (initialResponse?.order?.length && derived.items) {
+      return mergeWithDerived(initialResponse.order, derived.order)
+    }
     if (initialResponse?.order?.length) return initialResponse.order
     if (derived.order.length) return derived.order
     return content.items.map((i) => i.id)
   })
 
-  // If no saved order yet but derived order arrives later, adopt the derived order.
   useEffect(() => {
+    if (initialResponse?.order?.length && derived.items) {
+      setOrder(mergeWithDerived(initialResponse.order, derived.order))
+      return
+    }
     if (initialResponse?.order?.length) {
       setOrder(initialResponse.order)
       return
@@ -153,10 +247,31 @@ export function RankingExercise({
   }, [initialResponse, derived.order.join(',')])
 
   const { save } = useExerciseSave({ exerciseId, participantId, sessionId })
-  const itemMap = Object.fromEntries(content.items.map((i) => [i.id, i.label]))
+  const effectiveItems = derived.items ?? content.items
+  const itemMap = Object.fromEntries(effectiveItems.map((i) => [i.id, i.label]))
+
+  // 006-iter6 / US1 (T016): auto-complete-on-mount for the read-only sorted
+  // branch. Persist {order: derived, is_complete: true} exactly once when
+  // there is no prior response. Subsequent renders skip — the persisted
+  // response will rehydrate via initialResponse on the next page load.
+  const sortedAutoSaveFired = useRef(false)
+  useEffect(() => {
+    if (interaction !== 'sorted') return
+    if (readOnly) return
+    if (initialResponse?.order?.length) return
+    if (sortedAutoSaveFired.current) return
+    if (derived.order.length === 0) return
+    sortedAutoSaveFired.current = true
+    save({ order: derived.order }, true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [interaction, readOnly, initialResponse, derived.order.join(',')])
+
+  const sortedOrder = interaction === 'sorted' ? derived.order : order
 
   function persist(nextOrder: string[]) {
-    save({ order: nextOrder }, true)
+    const toSave =
+      derived.recordLimit != null ? nextOrder.slice(0, derived.recordLimit) : nextOrder
+    save({ order: toSave }, true)
   }
 
   function move(index: number, direction: 'up' | 'down') {
@@ -187,23 +302,91 @@ export function RankingExercise({
     persist(next)
   }
 
+  // 006-iter6 / US1 (T015): read-only sorted listing branch.
+  // No drag, no buttons, no # rank column. Rows in derived order; count chip
+  // pinned right via CSS margin-left:auto. Auto-complete-on-mount handled
+  // in the useEffect above.
+  if (interaction === 'sorted') {
+    const summaryCounts = derived.metricFormat === 'count' ? derived.metrics : null
+    return (
+      <div className={styles.container}>
+        <p className={styles.prompt}>{content.prompt}</p>
+        {showCounts && summaryCounts && content.derives_from?.group_by === 'id_prefix' && (
+          <div className={styles.countSummary} aria-label="WATUSI counts summary">
+            {Object.entries(summaryCounts)
+              .filter(([, count]) => count > 0)
+              .sort((a, b) => {
+                const order = ['w', 'a', 't', 'u', 's', 'i']
+                return order.indexOf(a[0]) - order.indexOf(b[0])
+              })
+              .map(([group, count]) => (
+                <span key={group} className={styles.summaryChip}>
+                  <span className={styles.summaryKey}>{group.toUpperCase()}</span>
+                  <span className={styles.summaryValue}>{count}</span>
+                </span>
+              ))}
+          </div>
+        )}
+        <ol className={`${styles.list} ${styles.sortedList}`} role="list">
+          {sortedOrder.map((id) => {
+            const metric = metricForItemId(id, derived.metrics)
+            const label = itemMap[id] ?? id
+            return (
+              <li
+                key={id}
+                className={`${styles.item} ${styles.sortedItem}`}
+                role="listitem"
+                aria-label={
+                  metric != null && metric > 0
+                    ? `${label}, ${derived.metricLabel?.toLowerCase() ?? 'value'} ${formatMetricValue(metric, derived.metricFormat)}`
+                    : label
+                }
+              >
+                <span className={styles.label}>{label}</span>
+                {showCounts && metric != null && metric > 0 && (
+                  <span
+                    className={styles.countBadge}
+                    aria-label={`${derived.metricLabel ?? 'Count'}: ${formatMetricValue(metric, derived.metricFormat)}`}
+                  >
+                    {formatMetricValue(metric, derived.metricFormat)}
+                  </span>
+                )}
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+    )
+  }
+
   return (
     <div className={styles.container}>
       <p className={styles.prompt}>{content.prompt}</p>
 
-      {interaction === 'drag' ? (
+      {interaction === 'drag' && derived.items != null && derived.items.length === 0 ? (
+        <p className={styles.emptyState}>
+          Fill in your Life Goal Inventory above to see your goals here.
+        </p>
+      ) : interaction === 'drag' ? (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={order} strategy={verticalListSortingStrategy}>
             <ol className={styles.list}>
               {order.map((id, index) => (
-                <SortableItem
-                  key={id}
-                  id={id}
-                  rank={index + 1}
-                  label={itemMap[id] ?? id}
-                  count={countForItemId(id, derived.counts)}
-                  showCount={showCounts}
-                />
+                <>
+                  <SortableItem
+                    key={id}
+                    id={id}
+                    rank={index + 1}
+                    label={itemMap[id] ?? id}
+                    count={metricForItemId(id, derived.metrics)}
+                    showCount={showCounts}
+                  />
+                  {derived.recordLimit != null && index === derived.recordLimit - 1 && order.length > derived.recordLimit && (
+                    <li key="__limit__" className={styles.recordLimitDivider} aria-hidden="true">
+                      Top {derived.recordLimit} recorded · drag up to promote
+                    </li>
+                  )}
+                </>
               ))}
             </ol>
           </SortableContext>
@@ -211,7 +394,7 @@ export function RankingExercise({
       ) : (
         <ol className={styles.list}>
           {order.map((id, index) => {
-            const count = countForItemId(id, derived.counts)
+            const count = metricForItemId(id, derived.metrics)
             return (
               <li key={id} className={styles.item}>
                 <span className={styles.rank}>{index + 1}</span>

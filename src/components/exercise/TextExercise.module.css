@@ -4,6 +4,27 @@
   font-size: var(--text-base);
   color: var(--color-text);
   line-height: var(--leading-normal);
+  /* 006-iter6 / US4: defensive — never break the prompt across columns. */
+  column-count: 1;
+  columns: auto;
+  max-width: 100%;
+}
+
+.prompt p { margin: 0 0 var(--space-2) 0; }
+.prompt p:last-child { margin-bottom: 0; }
+
+.numberedList,
+.bulletList {
+  margin: 0 0 var(--space-2) 0;
+  padding-left: var(--space-6);
+}
+
+.numberedList { list-style: decimal; }
+.bulletList { list-style: disc; }
+
+.numberedList li,
+.bulletList li {
+  margin-bottom: var(--space-1);
 }
 
 .textarea {

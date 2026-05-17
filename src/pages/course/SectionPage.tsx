@@ -8,9 +8,14 @@ import { PageShell } from '@/components/layout/PageShell'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { Spinner } from '@/components/ui/Spinner'
 import { CheckboxExercise } from '@/components/exercise/CheckboxExercise'
+import { CoreStyleInfo } from '@/components/exercise/CoreStyleInfo'
+import { CoreStyleChecklist } from '@/components/exercise/CoreStyleChecklist'
 import { TextExercise } from '@/components/exercise/TextExercise'
 import { RankingExercise } from '@/components/exercise/RankingExercise'
 import { TableExercise } from '@/components/exercise/TableExercise'
+import { LifeGoalInventoryTable } from '@/components/exercise/LifeGoalInventoryTable'
+import { CrossImpactMatrix } from '@/components/exercise/CrossImpactMatrix'
+import { WhoAmINowExercise } from '@/components/exercise/WhoAmINowExercise'
 import { InfoExercise } from '@/components/exercise/InfoExercise'
 import { StructuredTextExercise } from '@/components/exercise/StructuredTextExercise'
 import { RatingPickerExercise } from '@/components/exercise/RatingPickerExercise'
@@ -253,7 +258,30 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
     const content = exercise.content_json as unknown
 
     switch (exercise.type) {
-      case 'checkbox':
+      case 'checkbox': {
+        // 006-iter6 / US3 (T041): per-style traits checklist dispatcher.
+        const cbContent = content as { computed?: string; computed_inputs?: string[] } &
+          Parameters<typeof CheckboxExercise>[0]['content']
+        if (
+          cbContent.computed === 'core_style_options' &&
+          Array.isArray(cbContent.computed_inputs) &&
+          cbContent.computed_inputs.length === 2
+        ) {
+          const [q1Slug, q2Slug] = cbContent.computed_inputs
+          const q1Ex = exercises.find((e) => e.slug === q1Slug)
+          const q2Ex = exercises.find((e) => e.slug === q2Slug)
+          const q1Response = q1Ex ? responses[q1Ex.id] ?? null : null
+          const q2Response = q2Ex ? responses[q2Ex.id] ?? null : null
+          return (
+            <CoreStyleChecklist
+              {...commonProps}
+              content={cbContent as unknown as Parameters<typeof CoreStyleChecklist>[0]['content']}
+              initialResponse={resp?.response_json as { selected_ids: string[] } | undefined}
+              q1Response={q1Response}
+              q2Response={q2Response}
+            />
+          )
+        }
         return (
           <CheckboxExercise
             {...commonProps}
@@ -261,6 +289,7 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
             initialResponse={resp?.response_json as Parameters<typeof CheckboxExercise>[0]['initialResponse']}
           />
         )
+      }
       case 'text':
         return (
           <TextExercise
@@ -272,21 +301,65 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
       case 'ranking': {
         const rankingContent = content as Parameters<typeof RankingExercise>[0]['content']
         let derivesFromResponse: Response | null = null
-        if (rankingContent.derives_from?.source_exercise_slug) {
-          const sourceSlug = rankingContent.derives_from.source_exercise_slug
+        const derivedConfig =
+          exercise.slug === 'what-do-i-value' && !rankingContent.derives_from
+            ? {
+                source_exercise_slug: 'values-shopping-spree',
+                group_by: 'values_pair_sum' as const,
+              }
+            : rankingContent.derives_from
+        if (derivedConfig?.source_exercise_slug) {
+          const sourceSlug = derivedConfig.source_exercise_slug
           const sourceEx = exercises.find((e) => e.slug === sourceSlug)
           if (sourceEx) derivesFromResponse = responses[sourceEx.id] ?? null
         }
         return (
           <RankingExercise
             {...commonProps}
-            content={rankingContent}
+            content={{
+              ...rankingContent,
+              interaction:
+                exercise.slug === 'what-do-i-value' && !rankingContent.interaction
+                  ? 'sorted'
+                  : rankingContent.interaction,
+              show_counts:
+                exercise.slug === 'what-do-i-value' && rankingContent.show_counts == null
+                  ? true
+                  : rankingContent.show_counts,
+              derives_from: derivedConfig,
+            }}
             initialResponse={resp?.response_json as Parameters<typeof RankingExercise>[0]['initialResponse']}
             derivesFromResponse={derivesFromResponse}
           />
         )
       }
       case 'table':
+        if (exercise.slug === 'life-goal-inventory') {
+          return (
+            <LifeGoalInventoryTable
+              {...commonProps}
+              content={content as Parameters<typeof LifeGoalInventoryTable>[0]['content']}
+              initialResponse={resp?.response_json as Parameters<typeof LifeGoalInventoryTable>[0]['initialResponse']}
+            />
+          )
+        }
+        if (exercise.slug === 'cross-impact-matrix') {
+          return (
+            <CrossImpactMatrix
+              {...commonProps}
+              content={content as Parameters<typeof CrossImpactMatrix>[0]['content']}
+              initialResponse={resp?.response_json as Parameters<typeof CrossImpactMatrix>[0]['initialResponse']}
+            />
+          )
+        }
+        if (exercise.slug === 'who-am-i-now') {
+          return (
+            <WhoAmINowExercise
+              {...commonProps}
+              initialResponse={resp?.response_json as Parameters<typeof TableExercise>[0]['initialResponse']}
+            />
+          )
+        }
         return (
           <TableExercise
             {...commonProps}
@@ -295,6 +368,34 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
           />
         )
       case 'info': {
+        // 006-iter6 / US3 (T040): per-style deep-dive dispatcher.
+        const csSection = content as {
+          content: string
+          attribution?: string | null
+          computed?: string
+          computed_inputs?: string[]
+          sections_by_style?: Record<'D' | 'I' | 'S' | 'C', string>
+        }
+        if (
+          csSection.computed === 'core_style_section' &&
+          Array.isArray(csSection.computed_inputs) &&
+          csSection.computed_inputs.length === 2 &&
+          csSection.sections_by_style
+        ) {
+          const [q1Slug, q2Slug] = csSection.computed_inputs
+          const q1Ex = exercises.find((e) => e.slug === q1Slug)
+          const q2Ex = exercises.find((e) => e.slug === q2Slug)
+          const q1Response = q1Ex ? responses[q1Ex.id] ?? null : null
+          const q2Response = q2Ex ? responses[q2Ex.id] ?? null : null
+          return (
+            <CoreStyleInfo
+              content={csSection as unknown as Parameters<typeof CoreStyleInfo>[0]['content']}
+              q1Response={q1Response}
+              q2Response={q2Response}
+              attribution={exercise.attribution}
+            />
+          )
+        }
         // 005-iter5-ux-fixes / US5 (FR-051): Personality's `core-style-result`
         // row carries `content.computed === 'core_style'` and a pair of
         // `content.computed_inputs` referencing the two upstream quiz slugs.
@@ -322,6 +423,87 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         )
       }
       case 'structured-text':
+        // Auto-fill the blank in the 'My Top Three Values' prompts from the
+        // Values Shopping Spree -> What Do I Value derived totals. We look up
+        // the upstream exercises and compute the top three labels, then
+        // substitute them into the structured prompts (replace the '___').
+        if (exercise.slug === 'top-three-values') {
+          try {
+            const rankingEx = exercises.find((e) => e.slug === 'what-do-i-value')
+            const sourceEx = exercises.find((e) => e.slug === 'values-shopping-spree')
+            const contentCopy = JSON.parse(JSON.stringify(content)) as any
+            if (rankingEx && sourceEx) {
+              const rankingItems = (rankingEx.content_json as any).items ?? []
+              const rows = (responses[sourceEx.id]?.response_json as any)?.rows ?? []
+              const pairCount = rankingItems.length || 0
+              const sums: Array<{ id: string; label: string; total: number }> = rankingItems.map((item: any, idx: number) => {
+                const firstRow = rows[idx] ?? []
+                const secondRow = rows[idx + pairCount] ?? []
+                const parse = (v: string | undefined) => {
+                  const cleaned = String(v ?? '').replace(/[^0-9.-]/g, '')
+                  const n = parseFloat(cleaned)
+                  return Number.isFinite(n) ? n : 0
+                }
+                const total = parse(firstRow[firstRow.length - 1]) + parse(secondRow[secondRow.length - 1])
+                return { id: item.id, label: item.label, total }
+              })
+              sums.sort((a, b) => b.total - a.total)
+              const top3 = sums.slice(0, 3)
+              // Replace '___' in the prompt with the short label (before ' —')
+              const short = (label: string) => (typeof label === 'string' ? String(label).split(' —')[0] : String(label))
+              contentCopy.questions = (contentCopy.questions ?? []).map((q: any, i: number) => {
+                const top = top3[i]
+                if (top) {
+                  // Allow short answers for the value-name field (participant may
+                  // only want to type the name). Set min_length to 1 so the
+                  // slide gate doesn't block on the 30-char default.
+                  const replaced = (q.prompt ?? q.label ?? '').replace('___', short(top.label))
+                  return { ...(q as any), prompt: replaced, min_length: 1 }
+                }
+                return q
+              })
+            }
+            return (
+              <StructuredTextExercise
+                {...commonProps}
+                content={contentCopy as Parameters<typeof StructuredTextExercise>[0]['content']}
+                initialResponse={resp?.response_json as Parameters<typeof StructuredTextExercise>[0]['initialResponse']}
+              />
+            )
+          } catch (err) {
+            // Fall back to normal rendering on error
+            return (
+              <StructuredTextExercise
+                {...commonProps}
+                content={content as Parameters<typeof StructuredTextExercise>[0]['content']}
+                initialResponse={resp?.response_json as Parameters<typeof StructuredTextExercise>[0]['initialResponse']}
+              />
+            )
+          }
+        }
+        // If a structured-text exercise contains many separate questions (4+),
+        // participants commonly fill short statements into each. Relax the
+        // per-question min_length to 1 at render time so the slide gate does
+        // not block when users enter short answers for each prompt. This is a
+        // non-destructive render-time change (seed content unchanged) and
+        // covers Past Experience Inventory, Contract With Myself, Mission
+        // Statement, Favorite Skills, and similar multi-question exercises.
+        try {
+          const maybeQuestions = (content as any)?.questions
+          if (Array.isArray(maybeQuestions) && maybeQuestions.length >= 2) {
+            const contentCopy = JSON.parse(JSON.stringify(content)) as any
+            contentCopy.questions = (contentCopy.questions ?? []).map((q: any) => ({ ...(q as any), min_length: 1 }))
+            return (
+              <StructuredTextExercise
+                {...commonProps}
+                content={contentCopy as Parameters<typeof StructuredTextExercise>[0]['content']}
+                initialResponse={resp?.response_json as Parameters<typeof StructuredTextExercise>[0]['initialResponse']}
+              />
+            )
+          }
+        } catch (err) {
+          // Fall through to default rendering on error
+        }
         return (
           <StructuredTextExercise
             {...commonProps}
@@ -349,7 +531,6 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
 
   let nextLabel: string | undefined
   if (isAtIntro) nextLabel = 'Begin →'
-  else if (isAtClosing) nextLabel = isLastSection ? 'Finish course →' : 'Continue to next section →'
 
   return (
     <PageShell title={section?.title}>

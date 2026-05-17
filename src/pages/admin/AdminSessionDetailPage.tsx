@@ -5,6 +5,7 @@ import { PageShell } from '@/components/layout/PageShell'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
+import { BulkAddModal } from '@/components/admin/BulkAddModal'
 import styles from './AdminSessionDetailPage.module.css'
 
 interface EnrollmentRow {
@@ -24,6 +25,7 @@ export default function AdminSessionDetailPage() {
   const [selectedParticipant, setSelectedParticipant] = useState('')
   const [enrolling, setEnrolling] = useState(false)
   const [removing, setRemoving] = useState<string | null>(null)
+  const [showBulkAdd, setShowBulkAdd] = useState(false)
 
   async function load() {
     if (!id) return
@@ -96,7 +98,19 @@ export default function AdminSessionDetailPage() {
         <Button onClick={enroll} loading={enrolling} disabled={!selectedParticipant}>
           Enroll
         </Button>
+        <Button variant="secondary" onClick={() => setShowBulkAdd(true)}>
+          Bulk add
+        </Button>
       </div>
+
+      {showBulkAdd ? (
+        <BulkAddModal
+          sessionId={id!}
+          sessionTitle={session?.title ?? ''}
+          onClose={() => setShowBulkAdd(false)}
+          onAdded={() => { setShowBulkAdd(false); load() }}
+        />
+      ) : null}
 
       {enrollments.length === 0 ? (
         <div className={styles.empty}>No participants enrolled yet.</div>

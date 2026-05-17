@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useExerciseSave } from '@/hooks/useExerciseSave'
+import { parseBlocks } from '@/lib/markdownBlocks'
 import styles from './TextExercise.module.css'
 
 interface TextContent {
@@ -43,9 +44,30 @@ export function TextExercise({
     save({ value: v }, v.trim().length > 0)
   }
 
+  // 006-iter6 / US4 (T061): render the prompt via the shared block-aware
+  // parser so numbered/bulleted lines become semantic <ol>/<ul> blocks.
+  const promptBlocks = parseBlocks(content.prompt)
+
   return (
     <div className={styles.container}>
-      <p className={styles.prompt}>{content.prompt}</p>
+      <div className={styles.prompt}>
+        {promptBlocks.map((b, i) => {
+          if (b.kind === 'br') return <br key={i} />
+          if (b.kind === 'p') return <p key={i}>{b.text}</p>
+          if (b.kind === 'ol') {
+            return (
+              <ol key={i} className={styles.numberedList}>
+                {b.items.map((it, j) => <li key={j}>{it}</li>)}
+              </ol>
+            )
+          }
+          return (
+            <ul key={i} className={styles.bulletList}>
+              {b.items.map((it, j) => <li key={j}>{it}</li>)}
+            </ul>
+          )
+        })}
+      </div>
       {readOnly ? (
         <div className={styles.readOnlyText}>
           {value || <span className={styles.empty}>No response recorded.</span>}

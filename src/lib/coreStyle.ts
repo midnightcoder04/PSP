@@ -66,3 +66,20 @@ export function resolveCoreStyleFromResponses(
 
   return mapCoreStyle({ extroversion, orientation })
 }
+
+/**
+ * 006-iter6 / US3 (T036): resolve the matched style and return the
+ * corresponding block from a `{D, I, S, C}`-keyed map. Returns `null`
+ * if the quiz answers don't resolve a style.
+ *
+ * Used by the deep-dive dispatchers (`CoreStyleInfo`, `CoreStyleChecklist`).
+ */
+export function pickStyleBlock<T>(
+  blocks: Record<CoreStyleLetter, T>,
+  q1Response: { selected_ids?: string[] } | null | undefined,
+  q2Response: { selected_ids?: string[] } | null | undefined
+): T | null {
+  const result = resolveCoreStyleFromResponses(q1Response, q2Response)
+  if (!result) return null
+  return blocks[result.letter]
+}

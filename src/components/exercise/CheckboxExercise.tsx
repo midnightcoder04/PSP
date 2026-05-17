@@ -35,6 +35,7 @@ interface CheckboxExerciseProps {
   participantId: string
   sessionId?: string | null
   readOnly?: boolean
+  showTally?: boolean
 }
 
 export function CheckboxExercise({
@@ -44,6 +45,7 @@ export function CheckboxExercise({
   participantId,
   sessionId,
   readOnly = false,
+  showTally = true,
 }: CheckboxExerciseProps) {
   const [selected, setSelected] = useState<Set<string>>(
     new Set(initialResponse?.selected_ids ?? [])
@@ -90,7 +92,7 @@ export function CheckboxExercise({
   return (
     <div className={styles.container}>
       <p className={styles.prompt}>{content.prompt}</p>
-      {watusiCounts && (
+      {showTally && watusiCounts && (
         <div
           className={styles.tally}
           role="status"
