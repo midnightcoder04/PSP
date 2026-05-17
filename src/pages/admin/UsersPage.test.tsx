@@ -108,7 +108,7 @@ describe('UsersPage', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /activate/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^reactivate$/i })).toBeInTheDocument()
     })
   })
 

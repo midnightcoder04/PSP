@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { useProgress } from '@/hooks/useProgress'
+import { useSectionLock } from '@/hooks/useSectionLock'
+import { useSectionGroups } from '@/hooks/useSectionGroups'
 import { PageShell } from '@/components/layout/PageShell'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
-import type { Section } from '@/types/database'
+import { LockIcon } from '@/components/ui/LockIcon'
+import { GroupBand } from '@/components/section/GroupBand'
+import type { Section, Progress } from '@/types/database'
 import styles from './CourseHome.module.css'
 
 export default function CourseHome() {
@@ -15,6 +19,7 @@ export default function CourseHome() {
   const navigate = useNavigate()
   const [sections, setSections] = useState<Section[]>([])
   const [sectionsLoading, setSectionsLoading] = useState(true)
+  const [resumeSlug, setResumeSlug] = useState<string | null>(null)
 
   const { progress, loading: progressLoading } = useProgress({
     participantId: profile?.id ?? '',
@@ -32,7 +37,25 @@ export default function CourseHome() {
       })
   }, [profile?.id])
 
-  // Resume position redirect on mount
+  const progressMap = useMemo(() => {
+    const m = new Map<string, Progress>()
+    for (const p of progress) m.set(p.section_id, p)
+    return m
+  }, [progress])
+
+  const locks = useSectionLock({ sections, progressMap })
+  const groups = useSectionGroups(sections)
+  // locks is ordered by section.order_index; map section.id → lock entry so we can
+  // re-render lock state inside each group's section list without breaking the
+  // existing useSectionLock contract.
+  const lockBySectionId = useMemo(() => {
+    const m = new Map<string, (typeof locks)[number]>()
+    for (const entry of locks) m.set(entry.section.id, entry)
+    return m
+  }, [locks])
+
+  // Resolve a resume target without auto-navigating. We surface a "Continue"
+  // CTA so the participant can always see the full 6-section overview first.
   useEffect(() => {
     if (!profile?.id) return
     supabase
@@ -40,26 +63,37 @@ export default function CourseHome() {
       .then(({ data }) => {
         if (data && data.length > 0) {
           const { section_slug } = data[0]
-          navigate(`/course/${section_slug}`, { replace: false })
+          const target = locks.find((l) => l.section.slug === section_slug)
+          if (target && !target.isLocked) {
+            setResumeSlug(section_slug)
+            return
+          }
         }
+        setResumeSlug(null)
       })
-  }, [profile?.id, navigate])
+  }, [profile?.id, locks])
 
-  const progressMap = Object.fromEntries(
-    progress.map((p) => [p.section_id, p])
-  )
+  const resumeTitle = resumeSlug
+    ? locks.find((l) => l.section.slug === resumeSlug)?.section.title ?? null
+    : null
+  const hasAnyProgress = progress.some((p) => p.completed_exercises > 0)
 
-  const overallPct = sections.length > 0
-    ? Math.round(
-        progress.reduce((sum, p) => sum + (p.completed_exercises / Math.max(p.total_exercises, 1)) * 100, 0)
-        / sections.length
-      )
-    : 0
+  const overallPct =
+    sections.length > 0
+      ? Math.round(
+          progress.reduce(
+            (sum, p) => sum + (p.completed_exercises / Math.max(p.total_exercises, 1)) * 100,
+            0
+          ) / sections.length
+        )
+      : 0
 
   if (sectionsLoading || progressLoading) {
     return (
       <PageShell title="My Course">
-        <div className={styles.loading}><Spinner size="lg" /></div>
+        <div className={styles.loading}>
+          <Spinner size="lg" />
+        </div>
       </PageShell>
     )
   }
@@ -79,38 +113,91 @@ export default function CourseHome() {
         </div>
       </div>
 
-      <div className={styles.grid}>
-        {sections.map((section) => {
-          const prog = progressMap[section.id]
-          const completed = prog?.completed_exercises ?? 0
-          const total = prog?.total_exercises ?? 0
-          const pct = total > 0 ? Math.round((completed / total) * 100) : 0
-          const isDone = prog?.section_completed_at != null
+      {resumeSlug && (
+        <div className={styles.continueRow}>
+          <button
+            type="button"
+            className={styles.continueBtn}
+            onClick={() => navigate(`/course/${resumeSlug}`)}
+          >
+            {hasAnyProgress ? 'Continue' : 'Start'}
+            {resumeTitle ? ` — ${resumeTitle}` : ''} →
+          </button>
+        </div>
+      )}
 
-          return (
-            <button
-              key={section.id}
-              className={`${styles.card} ${isDone ? styles.cardDone : ''}`}
-              onClick={() => navigate(`/course/${section.slug}`)}
-              aria-label={`${section.title} — ${pct}% complete`}
-            >
-              <div className={styles.cardTop}>
-                <ProgressRing pct={pct} size={52} strokeWidth={4} />
-                {isDone && <Badge variant="success">Complete</Badge>}
-              </div>
-              <h3 className={styles.cardTitle}>{section.title}</h3>
-              {section.subtitle && (
-                <p className={styles.cardSubtitle}>{section.subtitle}</p>
-              )}
-              <p className={styles.cardProgress}>{completed}/{total} exercises</p>
-            </button>
-          )
-        })}
+      <div className={styles.groups}>
+        {groups.map((group) => (
+          <GroupBand key={group.slug} group={group}>
+            {group.sections.map((section) => {
+              const lockEntry = lockBySectionId.get(section.id)
+              if (!lockEntry) return null
+              const { isLocked, prereqTitle } = lockEntry
+              const prog = progressMap.get(section.id)
+              const completed = prog?.completed_exercises ?? 0
+              const total = prog?.total_exercises ?? 0
+              const pct = total > 0 ? Math.round((completed / total) * 100) : 0
+              const isDone = prog?.section_completed_at != null
+
+              const ariaLabel = isLocked
+                ? `Locked — complete ${prereqTitle} first`
+                : `${section.title} — ${pct}% complete`
+
+              if (isLocked) {
+                return (
+                  <div
+                    key={section.id}
+                    className={`${styles.card} ${styles.cardLocked}`}
+                    data-locked="true"
+                    role="listitem"
+                    aria-label={ariaLabel}
+                    tabIndex={0}
+                    title={`Complete ${prereqTitle} first`}
+                  >
+                    <div className={styles.cardTop}>
+                      <LockIcon size={24} aria-label="Locked" />
+                    </div>
+                    <h3 className={styles.cardTitle}>{section.title}</h3>
+                    {section.subtitle && (
+                      <p className={styles.cardSubtitle}>{section.subtitle}</p>
+                    )}
+                    <p className={styles.cardProgress}>
+                      Locked — complete {prereqTitle} first
+                    </p>
+                  </div>
+                )
+              }
+
+              return (
+                <button
+                  key={section.id}
+                  className={`${styles.card} ${isDone ? styles.cardDone : ''}`}
+                  data-locked="false"
+                  role="listitem"
+                  onClick={() => navigate(`/course/${section.slug}`)}
+                  aria-label={ariaLabel}
+                >
+                  <div className={styles.cardTop}>
+                    <ProgressRing pct={pct} size={52} strokeWidth={4} />
+                    {isDone && <Badge variant="success">Complete</Badge>}
+                  </div>
+                  <h3 className={styles.cardTitle}>{section.title}</h3>
+                  {section.subtitle && (
+                    <p className={styles.cardSubtitle}>{section.subtitle}</p>
+                  )}
+                  <p className={styles.cardProgress}>
+                    {completed}/{total} exercises
+                  </p>
+                </button>
+              )
+            })}
+          </GroupBand>
+        ))}
       </div>
 
       <p className={styles.attribution}>
         Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada. All rights reserved.
-        Workshop facilitated by Bijo Abraham (Career &amp; Life Strategist), Select HR Solutions.
+        Workshop facilitated by Bijo Abraham (Career &amp; Life Strategist), Rise with PSP™.
       </p>
     </PageShell>
   )

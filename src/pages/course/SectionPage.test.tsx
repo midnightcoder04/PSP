@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import SectionPage from './SectionPage'
 
@@ -11,6 +12,7 @@ vi.mock('@/hooks/useAuth', () => ({
 
 vi.mock('@/hooks/useExerciseSave', () => ({
   useExerciseSave: () => ({ save: vi.fn(), saveImmediate: vi.fn(), status: 'idle' }),
+  LocalResponseUpdateContext: { Provider: ({ children }: { children: React.ReactNode }) => children },
 }))
 
 const mockSection = {
@@ -19,7 +21,18 @@ const mockSection = {
   title: 'Personality',
   subtitle: 'Understand your natural style',
   order_index: 1,
+  framing: null,
+  group_slug: 'self-awareness',
 }
+
+// Self-awareness has 5 sections; personality is #1 of 5.
+const mockSelfAwarenessPeers = [
+  { slug: 'personality', order_index: 1 },
+  { slug: 'attitude', order_index: 2 },
+  { slug: 'values', order_index: 3 },
+  { slug: 'roles-and-demands', order_index: 4 },
+  { slug: 'transferable-skills', order_index: 5 },
+]
 
 const mockExercises = [
   {
@@ -29,7 +42,8 @@ const mockExercises = [
     title: 'D.I.S.C. Overview',
     type: 'info',
     order_index: 1,
-    content_json: { prompt: 'Read about D.I.S.C.', body: 'The D.I.S.C. model...' },
+    slide_group: null,
+    content_json: { content: 'The D.I.S.C. model describes four primary behavioural styles.' },
     attribution: 'Adapted from Bill Bonnstetter / Target Training International',
   },
   {
@@ -39,6 +53,7 @@ const mockExercises = [
     title: 'My D.I.S.C. Style',
     type: 'checkbox',
     order_index: 2,
+    slide_group: null,
     content_json: {
       prompt: 'Select your dominant style',
       options: [
@@ -50,23 +65,28 @@ const mockExercises = [
   },
 ]
 
-function makeChain(data: unknown) {
+// Builds a chain where single()/maybeSingle() return `singleData` and the
+// awaitable then-path returns `listData`. Lets us model both the "fetch one
+// section by slug" and the "fetch peer sections by group_slug" calls without
+// re-wiring the mock per call.
+function makeChain(singleData: unknown, listData: unknown = singleData) {
   return {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     in: vi.fn().mockReturnThis(),
     is: vi.fn().mockReturnThis(),
-    order: vi.fn().mockReturnThis(),
-    single: vi.fn().mockResolvedValue({ data, error: null }),
+    order: vi.fn().mockImplementation(() => Promise.resolve({ data: listData, error: null })),
+    single: vi.fn().mockResolvedValue({ data: singleData, error: null }),
+    maybeSingle: vi.fn().mockResolvedValue({ data: singleData, error: null }),
     then: (cb: (v: { data: unknown; error: null }) => void) =>
-      Promise.resolve({ data, error: null }).then(cb),
+      Promise.resolve({ data: listData, error: null }).then(cb),
   }
 }
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: vi.fn((table: string) => {
-      if (table === 'sections') return makeChain(mockSection)
+      if (table === 'sections') return makeChain(mockSection, mockSelfAwarenessPeers)
       if (table === 'exercises') return makeChain(mockExercises)
       if (table === 'responses') return makeChain([])
       return makeChain(null)
@@ -84,44 +104,71 @@ function renderSectionPage() {
   )
 }
 
-describe('SectionPage', () => {
+describe('SectionPage (slide-based)', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('renders exercises after loading', async () => {
+  it('renders the section title', async () => {
     renderSectionPage()
-
-    await waitFor(() => {
-      expect(screen.getByText('D.I.S.C. Overview')).toBeInTheDocument()
-    })
-
-    expect(screen.getByText('My D.I.S.C. Style')).toBeInTheDocument()
-  })
-
-  it('renders exercises in order_index order', async () => {
-    renderSectionPage()
-
-    await waitFor(() => {
-      expect(screen.getByText('D.I.S.C. Overview')).toBeInTheDocument()
-    })
-
-    const headings = screen.getAllByRole('heading', { level: 3 })
-    expect(headings[0]).toHaveTextContent('D.I.S.C. Overview')
-    expect(headings[1]).toHaveTextContent('My D.I.S.C. Style')
-  })
-
-  it('shows the section title', async () => {
-    renderSectionPage()
-
     await waitFor(() => {
       expect(screen.getByText('Personality')).toBeInTheDocument()
     })
   })
 
-  it('renders a back button', async () => {
+  it('renders only one active slide at a time', async () => {
     renderSectionPage()
+    await waitFor(() => {
+      expect(screen.getByText('D.I.S.C. Overview')).toBeInTheDocument()
+    })
+    const activeSlides = document.querySelectorAll('[data-slide-active="true"]')
+    expect(activeSlides).toHaveLength(1)
+  })
+
+  it('shows the next button which advances slides', async () => {
+    const user = userEvent.setup()
+    renderSectionPage()
+    await waitFor(() => {
+      expect(screen.getByText('D.I.S.C. Overview')).toBeInTheDocument()
+    })
+
+    // First exercise is info type → next is enabled.
+    const next = screen.getByRole('button', { name: /next slide/i })
+    expect(next).not.toBeDisabled()
+    await user.click(next)
+
+    // After advancing, the checkbox slide is active.
+    await waitFor(() => {
+      const active = document.querySelectorAll('[data-slide-active="true"]')
+      expect(active).toHaveLength(1)
+      expect(active[0].textContent).toContain('My D.I.S.C. Style')
+    })
+  })
+
+  it('disables next on the checkbox slide until the exercise is complete', async () => {
+    const user = userEvent.setup()
+    renderSectionPage()
+    await waitFor(() => {
+      expect(screen.getByText('D.I.S.C. Overview')).toBeInTheDocument()
+    })
+    await user.click(screen.getByRole('button', { name: /next slide/i }))
 
     await waitFor(() => {
+      const next = screen.getByRole('button', { name: /next slide|finish section/i })
+      expect(next).toBeDisabled()
+    })
+  })
+
+  it('renders a back-to-course control', async () => {
+    renderSectionPage()
+    await waitFor(() => {
       expect(screen.getByText(/back to course/i)).toBeInTheDocument()
+    })
+  })
+
+  // US5 — group-context affordance in the section header (004-content-restructure)
+  it('renders a group-context affordance "Self Awareness · 1 of 5" for personality', async () => {
+    renderSectionPage()
+    await waitFor(() => {
+      expect(screen.getByText(/Self Awareness · 1 of 5/)).toBeInTheDocument()
     })
   })
 })

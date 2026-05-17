@@ -84,4 +84,26 @@ describe('CheckboxExercise', () => {
     await user.click(checkbox)
     expect(mockSave).not.toHaveBeenCalled()
   })
+
+  it('hides the WATUSI tally when showTally is false', () => {
+    const watusiContent = {
+      prompt: 'Select your dominant traits',
+      options: [
+        { id: 'w_1', label: 'W one' },
+        { id: 'a_1', label: 'A one' },
+      ],
+      allow_multiple: true,
+    }
+
+    render(
+      <CheckboxExercise
+        {...defaultProps}
+        content={watusiContent}
+        initialResponse={{ selected_ids: ['w_1', 'a_1'] }}
+        showTally={false}
+      />
+    )
+
+    expect(screen.queryByLabelText('Attitude group counts')).not.toBeInTheDocument()
+  })
 })

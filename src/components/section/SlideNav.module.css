@@ -1,0 +1,106 @@
+.slideNav {
+  position: fixed;
+  bottom: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  z-index: 50;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  padding: 24px var(--space-4);
+}
+
+:global([data-sidebar-collapsed='true']) .slideNav {
+  left: var(--sidebar-collapsed-width);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  max-width: var(--max-dashboard);
+  margin: 0 auto;
+}
+
+.leftGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.prev,
+.next {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 14px 21px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.next {
+  background: var(--color-trust);
+  color: var(--color-on-trust, white);
+  border-color: var(--color-trust);
+}
+
+.prev:hover:not(:disabled),
+.next:hover:not(:disabled) {
+  filter: brightness(0.96);
+}
+
+.prev:disabled,
+.next:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.prev:focus-visible,
+.next:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 2px;
+}
+
+.hint {
+  flex: 1;
+  margin: 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.backLink {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.backLink:hover {
+  color: var(--color-trust);
+  background: var(--color-trust-light, transparent);
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .slideNav {
+    left: 0;
+    padding: 8px var(--space-2);
+  }
+}

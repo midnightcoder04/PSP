@@ -135,9 +135,12 @@ read all their exercise responses exactly as entered.
   and participants.
 - **FR-004**: Admin MUST be able to create workshop sessions, set titles and dates, and assign
   exactly one facilitator per session.
-- **FR-005**: Admin MUST be able to enroll and unenroll participants in sessions.
+- **FR-005**: Admin MUST be able to enroll and unenroll participants in sessions. *(Mechanism:
+  toggling `enrollments.is_active` for a specific (participant, session) pair — affects only that
+  session.)*
 - **FR-006**: Admin MUST be able to grant and revoke a participant's course access independently
-  of session enrollment.
+  of session enrollment. *(Mechanism: toggling `profiles.is_active` — revokes the participant's
+  ability to log in or access ANY session, regardless of enrollment state.)*
 - **FR-007**: Admin MUST be able to view aggregate completion statistics: sessions count,
   participant count, overall and per-section completion rates.
 - **FR-008**: System MUST track each participant's progress at the exercise level within each

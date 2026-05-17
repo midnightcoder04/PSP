@@ -3,10 +3,26 @@
     {
       "slug": "personality",
       "title": "Personality",
-      "subtitle": "Filter 1 of 5",
-      "description": "Discover your Personal Behavioural Design using the D.I.S.C. model. Understanding your personality preferences helps you work with your natural tendencies, improve relationships, and reduce stress in every area of life.",
+      "subtitle": null,
+      "description": null,
       "order_index": 1,
-      "icon_name": "user",
+      "group_slug": "self-awareness",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "Until you make the unconscious conscious, it will direct your life and you will call it fate.",
+          "attribution": "— Carl Jung"
+        },
+        "opening_question": "If we asked the five people closest to you to describe how you make decisions, would they all give the same answer?",
+        "facilitator_says": "D.I.S.C. isn't a label — it's a mirror. Today we're going to look at how you naturally show up, before we look at how you choose to show up.",
+        "why_it_matters": "Strategy starts with self-knowledge. You can't plan a life you don't understand. Your D.I.S.C. style shapes how you make decisions, who energises you, and what kind of work feels effortless. Knowing it doesn't lock you in — it gives you a starting point.",
+        "closing_reflection": "What is one D.I.S.C. trait that helps you, and one that gets in your way?",
+        "bridge_to_next": "Knowing your style is one filter. Now we look at the lenses you see through it: your attitudes.",
+        "reading_material": {
+          "title": "How To Read and Understand People — Bill Bonnstetter (TTI)",
+          "content": "A short primer on the D.I.S.C. behavioural model — the framework underneath this section. Bonnstetter explains why the four primary styles (Dominance, Influence, Steadiness, Compliance) are observable patterns, not fixed labels, and how each one tends to make decisions, communicate, and react under pressure. The PSP workshop adapts this work with permission."
+        }
+      },
       "exercises": [
         {
           "slug": "disc-introduction",
@@ -18,207 +34,129 @@
           "content_json": {
             "content": "The D.I.S.C. MODEL was developed by Bill Bonnstetter at Target Training International, Phoenix, Arizona. It is based on the psychology of Carl Jung and William Moulton Marston and is widely accepted as an effective tool for enhancing performance in all areas of life.\n\nThrough the combined Nature/Nurture process of growing, you have developed specific ways of interacting with the world. This is your Personal Behavioural Style, or CORE STYLE.\n\nThe D.I.S.C. model uses four factors to determine behaviour:\n\n1. THE DOMINANCE FACTOR (D) — How you handle problems and challenges\n2. THE INFLUENCE FACTOR (I) — How you handle people and influence others\n3. THE STEADINESS FACTOR (S) — How you handle and pace yourself\n4. THE COMPLIANCE FACTOR (C) — How you handle the rules set by others\n\nHow you will benefit:\n• Increased Self Understanding\n• Increased Understanding of Others\n• Increased Communication Skills\n• Less Stress\n• Decreased Tension\n• Improved Relationships (Family, Work/Business, Social)",
             "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)"
-          }
+          },
+          "slide_group": 1
         },
         {
-          "slug": "identifying-personal-style",
-          "title": "EXERCISE: Identifying Your Own Personal Style",
+          "slug": "core-style-q1-extroversion",
+          "title": "EXERCISE: Core Style — Question 1 (Extroversion)",
           "type": "checkbox",
           "order_index": 2,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "In the following four categories (D, I, S, C), check which of the statements you tend to agree with more. Rate how strongly (1 to 10) you agree with each statement. Your highest rating indicates your BASIC CORE STYLE.",
+            "prompt": "Question 1: Are you predominantly EXTROVERTED or INTROVERTED?",
             "options": [
               {
-                "id": "opt_d",
-                "label": "D — Dominance: You tend to be very active and aggressive in gaining results. You will go directly at the problem with little or no fear. (How you handle problems and challenges)",
+                "id": "q1_extroverted",
+                "label": "Extroverted — I gain energy from interacting with people and the outside world.",
                 "value": 1
               },
               {
-                "id": "opt_i",
-                "label": "I — Influence: You usually are very approachable and open to others. Outgoing, social, very verbally persuasive. (How you interact with other people)",
-                "value": 2
-              },
-              {
-                "id": "opt_s",
-                "label": "S — Steadiness: You prefer a structured and more predictable environment, having the parameters and boundaries clearly defined. Prefer a secure situation. (How you handle a steady pace and your workplace)",
-                "value": 3
-              },
-              {
-                "id": "opt_c",
-                "label": "C — Compliance: You tend to follow rules set by others and you are very aware of the consequences of not complying with rules or following procedures. (How you respond to rules and procedures imposed by others)",
-                "value": 4
+                "id": "q1_introverted",
+                "label": "Introverted — I gain energy from quiet reflection and my inner world.",
+                "value": 1
               }
             ],
             "allow_multiple": false
           }
         },
         {
-          "slug": "disc-core-style-d",
-          "title": "HIGH D — Dominance Core Style Profile",
+          "slug": "core-style-q2-orientation",
+          "title": "EXERCISE: Core Style — Question 2 (Orientation)",
           "type": "checkbox",
           "order_index": 3,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on D — Dominance, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH D.",
+            "prompt": "Question 2: Are you predominantly PEOPLE-ORIENTED or TASK-ORIENTED?",
             "options": [
-              { "id": "d_char_1", "label": "Able to make decisions quickly", "value": 1 },
-              { "id": "d_char_2", "label": "Willing to state unpopular opinions", "value": 1 },
-              { "id": "d_char_3", "label": "Risk taking", "value": 1 },
-              { "id": "d_env_1", "label": "I thrive with freedom from controls, supervision and details", "value": 1 },
-              { "id": "d_env_2", "label": "I prefer evaluation based on results, not process or method", "value": 1 },
-              { "id": "d_env_3", "label": "I prefer an innovative and futuristic oriented environment", "value": 1 },
-              { "id": "d_env_4", "label": "I prefer non-routine work with challenge and opportunity", "value": 1 },
-              { "id": "d_env_5", "label": "I need a forum to express my ideas and viewpoints", "value": 1 },
-              { "id": "d_trait_1", "label": "Ambitious", "value": 1 },
-              { "id": "d_trait_2", "label": "Forceful", "value": 1 },
-              { "id": "d_trait_3", "label": "Decisive", "value": 1 },
-              { "id": "d_trait_4", "label": "Direct", "value": 1 },
-              { "id": "d_trait_5", "label": "Independent", "value": 1 },
-              { "id": "d_trait_6", "label": "Challenging", "value": 1 },
-              { "id": "d_trait_7", "label": "Results oriented", "value": 1 },
-              { "id": "d_trait_8", "label": "I have a desire to win", "value": 1 },
-              { "id": "d_trait_9", "label": "Argumentative", "value": 1 },
-              { "id": "d_trait_10", "label": "Fast paced", "value": 1 },
-              { "id": "d_trait_11", "label": "I tend to juggle a lot at once", "value": 1 },
-              { "id": "d_trait_12", "label": "I am quick to accept challenge", "value": 1 },
-              { "id": "d_trait_13", "label": "I usually interrupt and am impatient with long explanations", "value": 1 },
-              { "id": "d_trait_14", "label": "I tend to act or speak before thinking", "value": 1 },
-              { "id": "d_trait_15", "label": "I am not afraid of high risk", "value": 1 },
-              { "id": "d_trait_16", "label": "I tend to create fear in others", "value": 1 },
-              { "id": "d_trait_17", "label": "I tend to be impatient", "value": 1 }
+              {
+                "id": "q2_people",
+                "label": "People-oriented — I focus on relationships, collaboration, and how people feel.",
+                "value": 1
+              },
+              {
+                "id": "q2_task",
+                "label": "Task-oriented — I focus on results, structure, and getting things done.",
+                "value": 1
+              }
             ],
-            "allow_multiple": true
+            "allow_multiple": false
           }
         },
         {
-          "slug": "disc-core-style-i",
-          "title": "HIGH I — Influence Core Style Profile",
-          "type": "checkbox",
+          "slug": "core-style-result",
+          "title": "Your Core Style",
+          "type": "info",
           "order_index": 4,
-          "is_scored": true,
+          "slide_group": 3,
+          "is_scored": false,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on I — Influence, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH I.",
-            "options": [
-              { "id": "i_char_1", "label": "A natural optimist", "value": 1 },
-              { "id": "i_char_2", "label": "Trusting of others", "value": 1 },
-              { "id": "i_char_3", "label": "Able to make others feel welcome and/or included", "value": 1 },
-              { "id": "i_env_1", "label": "I thrive with assignments involving a high degree of people contacts", "value": 1 },
-              { "id": "i_env_2", "label": "I enjoy tasks involving motivating groups and establishing a network of contacts", "value": 1 },
-              { "id": "i_env_3", "label": "I prefer a democratic supervisor with whom I can associate", "value": 1 },
-              { "id": "i_env_4", "label": "I need freedom from control and detail", "value": 1 },
-              { "id": "i_env_5", "label": "I need freedom of movement", "value": 1 },
-              { "id": "i_env_6", "label": "I prefer multi-changing work tasks", "value": 1 },
-              { "id": "i_trait_1", "label": "Expressive", "value": 1 },
-              { "id": "i_trait_2", "label": "Enthusiastic", "value": 1 },
-              { "id": "i_trait_3", "label": "Friendly", "value": 1 },
-              { "id": "i_trait_4", "label": "Demonstrative", "value": 1 },
-              { "id": "i_trait_5", "label": "Talkative", "value": 1 },
-              { "id": "i_trait_6", "label": "Stimulating", "value": 1 },
-              { "id": "i_trait_7", "label": "I have a good sense of humor", "value": 1 },
-              { "id": "i_trait_8", "label": "I treat everyone as a friend", "value": 1 },
-              { "id": "i_trait_9", "label": "I am fun loving", "value": 1 },
-              { "id": "i_trait_10", "label": "I am a creative problem solver", "value": 1 },
-              { "id": "i_trait_11", "label": "I am usually very optimistic", "value": 1 },
-              { "id": "i_trait_12", "label": "I tend to talk before thinking", "value": 1 },
-              { "id": "i_trait_13", "label": "I very often lose track of time", "value": 1 },
-              { "id": "i_trait_14", "label": "I prefer to back away from conflict", "value": 1 },
-              { "id": "i_trait_15", "label": "I tend to be disorganized", "value": 1 },
-              { "id": "i_trait_16", "label": "I am very trusting of others", "value": 1 }
-            ],
-            "allow_multiple": true
+            "content": "Based on your two answers, your Core Style maps to one of the four D.I.S.C. types per the workbook's mapping rule:\n\n1. Extroverted + Task-oriented = Core D — Dominance\n2. Extroverted + People-oriented = Core I — Influence\n3. Introverted + People-oriented = Core S — Steadiness\n4. Introverted + Task-oriented = Core C — Compliance\n\n{result}\n\nOn the next slides you'll read through each style's strengths, ideal environment, and comfort zones — not just your own. Knowing how other styles work makes every relationship easier.",
+            "computed": "core_style",
+            "computed_inputs": [
+              "core-style-q1-extroversion",
+              "core-style-q2-orientation"
+            ]
           }
         },
         {
-          "slug": "disc-core-style-s",
-          "title": "HIGH S — Steadiness Core Style Profile",
-          "type": "checkbox",
+          "slug": "disc-profile-d",
+          "title": "HIGH D — Dominance Profile",
+          "type": "info",
           "order_index": 5,
-          "is_scored": true,
+          "slide_group": 4,
+          "is_scored": false,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on S — Steadiness, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH S.",
-            "options": [
-              { "id": "s_char_1", "label": "A tenacity for order", "value": 1 },
-              { "id": "s_char_2", "label": "A natural ability to organize tasks", "value": 1 },
-              { "id": "s_env_1", "label": "I thrive in jobs where standards and methods are established", "value": 1 },
-              { "id": "s_env_2", "label": "I prefer environments where long-standing relationships can be developed", "value": 1 },
-              { "id": "s_env_3", "label": "I need personal attention and recognition for tasks completed and well done", "value": 1 },
-              { "id": "s_env_4", "label": "I prefer a stable and predictable environment", "value": 1 },
-              { "id": "s_env_5", "label": "I need environments that allow time for change", "value": 1 },
-              { "id": "s_env_6", "label": "I prefer environments where I can deal with people on a personal, intimate basis", "value": 1 },
-              { "id": "s_trait_1", "label": "Methodical", "value": 1 },
-              { "id": "s_trait_2", "label": "Systematic", "value": 1 },
-              { "id": "s_trait_3", "label": "Reliable", "value": 1 },
-              { "id": "s_trait_4", "label": "Steady", "value": 1 },
-              { "id": "s_trait_5", "label": "Relaxed", "value": 1 },
-              { "id": "s_trait_6", "label": "Modest", "value": 1 },
-              { "id": "s_trait_7", "label": "I need secure situations", "value": 1 },
-              { "id": "s_trait_8", "label": "I'm a good planner", "value": 1 },
-              { "id": "s_trait_9", "label": "I need closure", "value": 1 },
-              { "id": "s_trait_10", "label": "I'm a great listener", "value": 1 },
-              { "id": "s_trait_11", "label": "I am usually calm and stabilize others", "value": 1 },
-              { "id": "s_trait_12", "label": "I mask my emotions", "value": 1 },
-              { "id": "s_trait_13", "label": "I tend to be indirect to avoid conflict", "value": 1 },
-              { "id": "s_trait_14", "label": "I tend to be possessive of things", "value": 1 },
-              { "id": "s_trait_15", "label": "I tend to be too low risk", "value": 1 },
-              { "id": "s_trait_16", "label": "I tend to hold a grudge", "value": 1 },
-              { "id": "s_trait_17", "label": "I tend to adapt very quickly to others", "value": 1 },
-              { "id": "s_trait_18", "label": "I tend to resist changes", "value": 1 }
-            ],
-            "allow_multiple": true
+            "content": "HIGH D — Dominance\n\nIf you are HIGH D, you are able to make decisions quickly, willing to state unpopular opinions, and naturally risk-taking. You are direct, decisive, and results-oriented.\n\nIdeal environment\nYou thrive with freedom from controls, supervision and details. You prefer evaluation based on results — not process or method — and gravitate toward innovative, futuristic, non-routine work that gives you challenge and opportunity. You need a forum where you can express your ideas and viewpoints.\n\nCharacteristics\nAmbitious, forceful, decisive, direct, independent, challenging, results-oriented. You carry a strong desire to win, work at a fast pace, and tend to juggle several things at once. You are quick to accept a challenge, are not afraid of high risk, and may interrupt or speak before thinking. Others sometimes find your style impatient or fear-inducing — useful to know when you collaborate.\n\nComfort zone with other styles\n• With another D — the same approach, but your shared need to have your own way narrows the comfort zone.\n• With an I — both extroverted; the I's verbal skill and people focus widens interaction comfortably.\n• With an S — low comfort zone; the S tends to back down from your assertive style and both can feel frustrated.\n• With a C — your need for immediate results clashes with the C's drive to analyse and test first."
           }
         },
         {
-          "slug": "disc-core-style-c",
-          "title": "HIGH C — Compliance Core Style Profile",
-          "type": "checkbox",
+          "slug": "disc-profile-i",
+          "title": "HIGH I — Influence Profile",
+          "type": "info",
           "order_index": 6,
-          "is_scored": true,
+          "slide_group": 4,
+          "is_scored": false,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "If you scored highest on C — Compliance, check all the characteristics below that resonate with you. These describe your natural strengths, ideal environment, and tendencies as a HIGH C.",
-            "options": [
-              { "id": "c_char_1", "label": "A natural systems developer", "value": 1 },
-              { "id": "c_char_2", "label": "A good quality control person", "value": 1 },
-              { "id": "c_char_3", "label": "Willing to dig for information", "value": 1 },
-              { "id": "c_env_1", "label": "I thrive where critical thinking is needed and rewarded", "value": 1 },
-              { "id": "c_env_2", "label": "I prefer assignments that can be followed through to completion", "value": 1 },
-              { "id": "c_env_3", "label": "I prefer technical, task-oriented, specialized work", "value": 1 },
-              { "id": "c_env_4", "label": "I prefer environments where noise and people are at a minimum", "value": 1 },
-              { "id": "c_env_5", "label": "I prefer close relationships with a small group of people", "value": 1 },
-              { "id": "c_env_6", "label": "I thrive where quality and/or standards are important", "value": 1 },
-              { "id": "c_trait_1", "label": "Analytical", "value": 1 },
-              { "id": "c_trait_2", "label": "Contemplative", "value": 1 },
-              { "id": "c_trait_3", "label": "Conservative", "value": 1 },
-              { "id": "c_trait_4", "label": "Exacting", "value": 1 },
-              { "id": "c_trait_5", "label": "Careful", "value": 1 },
-              { "id": "c_trait_6", "label": "Deliberate", "value": 1 },
-              { "id": "c_trait_7", "label": "I like to organize and analyze", "value": 1 },
-              { "id": "c_trait_8", "label": "I work well alone", "value": 1 },
-              { "id": "c_trait_9", "label": "I have high expectations", "value": 1 },
-              { "id": "c_trait_10", "label": "I like to follow rules", "value": 1 },
-              { "id": "c_trait_11", "label": "I am self-competitive", "value": 1 },
-              { "id": "c_trait_12", "label": "I can solve complex problems", "value": 1 },
-              { "id": "c_trait_13", "label": "I live my life by rules of behaving", "value": 1 },
-              { "id": "c_trait_14", "label": "I tend to want as much data as possible", "value": 1 },
-              { "id": "c_trait_15", "label": "I tend to be hard on myself", "value": 1 },
-              { "id": "c_trait_16", "label": "I never take unnecessary chances", "value": 1 },
-              { "id": "c_trait_17", "label": "I tend to feel emotions are very irrational", "value": 1 },
-              { "id": "c_trait_18", "label": "I tend to see faults in others", "value": 1 },
-              { "id": "c_trait_19", "label": "I tend to analyze things to death", "value": 1 }
-            ],
-            "allow_multiple": true
+            "content": "HIGH I — Influence\n\nIf you are HIGH I, you are a natural optimist, trusting of others, and able to make others feel welcome and included. You are expressive, enthusiastic, and persuasive.\n\nIdeal environment\nYou thrive on assignments with a high degree of people contact — motivating groups, building networks. You prefer a democratic supervisor you can associate with, freedom from control and detail, freedom of movement, and multi-changing work tasks.\n\nCharacteristics\nExpressive, enthusiastic, friendly, demonstrative, talkative, stimulating. You have a good sense of humour, treat everyone as a friend, are fun-loving and a creative problem solver. You are usually optimistic, may talk before thinking, sometimes lose track of time, prefer to back away from conflict, can tend toward disorganisation, and are very trusting of others.\n\nComfort zone with other styles\n• With a D — both extroverted; your verbal skills and people focus widen the comfort zone.\n• With another I — high comfort zone, maximised by mutual enjoyment of personal interaction.\n• With an S — both people-oriented, but the S's social conscience may irritate you, and the S may perceive you as unfeeling.\n• With a C — your people skills and high trust threshold relax the C's need to establish rationale for trust."
+          }
+        },
+        {
+          "slug": "disc-profile-s",
+          "title": "HIGH S — Steadiness Profile",
+          "type": "info",
+          "order_index": 7,
+          "slide_group": 5,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "content": "HIGH S — Steadiness\n\nIf you are HIGH S, you have a tenacity for order and a natural ability to organize tasks. You are steady, reliable, and calming to those around you.\n\nIdeal environment\nYou thrive in jobs where standards and methods are established, where long-standing relationships develop, and where you receive personal attention and recognition for tasks completed well. You prefer a stable, predictable environment that allows time for change, and where people can be dealt with on a personal, intimate basis.\n\nCharacteristics\nMethodical, systematic, reliable, steady, relaxed, modest. You need secure situations, are a good planner, need closure, and listen well. You usually stabilize others, may mask your emotions, tend to be indirect to avoid conflict, can be possessive of things, prefer low risk, occasionally hold a grudge, adapt quickly to others, and tend to resist changes.\n\nComfort zone with other styles\n• With a D — low comfort zone; you tend to back down from the D's assertive style and both can feel frustrated.\n• With an I — both people-oriented, but your social conscience may irritate the I, and you may perceive the I as unfeeling.\n• With another S — very high comfort zone; similar opinions plus high tolerance and sociability.\n• With a C — your high respect for others and tolerance of differences let you approach a C without alarming their introverted response."
+          }
+        },
+        {
+          "slug": "disc-profile-c",
+          "title": "HIGH C — Compliance Profile",
+          "type": "info",
+          "order_index": 8,
+          "slide_group": 5,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "content": "HIGH C — Compliance\n\nIf you are HIGH C, you are a natural systems developer, a good quality-control person, and willing to dig for information. You are analytical, careful, and precise.\n\nIdeal environment\nYou thrive where critical thinking is needed and rewarded, where assignments can be followed through to completion, in technical, task-oriented, specialized work. You prefer environments where noise and people are at a minimum, with close relationships among a small group, and where quality and standards matter.\n\nCharacteristics\nAnalytical, contemplative, conservative, exacting, careful, deliberate. You like to organize and analyse, work well alone, hold high expectations, follow rules, are self-competitive, and can solve complex problems. You like as much data as possible, are hard on yourself, never take unnecessary chances, may see emotions as irrational, tend to see faults in others, and can analyse things to death.\n\nComfort zone with other styles\n• With a D — the D's need for immediate results clashes with your drive to analyse first.\n• With an I — the I's people skills and high trust threshold relax your need to establish rationale for trust.\n• With an S — the S's respect for others and tolerance of differences let them approach you without alarming your introverted response.\n• With another C — high comfort zone; mutual respect for rules and protocol plus a shared desire to avoid conflict."
           }
         },
         {
           "slug": "my-core-style",
           "title": "My Core Style — People Reading",
           "type": "text",
-          "order_index": 7,
+          "order_index": 99,
           "is_scored": false,
           "attribution": null,
           "content_json": {
@@ -226,17 +164,411 @@
             "placeholder": "My Core Style is ___ because...",
             "min_length": 10,
             "max_length": 2000
+          },
+          "slide_group": null
+        },
+        {
+          "slug": "core-style-characteristics",
+          "title": "Characteristics of Your Core Style",
+          "type": "info",
+          "order_index": 9,
+          "slide_group": 7,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "content": "Answer the two questions on the quiz slide to see your matched style's characteristics here.",
+            "computed": "core_style_section",
+            "computed_inputs": [
+              "core-style-q1-extroversion",
+              "core-style-q2-orientation"
+            ],
+            "sections_by_style": {
+              "D": "If you are HIGH D, you are:\n• Able to make decisions quickly\n• Willing to state unpopular opinions\n• Risk taking",
+              "I": "If you are HIGH I, you:\n• Are a natural optimist\n• Trusting of others\n• Able to make others feel welcome and/or included",
+              "S": "If you are HIGH S, you:\n• Have a tenacity for order\n• Possess a natural ability to organize tasks",
+              "C": "If you are HIGH C, you:\n• Are a natural systems developer\n• Are a good quality control person\n• Are willing to dig for information"
+            }
+          }
+        },
+        {
+          "slug": "core-style-ideal-environment",
+          "title": "Your Ideal Environment",
+          "type": "info",
+          "order_index": 10,
+          "slide_group": 8,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "content": "Answer the two questions on the quiz slide to see your matched style's ideal environment here.",
+            "computed": "core_style_section",
+            "computed_inputs": [
+              "core-style-q1-extroversion",
+              "core-style-q2-orientation"
+            ],
+            "sections_by_style": {
+              "D": "Ideal environment for the HIGH D:\n• Freedom from controls, supervision and details\n• Evaluation based on results, not process or method\n• An innovative and futuristic oriented environment\n• Non-routine work with challenge and opportunity\n• A forum for them to express their ideas and viewpoints",
+              "I": "Ideal environment for the HIGH I:\n• Assignments with a high degree of people contacts\n• Tasks involving motivating groups and establishing a network of contacts\n• Democratic supervisor with whom they can associate\n• Freedom from control and detail\n• Freedom of movement\n• Multi-changing work tasks",
+              "S": "Ideal environment for the HIGH S:\n• Jobs for which standards and methods are established\n• Environment where long standing relationships can be or are developed\n• Personal attention and recognition for tasks complete and well done\n• Stable and predictable environment\n• Environment that allows time for change\n• Environment where people can be dealt with on a personal, intimate basis",
+              "C": "Ideal environment for the HIGH C:\n• Where critical thinking is needed and rewarded\n• Assignments can be followed through to completion\n• Technical, task-oriented work, specialized\n• Noise and people are at a minimum\n• Close relationship with a small group of people\n• Environment where quality and/or standards are important"
+            }
+          }
+        },
+        {
+          "slug": "core-style-traits-checklist",
+          "title": "Your Characteristics Checklist (Optional)",
+          "type": "checkbox",
+          "order_index": 11,
+          "slide_group": 9,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "prompt": "Tick the characteristics that resonate with you. This is optional — you can move on without ticking any.",
+            "allow_multiple": true,
+            "computed": "core_style_options",
+            "computed_inputs": [
+              "core-style-q1-extroversion",
+              "core-style-q2-orientation"
+            ],
+            "options_by_style": {
+              "D": [
+                {
+                  "id": "d_t1",
+                  "label": "Ambitious"
+                },
+                {
+                  "id": "d_t2",
+                  "label": "Forceful"
+                },
+                {
+                  "id": "d_t3",
+                  "label": "Decisive"
+                },
+                {
+                  "id": "d_t4",
+                  "label": "Direct"
+                },
+                {
+                  "id": "d_t5",
+                  "label": "Independent"
+                },
+                {
+                  "id": "d_t6",
+                  "label": "Challenging"
+                },
+                {
+                  "id": "d_t7",
+                  "label": "Results oriented"
+                },
+                {
+                  "id": "d_t8",
+                  "label": "I have a desire to win"
+                },
+                {
+                  "id": "d_t9",
+                  "label": "Argumentative"
+                },
+                {
+                  "id": "d_t10",
+                  "label": "Fast paced"
+                },
+                {
+                  "id": "d_t11",
+                  "label": "I tend to juggle a lot at once"
+                },
+                {
+                  "id": "d_t12",
+                  "label": "I am quick to accept challenge"
+                },
+                {
+                  "id": "d_t13",
+                  "label": "I usually interrupt and am impatient with long explanations"
+                },
+                {
+                  "id": "d_t14",
+                  "label": "I tend to act or speak before thinking"
+                },
+                {
+                  "id": "d_t15",
+                  "label": "I am not afraid of high risk"
+                },
+                {
+                  "id": "d_t16",
+                  "label": "I tend to create fear in others"
+                },
+                {
+                  "id": "d_t17",
+                  "label": "I tend to be impatient"
+                }
+              ],
+              "I": [
+                {
+                  "id": "i_t1",
+                  "label": "Expressive"
+                },
+                {
+                  "id": "i_t2",
+                  "label": "Enthusiastic"
+                },
+                {
+                  "id": "i_t3",
+                  "label": "Friendly"
+                },
+                {
+                  "id": "i_t4",
+                  "label": "Demonstrative"
+                },
+                {
+                  "id": "i_t5",
+                  "label": "Talkative"
+                },
+                {
+                  "id": "i_t6",
+                  "label": "Stimulating"
+                },
+                {
+                  "id": "i_t7",
+                  "label": "I have a good sense of humor"
+                },
+                {
+                  "id": "i_t8",
+                  "label": "I treat everyone as a friend"
+                },
+                {
+                  "id": "i_t9",
+                  "label": "I am fun loving"
+                },
+                {
+                  "id": "i_t10",
+                  "label": "I am a creative problem solver"
+                },
+                {
+                  "id": "i_t11",
+                  "label": "I am usually very optimistic"
+                },
+                {
+                  "id": "i_t12",
+                  "label": "I tend to talk before thinking"
+                },
+                {
+                  "id": "i_t13",
+                  "label": "I very often lose track of time"
+                },
+                {
+                  "id": "i_t14",
+                  "label": "I prefer to back away from conflict"
+                },
+                {
+                  "id": "i_t15",
+                  "label": "I tend to be disorganized"
+                },
+                {
+                  "id": "i_t16",
+                  "label": "I am very trusting of others"
+                }
+              ],
+              "S": [
+                {
+                  "id": "s_t1",
+                  "label": "Methodical"
+                },
+                {
+                  "id": "s_t2",
+                  "label": "Systematic"
+                },
+                {
+                  "id": "s_t3",
+                  "label": "Reliable"
+                },
+                {
+                  "id": "s_t4",
+                  "label": "Steady"
+                },
+                {
+                  "id": "s_t5",
+                  "label": "Relaxed"
+                },
+                {
+                  "id": "s_t6",
+                  "label": "Modest"
+                },
+                {
+                  "id": "s_t7",
+                  "label": "I need secure situations"
+                },
+                {
+                  "id": "s_t8",
+                  "label": "I'm a good planner"
+                },
+                {
+                  "id": "s_t9",
+                  "label": "I need closure"
+                },
+                {
+                  "id": "s_t10",
+                  "label": "I'm a great listener"
+                },
+                {
+                  "id": "s_t11",
+                  "label": "I am usually calm and stabilize others"
+                },
+                {
+                  "id": "s_t12",
+                  "label": "I mask my emotions"
+                },
+                {
+                  "id": "s_t13",
+                  "label": "I tend to be indirect to avoid conflict"
+                },
+                {
+                  "id": "s_t14",
+                  "label": "I tend to be possessive of things"
+                },
+                {
+                  "id": "s_t15",
+                  "label": "I tend to be too low risk"
+                },
+                {
+                  "id": "s_t16",
+                  "label": "I tend to hold a grudge"
+                },
+                {
+                  "id": "s_t17",
+                  "label": "I tend to adapt very quickly to others"
+                },
+                {
+                  "id": "s_t18",
+                  "label": "I tend to resist changes"
+                }
+              ],
+              "C": [
+                {
+                  "id": "c_t1",
+                  "label": "Analytical"
+                },
+                {
+                  "id": "c_t2",
+                  "label": "Contemplative"
+                },
+                {
+                  "id": "c_t3",
+                  "label": "Conservative"
+                },
+                {
+                  "id": "c_t4",
+                  "label": "Exacting"
+                },
+                {
+                  "id": "c_t5",
+                  "label": "Careful"
+                },
+                {
+                  "id": "c_t6",
+                  "label": "Deliberate"
+                },
+                {
+                  "id": "c_t7",
+                  "label": "I like to organize and analyze"
+                },
+                {
+                  "id": "c_t8",
+                  "label": "I work well alone"
+                },
+                {
+                  "id": "c_t9",
+                  "label": "I have high expectations"
+                },
+                {
+                  "id": "c_t10",
+                  "label": "I like to follow rules"
+                },
+                {
+                  "id": "c_t11",
+                  "label": "I am self-competitive"
+                },
+                {
+                  "id": "c_t12",
+                  "label": "I can solve complex problems"
+                },
+                {
+                  "id": "c_t13",
+                  "label": "I live my life by rules of behaving"
+                },
+                {
+                  "id": "c_t14",
+                  "label": "I tend to want as much data as possible"
+                },
+                {
+                  "id": "c_t15",
+                  "label": "I tend to be hard on myself"
+                },
+                {
+                  "id": "c_t16",
+                  "label": "I never take unnecessary chances"
+                },
+                {
+                  "id": "c_t17",
+                  "label": "I tend to feel emotions are very irrational"
+                },
+                {
+                  "id": "c_t18",
+                  "label": "I tend to see faults in others"
+                },
+                {
+                  "id": "c_t19",
+                  "label": "I tend to analyze things to death"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "slug": "core-style-comfort-zones",
+          "title": "Your Comfort Zones",
+          "type": "info",
+          "order_index": 12,
+          "slide_group": 10,
+          "is_scored": false,
+          "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
+          "content_json": {
+            "content": "Answer the two questions on the quiz slide to see how your matched style interacts with each of the others.",
+            "computed": "core_style_section",
+            "computed_inputs": [
+              "core-style-q1-extroversion",
+              "core-style-q2-orientation"
+            ],
+            "sections_by_style": {
+              "D": "Comfort Zones for HIGH D:\n• D ↔ D: Though both have the same approach toward life, their tendency to challenge and need to have their own way reduces their Comfort Zone.\n• D ↔ I: Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction.\n• D ↔ S: Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties.\n• D ↔ C: D's need for immediate results clashes with C's drive to analyse and test the water first.",
+              "I": "Comfort Zones for HIGH I:\n• I ↔ D: Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction.\n• I ↔ I: High Comfort Zone is maximized by their enjoyment of and need for personal interaction.\n• I ↔ S: Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling.\n• I ↔ C: I's people skills and their high trust threshold relaxes C's need to establish rationale for trust.",
+              "S": "Comfort Zones for HIGH S:\n• S ↔ D: Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties.\n• S ↔ I: Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling.\n• S ↔ S: Similar opinions and their high tolerance and sociability create a very high Comfort Zone.\n• S ↔ C: S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response.",
+              "C": "Comfort Zones for HIGH C:\n• C ↔ D: D's need for immediate results clashes with C's drive to analyse and test the water first.\n• C ↔ I: I's people skills and their high trust threshold relaxes C's need to establish rationale for trust.\n• C ↔ S: S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response.\n• C ↔ C: Respect for rules and established protocol and their desire to avoid conflict create a High Comfort Zone."
+            }
           }
         }
       ]
     },
     {
-      "slug": "attitudes",
-      "title": "Attitudes",
-      "subtitle": "Filter 2 of 5",
-      "description": "Explore the six attitude types identified by Eduard Spranger and discover how your unique world view shapes your values, motivations, and the choices you make in life.",
+      "slug": "attitude",
+      "title": "Attitude",
+      "subtitle": null,
+      "description": null,
       "order_index": 2,
-      "icon_name": "eye",
+      "group_slug": "self-awareness",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "Between stimulus and response there is a space. In that space is our power to choose our response.",
+          "attribution": "— Viktor Frankl"
+        },
+        "opening_question": "What is one belief you hold about yourself that you have never actually questioned?",
+        "facilitator_says": "Attitudes are the lenses we look through. We rarely notice them — but they shape every decision we make.",
+        "why_it_matters": "Even with the right personality and the right skills, the wrong attitude will sabotage you. The good news: attitudes can be examined, named, and chosen. We're going to surface yours so you can decide which to keep, which to soften, and which to retire.",
+        "closing_reflection": "Which one attitude — if you changed it tomorrow — would change the most about your life?",
+        "bridge_to_next": "Attitudes are HOW you see. Values are WHAT you protect. Let's go there next.",
+        "reading_material": {
+          "title": "Man's Search for Meaning — Viktor Frankl",
+          "content": "The book the opening quote comes from. Frankl, a psychiatrist who survived the Nazi camps, argues that meaning is not given to us — it is the response we choose to whatever we are handed. For this section, the relevant move is his: you cannot always change the stimulus, but the space between stimulus and response is where your attitude lives. Naming that space is the first step in this exercise."
+        }
+      },
       "exercises": [
         {
           "slug": "attitudes-introduction",
@@ -255,61 +587,262 @@
           "title": "EXERCISE: Identifying Your Attitudes",
           "type": "checkbox",
           "order_index": 2,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
             "prompt": "From the following list of likes and dislikes, select those that most accurately describe who you are. The first answer that comes to your mind is usually a good indication of how you truly feel.\n\nGroup W (Theoretical — Questions 1–9):\nGroup A (Aesthetic — Questions 10–18):\nGroup T (Traditional — Questions 19–25):\nGroup U (Utilitarian — Questions 26–35):\nGroup S (Social — Questions 36–42):\nGroup I (Individualistic — Questions 43–50):\n\nCheck all that apply, then count your totals per group to find your top two attitudes.",
             "options": [
-              { "id": "w_1", "label": "I like solving problems.", "value": 1 },
-              { "id": "w_2", "label": "I like objectivity in all areas of life.", "value": 1 },
-              { "id": "w_3", "label": "I like identifying, differentiating, generalizing, systematizing.", "value": 1 },
-              { "id": "w_4", "label": "I like intellectual process.", "value": 1 },
-              { "id": "w_5", "label": "I like discovery, understanding, ordering.", "value": 1 },
-              { "id": "w_6", "label": "I like pursuit of knowledge, identifying truth and untruth.", "value": 1 },
-              { "id": "w_7", "label": "I like knowledge for the sake of knowing.", "value": 1 },
-              { "id": "w_8", "label": "I hate inability to know, learn or discover.", "value": 1 },
-              { "id": "w_9", "label": "I hate emotional, subjective experience without rational justification.", "value": 1 },
-              { "id": "a_10", "label": "I like appreciation of form, harmony and beauty.", "value": 1 },
-              { "id": "a_11", "label": "I like enjoyment of all the senses.", "value": 1 },
-              { "id": "a_12", "label": "I like subjective experience.", "value": 1 },
-              { "id": "a_13", "label": "I like understanding the feelings of myself and others.", "value": 1 },
-              { "id": "a_14", "label": "I like self-realization, self-fulfilment and self-actualization.", "value": 1 },
-              { "id": "a_15", "label": "I like creative expression.", "value": 1 },
-              { "id": "a_16", "label": "I like appreciation of impressions.", "value": 1 },
-              { "id": "a_17", "label": "I hate disturbances in form, beauty and harmony in myself, others and/or the environment.", "value": 1 },
-              { "id": "a_18", "label": "I object to objective truth.", "value": 1 },
-              { "id": "t_19", "label": "I like understanding the totality of life.", "value": 1 },
-              { "id": "t_20", "label": "I like finding meaning in life.", "value": 1 },
-              { "id": "t_21", "label": "I like pursuit of the divine in life.", "value": 1 },
-              { "id": "t_22", "label": "I like following and dying for a cause.", "value": 1 },
-              { "id": "t_23", "label": "I like living constantly according to a 'closed' book.", "value": 1 },
-              { "id": "t_24", "label": "I like converting others to my way of thinking.", "value": 1 },
-              { "id": "t_25", "label": "I don't like people who oppose my beliefs.", "value": 1 },
-              { "id": "u_26", "label": "I like practicality in all areas of my life.", "value": 1 },
-              { "id": "u_27", "label": "I like surpassing others in the attainment of wealth.", "value": 1 },
-              { "id": "u_28", "label": "I like using resources to accomplish results.", "value": 1 },
-              { "id": "u_29", "label": "I like gaining a measurable return on all my investments.", "value": 1 },
-              { "id": "u_30", "label": "I like creative application of resources.", "value": 1 },
-              { "id": "u_31", "label": "I like producing goods, materials, services and marketing them for economic gain.", "value": 1 },
-              { "id": "u_32", "label": "I like capitalism.", "value": 1 },
-              { "id": "u_33", "label": "I like maximizing or conserving resources.", "value": 1 },
-              { "id": "u_34", "label": "I don't like to see wasted resources, time, materials and/or services.", "value": 1 },
-              { "id": "u_35", "label": "I hate investments with inadequate or no return.", "value": 1 },
-              { "id": "s_36", "label": "I like investing in others.", "value": 1 },
-              { "id": "s_37", "label": "I like selflessness.", "value": 1 },
-              { "id": "s_38", "label": "I like generosity of time, talent and resources.", "value": 1 },
-              { "id": "s_39", "label": "I like seeing and developing potential in others.", "value": 1 },
-              { "id": "s_40", "label": "I like championing a worthy cause.", "value": 1 },
-              { "id": "s_41", "label": "I don't like rampant individualism.", "value": 1 },
-              { "id": "s_42", "label": "I hate decisions and actions which are insensitive to people's needs.", "value": 1 },
-              { "id": "i_43", "label": "I like leading others.", "value": 1 },
-              { "id": "i_44", "label": "I like achieving position.", "value": 1 },
-              { "id": "i_45", "label": "I like advancing position and strategic alliances.", "value": 1 },
-              { "id": "i_46", "label": "I like attaining and using power to accomplish purpose.", "value": 1 },
-              { "id": "i_47", "label": "I like planning and carrying out a winning strategy.", "value": 1 },
-              { "id": "i_48", "label": "I like tactics and positioning.", "value": 1 },
-              { "id": "i_49", "label": "I hate actual or perceived threat of diminished power or position.", "value": 1 },
-              { "id": "i_50", "label": "I hate inability to advance, lack of opportunity for individual advancement.", "value": 1 }
+              {
+                "id": "w_1",
+                "label": "I like solving problems.",
+                "value": 1
+              },
+              {
+                "id": "w_2",
+                "label": "I like objectivity in all areas of life.",
+                "value": 1
+              },
+              {
+                "id": "w_3",
+                "label": "I like identifying, differentiating, generalizing, systematizing.",
+                "value": 1
+              },
+              {
+                "id": "w_4",
+                "label": "I like intellectual process.",
+                "value": 1
+              },
+              {
+                "id": "w_5",
+                "label": "I like discovery, understanding, ordering.",
+                "value": 1
+              },
+              {
+                "id": "w_6",
+                "label": "I like pursuit of knowledge, identifying truth and untruth.",
+                "value": 1
+              },
+              {
+                "id": "w_7",
+                "label": "I like knowledge for the sake of knowing.",
+                "value": 1
+              },
+              {
+                "id": "w_8",
+                "label": "I hate inability to know, learn or discover.",
+                "value": 1
+              },
+              {
+                "id": "w_9",
+                "label": "I hate emotional, subjective experience without rational justification.",
+                "value": 1
+              },
+              {
+                "id": "a_10",
+                "label": "I like appreciation of form, harmony and beauty.",
+                "value": 1
+              },
+              {
+                "id": "a_11",
+                "label": "I like enjoyment of all the senses.",
+                "value": 1
+              },
+              {
+                "id": "a_12",
+                "label": "I like subjective experience.",
+                "value": 1
+              },
+              {
+                "id": "a_13",
+                "label": "I like understanding the feelings of myself and others.",
+                "value": 1
+              },
+              {
+                "id": "a_14",
+                "label": "I like self-realization, self-fulfilment and self-actualization.",
+                "value": 1
+              },
+              {
+                "id": "a_15",
+                "label": "I like creative expression.",
+                "value": 1
+              },
+              {
+                "id": "a_16",
+                "label": "I like appreciation of impressions.",
+                "value": 1
+              },
+              {
+                "id": "a_17",
+                "label": "I hate disturbances in form, beauty and harmony in myself, others and/or the environment.",
+                "value": 1
+              },
+              {
+                "id": "a_18",
+                "label": "I object to objective truth.",
+                "value": 1
+              },
+              {
+                "id": "t_19",
+                "label": "I like understanding the totality of life.",
+                "value": 1
+              },
+              {
+                "id": "t_20",
+                "label": "I like finding meaning in life.",
+                "value": 1
+              },
+              {
+                "id": "t_21",
+                "label": "I like pursuit of the divine in life.",
+                "value": 1
+              },
+              {
+                "id": "t_22",
+                "label": "I like following and dying for a cause.",
+                "value": 1
+              },
+              {
+                "id": "t_23",
+                "label": "I like living constantly according to a 'closed' book.",
+                "value": 1
+              },
+              {
+                "id": "t_24",
+                "label": "I like converting others to my way of thinking.",
+                "value": 1
+              },
+              {
+                "id": "t_25",
+                "label": "I don't like people who oppose my beliefs.",
+                "value": 1
+              },
+              {
+                "id": "u_26",
+                "label": "I like practicality in all areas of my life.",
+                "value": 1
+              },
+              {
+                "id": "u_27",
+                "label": "I like surpassing others in the attainment of wealth.",
+                "value": 1
+              },
+              {
+                "id": "u_28",
+                "label": "I like using resources to accomplish results.",
+                "value": 1
+              },
+              {
+                "id": "u_29",
+                "label": "I like gaining a measurable return on all my investments.",
+                "value": 1
+              },
+              {
+                "id": "u_30",
+                "label": "I like creative application of resources.",
+                "value": 1
+              },
+              {
+                "id": "u_31",
+                "label": "I like producing goods, materials, services and marketing them for economic gain.",
+                "value": 1
+              },
+              {
+                "id": "u_32",
+                "label": "I like capitalism.",
+                "value": 1
+              },
+              {
+                "id": "u_33",
+                "label": "I like maximizing or conserving resources.",
+                "value": 1
+              },
+              {
+                "id": "u_34",
+                "label": "I don't like to see wasted resources, time, materials and/or services.",
+                "value": 1
+              },
+              {
+                "id": "u_35",
+                "label": "I hate investments with inadequate or no return.",
+                "value": 1
+              },
+              {
+                "id": "s_36",
+                "label": "I like investing in others.",
+                "value": 1
+              },
+              {
+                "id": "s_37",
+                "label": "I like selflessness.",
+                "value": 1
+              },
+              {
+                "id": "s_38",
+                "label": "I like generosity of time, talent and resources.",
+                "value": 1
+              },
+              {
+                "id": "s_39",
+                "label": "I like seeing and developing potential in others.",
+                "value": 1
+              },
+              {
+                "id": "s_40",
+                "label": "I like championing a worthy cause.",
+                "value": 1
+              },
+              {
+                "id": "s_41",
+                "label": "I don't like rampant individualism.",
+                "value": 1
+              },
+              {
+                "id": "s_42",
+                "label": "I hate decisions and actions which are insensitive to people's needs.",
+                "value": 1
+              },
+              {
+                "id": "i_43",
+                "label": "I like leading others.",
+                "value": 1
+              },
+              {
+                "id": "i_44",
+                "label": "I like achieving position.",
+                "value": 1
+              },
+              {
+                "id": "i_45",
+                "label": "I like advancing position and strategic alliances.",
+                "value": 1
+              },
+              {
+                "id": "i_46",
+                "label": "I like attaining and using power to accomplish purpose.",
+                "value": 1
+              },
+              {
+                "id": "i_47",
+                "label": "I like planning and carrying out a winning strategy.",
+                "value": 1
+              },
+              {
+                "id": "i_48",
+                "label": "I like tactics and positioning.",
+                "value": 1
+              },
+              {
+                "id": "i_49",
+                "label": "I hate actual or perceived threat of diminished power or position.",
+                "value": 1
+              },
+              {
+                "id": "i_50",
+                "label": "I hate inability to advance, lack of opportunity for individual advancement.",
+                "value": 1
+              }
             ],
             "allow_multiple": true
           }
@@ -319,10 +852,17 @@
           "title": "The Six Attitude Types — WATUSI",
           "type": "ranking",
           "order_index": 3,
+          "slide_group": 2,
           "is_scored": true,
           "attribution": null,
           "content_json": {
-            "prompt": "Based on your checklist results, rank these six attitude types from highest (most checks) to lowest. Your top two attitudes reveal your primary world view and motivational drivers.",
+            "prompt": "Your prefilled order below is derived from the checklist you just completed. The count beside each item is auto-calculated and read-only.",
+            "interaction": "sorted",
+            "show_counts": true,
+            "derives_from": {
+              "source_exercise_slug": "identifying-attitudes",
+              "group_by": "id_prefix"
+            },
             "items": [
               {
                 "id": "attitude_w",
@@ -370,10 +910,26 @@
     {
       "slug": "values",
       "title": "Values",
-      "subtitle": "Filter 3 of 5",
-      "description": "Uncover what truly matters to you through the Values Shopping Spree exercise. Your values form the background of your conscious and unconscious goals and propel your actions — whether you recognize it or not.",
+      "subtitle": null,
+      "description": null,
       "order_index": 3,
-      "icon_name": "heart",
+      "group_slug": "self-awareness",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "It's not hard to make decisions when you know what your values are.",
+          "attribution": "— Roy Disney"
+        },
+        "opening_question": "If you had to give up everything you own except five things — and not material things, but five values — what would you protect?",
+        "facilitator_says": "Values aren't what we say we believe. They are what we spend on — time, energy, attention. Today we make that visible.",
+        "why_it_matters": "Your values are your compass. The Goal Setting section later in this course only works if you have named which direction is north. Most people inherit their values from family, school, or workplace and never audit them. The Values Shopping Spree exercise is your audit.",
+        "closing_reflection": "Which of your top five values is currently underfed?",
+        "bridge_to_next": "You know your style, your lenses, your compass. Now: what hats are you actually wearing day-to-day?",
+        "reading_material": {
+          "title": "The 7 Habits of Highly Effective People — Stephen R. Covey",
+          "content": "Covey's framework treats values as the centre of a personal mission and warns about the cost of confusing values with urgencies. Habit 2 — Begin with the end in mind — is the lens to bring into the Shopping Spree exercise: you are not buying what feels nice today, you are buying the things that, ten years from now, you would still defend as worth the money. Covey also separates principles (universal) from values (chosen) — useful vocabulary if you find the exercise hard."
+        }
+      },
       "exercises": [
         {
           "slug": "values-shopping-spree",
@@ -384,9 +940,18 @@
           "attribution": null,
           "content_json": {
             "prompt": "CONGRATULATIONS! You have won an imaginary $100,000! But there's a catch — you have to spend it all in the PSP™ Value Boutique. Read through the complete list carefully, then allocate dollar amounts to the items that are important to you. You MUST spend all of the $100,000 — no more, no less.\n\nGuidelines:\n• Buy only those things most important to YOU — not what others say should be important.\n• Pretend you are starting with nothing.\n• Do not let parents, priests, friends or teachers influence your purchases.\n• Read through the ENTIRE list before purchasing.",
-            "headers": ["#", "Item", "Amount Budgeted ($)"],
+            "headers": [
+              "#",
+              "Item",
+              "Amount Budgeted ($)"
+            ],
             "rows": 34,
-            "col_types": ["number", "text", "currency"],
+            "col_types": [
+              "number",
+              "text",
+              "currency"
+            ],
+            "total_target": 100000,
             "items": [
               "A process guaranteed to rid the world of prejudice and racism.",
               "An opportunity to help the sick and impoverished and allow them happier lives.",
@@ -433,51 +998,144 @@
           "is_scored": true,
           "attribution": null,
           "content_json": {
-            "prompt": "After completing the Values Shopping Spree, pair the amounts from items 1+18, 2+19, 3+20, etc. to calculate your total for each value. Then rank these 17 values from highest to lowest spending (your top three are your core values).\n\nValue pairings: Justice (1+18), Humanitarianism (2+19), Recognition (3+20), Achievement (4+21), Pleasure (5+22), Wisdom (6+23), Honesty (7+24), Autonomy (8+25), Economy (9+26), Power (10+27), Love (11+28), Aesthetics (12+29), Physical Attractiveness (13+30), Health (14+31), Feeling of Well-Being (15+32), Knowledge (16+33), Spiritual Well-Being (17+34).",
+            "prompt": "After completing the Values Shopping Spree, add each pair of items to total the score for that value. Then rank the 17 values from highest to lowest total spending. Your top 3 are your core values.",
+            "interaction": "sorted",
+            "show_counts": true,
+            "derives_from": {
+              "source_exercise_slug": "values-shopping-spree",
+              "group_by": "values_pair_sum"
+            },
             "items": [
-              { "id": "val_justice", "label": "Justice — Moral rightness, honor, fairness (Items 1 + 18)" },
-              { "id": "val_humanitarianism", "label": "Humanitarianism — Devotion to the promotion of human welfare (Items 2 + 19)" },
-              { "id": "val_recognition", "label": "Recognition — Acknowledgment of one's significance or importance (Items 3 + 20)" },
-              { "id": "val_achievement", "label": "Achievement — Accomplishment (Items 4 + 21)" },
-              { "id": "val_pleasure", "label": "Pleasure — Enjoyment, satisfaction, satiation (Items 5 + 22)" },
-              { "id": "val_wisdom", "label": "Wisdom — Understanding of what is true, right or lasting (Items 6 + 23)" },
-              { "id": "val_honesty", "label": "Honesty — Straightforwardness, integrity, consistency (Items 7 + 24)" },
-              { "id": "val_autonomy", "label": "Autonomy — Independence, self-containment (Items 8 + 25)" },
-              { "id": "val_economy", "label": "Economy — Abundance of material possessions, wealth (Items 9 + 26)" },
-              { "id": "val_power", "label": "Power — Control, authority or influence (Items 10 + 27)" },
-              { "id": "val_love", "label": "Love — Affection, warm attachment, caring (Items 11 + 28)" },
-              { "id": "val_aesthetics", "label": "Aesthetics — Appreciation and enjoyment of beauty for beauty's sake (Items 12 + 29)" },
-              { "id": "val_physical_attractiveness", "label": "Physical Attractiveness — Concern for the appearance of one's body (Items 13 + 30)" },
-              { "id": "val_health", "label": "Health — Concern for the health of one's body (Items 14 + 31)" },
-              { "id": "val_wellbeing", "label": "Feeling of Well-Being — Freedom from anxiety, imbalance; peace of mind (Items 15 + 32)" },
-              { "id": "val_knowledge", "label": "Knowledge — Seeking of truth and/or information (Items 16 + 33)" },
-              { "id": "val_spiritual", "label": "Spiritual Well-Being — Communion with, obedience to, and activity on behalf of a Supreme Being (Items 17 + 34)" }
+              {
+                "id": "val_justice",
+                "label": "Justice — Moral rightness, honor, fairness (Items 1 + 18)"
+              },
+              {
+                "id": "val_humanitarianism",
+                "label": "Humanitarianism — Devotion to the promotion of human welfare (Items 2 + 19)"
+              },
+              {
+                "id": "val_recognition",
+                "label": "Recognition — Acknowledgment of one's significance or importance (Items 3 + 20)"
+              },
+              {
+                "id": "val_achievement",
+                "label": "Achievement — Accomplishment (Items 4 + 21)"
+              },
+              {
+                "id": "val_pleasure",
+                "label": "Pleasure — Enjoyment, satisfaction, satiation (Items 5 + 22)"
+              },
+              {
+                "id": "val_wisdom",
+                "label": "Wisdom — Understanding of what is true, right or lasting (Items 6 + 23)"
+              },
+              {
+                "id": "val_honesty",
+                "label": "Honesty — Straightforwardness, integrity, consistency (Items 7 + 24)"
+              },
+              {
+                "id": "val_autonomy",
+                "label": "Autonomy — Independence, self-containment (Items 8 + 25)"
+              },
+              {
+                "id": "val_economy",
+                "label": "Economy — Abundance of material possessions, wealth (Items 9 + 26)"
+              },
+              {
+                "id": "val_power",
+                "label": "Power — Control, authority or influence (Items 10 + 27)"
+              },
+              {
+                "id": "val_love",
+                "label": "Love — Affection, warm attachment, caring (Items 11 + 28)"
+              },
+              {
+                "id": "val_aesthetics",
+                "label": "Aesthetics — Appreciation and enjoyment of beauty for beauty's sake (Items 12 + 29)"
+              },
+              {
+                "id": "val_physical_attractiveness",
+                "label": "Physical Attractiveness — Concern for the appearance of one's body (Items 13 + 30)"
+              },
+              {
+                "id": "val_health",
+                "label": "Health — Concern for the health of one's body (Items 14 + 31)"
+              },
+              {
+                "id": "val_wellbeing",
+                "label": "Feeling of Well-Being — Freedom from anxiety, imbalance; peace of mind (Items 15 + 32)"
+              },
+              {
+                "id": "val_knowledge",
+                "label": "Knowledge — Seeking of truth and/or information (Items 16 + 33)"
+              },
+              {
+                "id": "val_spiritual",
+                "label": "Spiritual Well-Being — Communion with, obedience to, and activity on behalf of a Supreme Being (Items 17 + 34)"
+              }
             ]
           }
         },
         {
           "slug": "top-three-values",
           "title": "My Top Three Values",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 3,
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "Based on the Values Shopping Spree exercise, list your top three values (those you spent the most money on) and reflect on how each one shows up as a driving force in your life. How do these values influence your career choices, relationships, and daily decisions?",
-            "placeholder": "1. My top value is ___ because...\n2. My second value is ___ because...\n3. My third value is ___ because...",
-            "min_length": 50,
-            "max_length": 2000
+            "intro": "Based on the Values Shopping Spree exercise, list your top three values (those you spent the most money on) and reflect on how each one shows up as a driving force in your life. How do these values influence your career choices, relationships, and daily decisions?",
+            "questions": [
+              {
+                "id": "top_1",
+                "prompt": "My #1 top value is ___ — describe how it shows up as a driving force in your life, career, and relationships.",
+                "required": true,
+                "max_length": 800,
+                "min_length": 30
+              },
+              {
+                "id": "top_2",
+                "prompt": "My #2 top value is ___ — describe how it shows up as a driving force in your life, career, and relationships.",
+                "required": true,
+                "max_length": 800,
+                "min_length": 30
+              },
+              {
+                "id": "top_3",
+                "prompt": "My #3 top value is ___ — describe how it shows up as a driving force in your life, career, and relationships.",
+                "required": true,
+                "max_length": 800,
+                "min_length": 30
+              }
+            ]
           }
         }
       ]
     },
     {
-      "slug": "roles",
-      "title": "Roles & Their Demands",
-      "subtitle": "Filter 4 of 5",
-      "description": "Examine the roles you play in life and the demands they make upon you. Whether or not you are happy with them, your roles are a driving force — consciously or unconsciously impacting every aspect of your daily life.",
+      "slug": "roles-and-demands",
+      "title": "Roles and Demands",
+      "subtitle": null,
+      "description": null,
       "order_index": 4,
-      "icon_name": "users",
+      "group_slug": "self-awareness",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "You can do anything, but not everything.",
+          "attribution": "— David Allen"
+        },
+        "opening_question": "If someone made a documentary of your last 30 days, how many different characters would you play in it?",
+        "facilitator_says": "We all wear multiple hats. The question isn't whether — it's whether each hat is one we still want to wear, or one we just inherited.",
+        "why_it_matters": "Roles consume your hours. If you don't audit them, they will consume your life. The Life Line and Past Experience Inventory in this section help you see the shape of your time, not just the content of it. That shape is what your goals will have to fit inside.",
+        "closing_reflection": "Which role on your list deserves more time than it currently gets — and which one secretly deserves less?",
+        "bridge_to_next": "Roles are demands on your time. Skills are what travel with you through every role. Let's catalogue them.",
+        "reading_material": {
+          "title": "Essentialism: The Disciplined Pursuit of Less — Greg McKeown",
+          "content": "McKeown's central move is to treat your roles as decisions, not obligations. A role inherited from family, employer, or habit is still a role you renew every day by showing up. The book offers a useful filter — 'if it isn't a clear yes, it's a clear no' — for the Life Line exercise. Read this before deciding which roles to keep on the list and which to retire."
+        }
+      },
       "exercises": [
         {
           "slug": "life-line-exercise",
@@ -502,179 +1160,589 @@
           "attribution": null,
           "content_json": {
             "prompt": "Write 10 separate short statements that answer the question 'Who am I?' Then rank these statements according to their importance to YOU — not how you think others would rank them. Ensure that at least 3–4 of your roles are defined in view of your responsibilities or accountabilities to specific individuals or groups (family, children, spouses, etc.).",
-            "headers": ["Rank Order", "Who Am I? (complete the sentence: I am...)"],
+            "headers": [
+              "Rank Order",
+              "Who Am I? (complete the sentence: I am...)"
+            ],
             "rows": 10,
-            "col_types": ["number", "text"]
+            "col_types": [
+              "number",
+              "text"
+            ]
           }
         },
         {
           "slug": "past-experience-inventory",
           "title": "EXERCISE: Past Experience Inventory",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 3,
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "Answer each of the following 14 questions as honestly and fully as possible. This inventory helps you identify the experiences, influences, and patterns that have shaped who you are today.\n\n1. Who have been the most influential people in your life and in what way?\n2. What were the critical incidents (events) that made you who you are?\n3. What have been the major interests in your life so far?\n4. What were the significant experiences in your school or college career?\n5. What were your significant work experiences?\n6. What were the most significant decisions in your life?\n7. What makes you alive and excited? What events or activities spur you on?\n8. What am I really good at? What strengths do I have to build on?\n9. What do I do poorly? What do I need to develop or correct?\n10. What do I want to stop doing that affects my effectiveness?\n11. What do I want to change in my life?\n12. What do I want to start doing much better?\n13. What do I want to learn or develop in myself?\n14. Who are the persons or organizations that can help me achieve my goals?",
-            "placeholder": "1. The most influential people in my life have been...\n\n2. Critical events that shaped me...\n\n3. My major interests...",
-            "min_length": 100,
-            "max_length": 5000
+            "questions": [
+              {
+                "id": "q1",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "Who have been the most influential people in your life and in what way?",
+                "required": true
+              },
+              {
+                "id": "q2",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What were the critical incidents (events) that made you who you are?",
+                "required": true
+              },
+              {
+                "id": "q3",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What have been the major interests in your life so far?",
+                "required": true
+              },
+              {
+                "id": "q4",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What were the significant experiences in your school or college career?",
+                "required": true
+              },
+              {
+                "id": "q5",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What were your significant work experiences?",
+                "required": true
+              },
+              {
+                "id": "q6",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What were the most significant decisions in your life?",
+                "required": true
+              },
+              {
+                "id": "q7",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What makes you alive and excited? What events or activities spur you on?",
+                "required": true
+              },
+              {
+                "id": "q8",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What am I really good at? What strengths do I have to build on?",
+                "required": true
+              },
+              {
+                "id": "q9",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What do I do poorly? What do I need to develop or correct?",
+                "required": true
+              },
+              {
+                "id": "q10",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What do I want to stop doing that affects my effectiveness?",
+                "required": true
+              },
+              {
+                "id": "q11",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What do I want to change in my life?",
+                "required": true
+              },
+              {
+                "id": "q12",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What do I want to start doing much better?",
+                "required": true
+              },
+              {
+                "id": "q13",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "What do I want to learn or develop in myself?",
+                "required": true
+              },
+              {
+                "id": "q14",
+                "min_length": 20,
+                "max_length": 800,
+                "prompt": "Who are the persons or organizations that can help me achieve my goals?",
+                "required": true
+              }
+            ],
+            "intro": "Answer each of the following 14 questions as honestly and fully as possible. This inventory helps you identify the experiences, influences, and patterns that have shaped who you are today."
           }
         },
         {
           "slug": "contract-with-myself",
           "title": "EXERCISE: A Contract With Myself",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 4,
           "is_scored": false,
           "attribution": "(From Professor Muriel James, author of Born to Win, Breaking Free, Passion for Life — on transactional analysis)",
           "content_json": {
-            "prompt": "Complete this personal contract for change (as suggested by Professor Muriel James, author of Born to Win):\n\nArticle 1: What do I want to change in my life for the better?\nArticle 2: What do I need to get what I want?\nArticle 3: What am I willing to do?\nArticle 4: How will I measure my success?\nArticle 5: How could I sabotage myself from achieving success?\nArticle 6: What are my next positive steps toward change?",
-            "placeholder": "Article 1 — What I want to change:\n\nArticle 2 — What I need:\n\nArticle 3 — What I am willing to do:\n\nArticle 4 — How I will measure success:\n\nArticle 5 — How I could sabotage myself:\n\nArticle 6 — My next positive steps:",
-            "min_length": 100,
-            "max_length": 3000
+            "questions": [
+              {
+                "id": "article_1",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "Article 1 — What do I want to change in my life for the better?",
+                "required": true
+              },
+              {
+                "id": "article_2",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "Article 2 — What do I need to get what I want?",
+                "required": true
+              },
+              {
+                "id": "article_3",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "Article 3 — What am I willing to do?",
+                "required": true
+              },
+              {
+                "id": "article_4",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "Article 4 — How will I measure my success?",
+                "required": true
+              },
+              {
+                "id": "article_5",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "Article 5 — How could I sabotage myself from achieving success?",
+                "required": true
+              },
+              {
+                "id": "article_6",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "Article 6 — What are my next positive steps toward change?",
+                "required": true
+              }
+            ],
+            "intro": "Complete this personal contract for change (as suggested by Professor Muriel James, author of Born to Win):"
           }
         },
         {
           "slug": "mission-statement",
           "title": "EXERCISE: My Mission Statement",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 5,
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "A Mission/Vision Statement gives you a powerful tool to help you focus and prioritize your life. Write your personal mission statement, addressing four dimensions:\n\n1. My Vision/Mission/Purpose for this life is...\n2. In relation to MYSELF...\n3. In relation to OTHERS...\n4. In relation to THE WORLD...\n5. If I put it in one sentence, my mission is...\n\nTip: Look at your own eyes in the mirror and repeat your mission statement to yourself. Ask: Does it sound right for me? Does it fit me completely as the person I am? Is it MY statement or someone else's?",
-            "placeholder": "My Vision/Mission/Purpose for this life is...\n\nIn relation to MYSELF:\n\nIn relation to OTHERS:\n\nIn relation to THE WORLD:\n\nIn one sentence, my mission is:",
-            "min_length": 50,
-            "max_length": 2000
+            "questions": [
+              {
+                "id": "vision",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "My Vision / Mission / Purpose for this life is...",
+                "required": true
+              },
+              {
+                "id": "self",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "In relation to MYSELF...",
+                "required": true
+              },
+              {
+                "id": "others",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "In relation to OTHERS...",
+                "required": true
+              },
+              {
+                "id": "world",
+                "min_length": 15,
+                "max_length": 600,
+                "prompt": "In relation to THE WORLD...",
+                "required": true
+              },
+              {
+                "id": "one_sentence",
+                "min_length": 10,
+                "max_length": 300,
+                "prompt": "If I put it in one sentence, my mission is...",
+                "required": true
+              }
+            ],
+            "intro": "A Mission/Vision Statement gives you a powerful tool to help you focus and prioritize your life. Tip: look at your own eyes in the mirror and repeat each line back to yourself. Does it fit you completely?"
           }
         }
       ]
     },
     {
-      "slug": "skills",
-      "title": "Transferable Skills",
-      "subtitle": "Filter 5 of 5",
-      "description": "Identify your gifts, talents, educational history, work experience, hobbies, interests, and passions. Never underestimate your passions in planning your career and life — they are your most powerful transferable assets.",
+      "slug": "transferable-skills",
+      "title": "Transferable Marketable Skills",
+      "subtitle": null,
+      "description": null,
       "order_index": 5,
-      "icon_name": "zap",
+      "group_slug": "self-awareness",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work.",
+          "attribution": "— Steve Jobs"
+        },
+        "opening_question": "What is something you do well that other people seem to find difficult?",
+        "facilitator_says": "Skills aren't just job descriptions. They are patterns — and patterns travel with you wherever you go.",
+        "why_it_matters": "Knowing your transferable skills means you are never trapped in one role. They are leverage. They are the answer to 'what could I do if I had to start over tomorrow?' Strategy needs options, and your skills inventory is your option set.",
+        "closing_reflection": "Which skill, if developed, would unlock the most doors for you next year?",
+        "bridge_to_next": "You have your style, lenses, compass, hats, and toolkit. Now we put it all together — into goals.",
+        "reading_material": {
+          "title": "What Color Is Your Parachute? — Richard N. Bolles",
+          "content": "Bolles invented the modern transferable-skills inventory. The book's core exercise — the Flower — separates a skill from the job that taught you the skill, so you can carry it into completely different work. Read the chapter on transferable skills before the inventory exercise; it will help you list skills as verbs (analyse, listen, organise) rather than as job titles."
+        }
+      },
       "exercises": [
         {
           "slug": "transferable-skills-with-individuals",
           "title": "EXERCISE: Transferable Skills — Dealing with Individuals",
-          "type": "table",
+          "type": "rating-picker",
           "order_index": 1,
           "is_scored": true,
           "attribution": null,
           "content_json": {
             "prompt": "Rate each skill on a scale of 1 (lowest) to 5 (highest). These are skills you use when dealing with individuals one-on-one.",
-            "headers": ["Skill", "1 (Low)", "2", "3", "4", "5 (High)"],
-            "rows": 10,
-            "col_types": ["text", "rating", "rating", "rating", "rating", "rating"],
-            "skills": [
-              "Take instructions, Serve or Help",
-              "Diagnose, Treat or Heal",
-              "Do well in conversation, in person, or on the phone",
-              "Refer people, or help two to link up",
-              "Communicate well in writing (e.g. excellent letters)",
-              "Assess, Evaluate, Screen, or Select Individuals",
-              "Instruct, Teach, Tutor, or Train Individuals",
-              "Persuade, Motivate, Recruit, Sell to Individuals",
-              "Advise, Coach, Counsel, Mentor",
-              "Represent Others, Interpret Others' Ideas"
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "labels": [
+                "Strongly Disagree",
+                "Disagree",
+                "Neutral",
+                "Agree",
+                "Strongly Agree"
+              ]
+            },
+            "items": [
+              {
+                "id": "ind_1",
+                "label": "Take instructions, Serve or Help"
+              },
+              {
+                "id": "ind_2",
+                "label": "Diagnose, Treat or Heal"
+              },
+              {
+                "id": "ind_3",
+                "label": "Do well in conversation, in person, or on the phone"
+              },
+              {
+                "id": "ind_4",
+                "label": "Refer people, or help two to link up"
+              },
+              {
+                "id": "ind_5",
+                "label": "Communicate well in writing (e.g. excellent letters)"
+              },
+              {
+                "id": "ind_6",
+                "label": "Assess, Evaluate, Screen, or Select Individuals"
+              },
+              {
+                "id": "ind_7",
+                "label": "Instruct, Teach, Tutor, or Train Individuals"
+              },
+              {
+                "id": "ind_8",
+                "label": "Persuade, Motivate, Recruit, Sell to Individuals"
+              },
+              {
+                "id": "ind_9",
+                "label": "Advise, Coach, Counsel, Mentor"
+              },
+              {
+                "id": "ind_10",
+                "label": "Represent Others, Interpret Others' Ideas"
+              }
             ]
           }
         },
         {
           "slug": "transferable-skills-with-groups",
           "title": "EXERCISE: Transferable Skills — Dealing with Groups",
-          "type": "table",
+          "type": "rating-picker",
           "order_index": 2,
           "is_scored": true,
           "attribution": null,
           "content_json": {
             "prompt": "Rate each skill on a scale of 1 (lowest) to 5 (highest). These are skills you use when working with groups and audiences.",
-            "headers": ["Skill", "1 (Low)", "2", "3", "4", "5 (High)"],
-            "rows": 15,
-            "col_types": ["text", "rating", "rating", "rating", "rating", "rating"],
-            "skills": [
-              "Communicate Effectively to a group or a multitude",
-              "Play games or lead others in recreation",
-              "Manage, Supervise or Run (a business, fund drive etc.)",
-              "Use words expressively in speaking or writing",
-              "Teach, Train, or Design educational events",
-              "Follow through getting things done",
-              "Make presentations in person, or on TV or film",
-              "Guide a Group Discussion conveying warmth",
-              "Take the lead, be a pioneer",
-              "Perform, Entertain, Amuse or Inspire",
-              "Persuade a Group, Motivate or Sell",
-              "Initiating, Starting Up, Founding, Or Establishing",
-              "Sign, Mimic, Act, Sing, or Play an Instrument",
-              "Consult, give advice to groups in your area of service",
-              "Negotiate between two parties, or resolve conflict"
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "labels": [
+                "Strongly Disagree",
+                "Disagree",
+                "Neutral",
+                "Agree",
+                "Strongly Agree"
+              ]
+            },
+            "items": [
+              {
+                "id": "grp_1",
+                "label": "Communicate Effectively to a group or a multitude"
+              },
+              {
+                "id": "grp_2",
+                "label": "Play games or lead others in recreation"
+              },
+              {
+                "id": "grp_3",
+                "label": "Manage, Supervise or Run (a business, fund drive etc.)"
+              },
+              {
+                "id": "grp_4",
+                "label": "Use words expressively in speaking or writing"
+              },
+              {
+                "id": "grp_5",
+                "label": "Teach, Train, or Design educational events"
+              },
+              {
+                "id": "grp_6",
+                "label": "Follow through getting things done"
+              },
+              {
+                "id": "grp_7",
+                "label": "Make presentations in person, or on TV or film"
+              },
+              {
+                "id": "grp_8",
+                "label": "Guide a Group Discussion conveying warmth"
+              },
+              {
+                "id": "grp_9",
+                "label": "Take the lead, be a pioneer"
+              },
+              {
+                "id": "grp_10",
+                "label": "Perform, Entertain, Amuse or Inspire"
+              },
+              {
+                "id": "grp_11",
+                "label": "Persuade a Group, Motivate or Sell"
+              },
+              {
+                "id": "grp_12",
+                "label": "Initiating, Starting Up, Founding, Or Establishing"
+              },
+              {
+                "id": "grp_13",
+                "label": "Sign, Mimic, Act, Sing, or Play an Instrument"
+              },
+              {
+                "id": "grp_14",
+                "label": "Consult, give advice to groups in your area of service"
+              },
+              {
+                "id": "grp_15",
+                "label": "Negotiate between two parties, or resolve conflict"
+              }
             ]
           }
         },
         {
           "slug": "transferable-skills-information",
           "title": "EXERCISE: Transferable Skills — Dealing with Information & Data",
-          "type": "table",
+          "type": "rating-picker",
           "order_index": 3,
           "is_scored": true,
           "attribution": null,
           "content_json": {
             "prompt": "Rate each skill on a scale of 1 (lowest) to 5 (highest). These are skills you use when gathering, managing, storing and retrieving information, data, and ideas.",
-            "headers": ["Skill", "1 (Low)", "2", "3", "4", "5 (High)"],
-            "rows": 18,
-            "col_types": ["text", "rating", "rating", "rating", "rating", "rating"],
-            "skills": [
-              "Compile, Search, or Research",
-              "Gather information by interviewing or observing people",
-              "Gather information by studying or observing things",
-              "Have an acute sense of hearing, smell, taste, or sight",
-              "Imagine, invent, create or design new ideas",
-              "Copy and/or compare similarities or differences",
-              "Compute, working with numbers, do accounting",
-              "Analyze, break down into its parts",
-              "Organize, classify, systematize, and/or prioritize",
-              "Plan, lay out step by step process for achieving a goal",
-              "Adapt, translate (incl. computer programming), develop or improve",
-              "Visualize, draw, paint, dramatize, create videos or software",
-              "Synthesize, combining parts into a whole",
-              "Problem solve or see patterns among a mass of data",
-              "Decide, evaluate, appraise, or make recommendations",
-              "Keep Records (Incl. on film or on a computer)",
-              "Store or File: microfiche, video, audio, or computer",
-              "Retrieve information, ideas, data",
-              "Enable other people to find or retrieve information",
-              "Have a superior memory, keeping track of details"
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "labels": [
+                "Strongly Disagree",
+                "Disagree",
+                "Neutral",
+                "Agree",
+                "Strongly Agree"
+              ]
+            },
+            "items": [
+              {
+                "id": "inf_1",
+                "label": "Compile, Search, or Research"
+              },
+              {
+                "id": "inf_2",
+                "label": "Gather information by interviewing or observing people"
+              },
+              {
+                "id": "inf_3",
+                "label": "Gather information by studying or observing things"
+              },
+              {
+                "id": "inf_4",
+                "label": "Have an acute sense of hearing, smell, taste, or sight"
+              },
+              {
+                "id": "inf_5",
+                "label": "Imagine, invent, create or design new ideas"
+              },
+              {
+                "id": "inf_6",
+                "label": "Copy and/or compare similarities or differences"
+              },
+              {
+                "id": "inf_7",
+                "label": "Compute, working with numbers, do accounting"
+              },
+              {
+                "id": "inf_8",
+                "label": "Analyze, break down into its parts"
+              },
+              {
+                "id": "inf_9",
+                "label": "Organize, classify, systematize, and/or prioritize"
+              },
+              {
+                "id": "inf_10",
+                "label": "Plan, lay out step by step process for achieving a goal"
+              },
+              {
+                "id": "inf_11",
+                "label": "Adapt, translate (incl. computer programming), develop or improve"
+              },
+              {
+                "id": "inf_12",
+                "label": "Visualize, draw, paint, dramatize, create videos or software"
+              },
+              {
+                "id": "inf_13",
+                "label": "Synthesize, combining parts into a whole"
+              },
+              {
+                "id": "inf_14",
+                "label": "Problem solve or see patterns among a mass of data"
+              },
+              {
+                "id": "inf_15",
+                "label": "Decide, evaluate, appraise, or make recommendations"
+              },
+              {
+                "id": "inf_16",
+                "label": "Keep Records (Incl. on film or on a computer)"
+              },
+              {
+                "id": "inf_17",
+                "label": "Store or File: microfiche, video, audio, or computer"
+              },
+              {
+                "id": "inf_18",
+                "label": "Retrieve information, ideas, data"
+              },
+              {
+                "id": "inf_19",
+                "label": "Enable other people to find or retrieve information"
+              },
+              {
+                "id": "inf_20",
+                "label": "Have a superior memory, keeping track of details"
+              }
             ]
           }
         },
         {
           "slug": "favorite-strongest-skills",
           "title": "EXERCISE: My Favorite & Strongest Skills",
-          "type": "text",
+          "type": "structured-text",
           "order_index": 4,
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "List your top six favorite AND strongest skills. Remember — favorite AND strongest, not just strongest. Feel free to add any skills not found in the previous exercise. Your passions matter here as much as your proficiency.\n\n1. My favorite and strongest skill is:\n2. My second favorite and strongest skill is:\n3. My third:\n4. My fourth:\n5. My fifth:\n6. My sixth:",
-            "placeholder": "1. My favorite and strongest skill is...\n\n2. My second favorite and strongest skill is...\n\n3. Third...\n\n4. Fourth...\n\n5. Fifth...\n\n6. Sixth...",
-            "min_length": 50,
-            "max_length": 2000
+            "intro": "List your top six favorite AND strongest skills. Remember — favorite AND strongest, not just strongest. Feel free to add any skills not found in the previous exercise. Your passions matter here as much as your proficiency.",
+            "questions": [
+              {
+                "id": "skill_1",
+                "prompt": "My favorite and strongest skill is:",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "skill_2",
+                "prompt": "My second favorite and strongest skill is:",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "skill_3",
+                "prompt": "My third favorite and strongest skill is:",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "skill_4",
+                "prompt": "My fourth favorite and strongest skill is:",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "skill_5",
+                "prompt": "My fifth favorite and strongest skill is:",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "skill_6",
+                "prompt": "My sixth favorite and strongest skill is:",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              }
+            ]
           }
         }
       ]
     },
     {
-      "slug": "goal-setting",
-      "title": "Setting Goals",
-      "subtitle": "Your Personal Strategic Plan™",
-      "description": "Now that you have completed all five filters, it's time to set your goals. Research shows that people with a comprehensive set of life goals — not just career goals — are more likely to achieve them and find true satisfaction when they do.",
+      "slug": "specific-goals",
+      "title": "Specific Goals",
+      "subtitle": null,
+      "description": null,
       "order_index": 6,
-      "icon_name": "target",
+      "group_slug": "goal-setting",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "A goal without a plan is just a wish.",
+          "attribution": "— Antoine de Saint-Exupéry"
+        },
+        "opening_question": "If you looked back on your life ten years from now and everything had gone well — what would need to be true?",
+        "facilitator_says": "Most people have wishes. Fewer have goals. The difference is specificity, a deadline, and honesty about difficulty. Right now we are going to take your most important aims — across every area of life, not just the obvious ones — and put them on paper.",
+        "why_it_matters": "People who write down specific goals achieve significantly more than those who don't — not because writing is magic, but because it forces clarity. A vague aspiration like 'be more successful' is not a goal; it's a direction. This inventory asks you to be precise, to assess how important each goal really is, and to notice where your goals might conflict with each other.",
+        "closing_reflection": "Which goal — if you achieved nothing else this year — would make the biggest difference to your life?",
+        "bridge_to_next": "You have named your goals. Now we are going to pressure-test them against each other, because not all goals can be pursued at the same time.",
+        "reading_material": {
+          "title": "Goals! — Brian Tracy",
+          "content": "Tracy's central claim is that fewer than 3% of people have written, specific goals with deadlines — and that this single habit accounts for more of the variance in outcomes than talent, education, or circumstance. He draws on research from goal-setting psychology to show that clarity of intention is the primary differentiator between high and average performers. Read the first two chapters before the Life Goal Inventory; they will help you move from abstract wishes to concrete, dated targets."
+        }
+      },
       "exercises": [
         {
           "slug": "life-goal-inventory",
@@ -685,9 +1753,21 @@
           "attribution": "(Adapted with kind permission from Dr. David Kolb. From Organizational Behavior: An Experiential Approach, Fifth Edition — David Kolb, Irwin M. Rubin and Joyce Osland. Prentice Hall, Englewood Cliffs, N.Y. 07632.)",
           "content_json": {
             "prompt": "Describe your aims and goals for ALL areas of your life as fully as possible. Be as specific as you can — include the date by which you wish to have each goal achieved. Sift each goal through your four filters: Personal Style, Attitudes and Values, Roles and their Demands, and Transferable Skills.\n\nGoal Importance: H (High) = very important compared to others | M (Moderate) = moderately important | L (Low) = other goals are more important\n\nEase of Attainment: H (High) = easily reachable | M (Moderate) = reachable with moderate difficulty | L (Low) = very difficult to reach\n\nCategories:\nA — Career Satisfaction: your goals for your future job or career, including specific positions you want to hold.\nB — Status and Respect: how important is receiving respect from others? From whom? What groups do you belong to?\nC — Personal Relationships: goals in your relationships with colleagues, parents, friends, people in general.\nD — Learning and Education: what would you like to know more about? What skills do you want to develop?\nE — Material Rewards and Possessions: what kind of wealth is important to you? What possessions would you want?\nF — Leisure Satisfaction: goals for leisure time — hobbies, sports, vacations, interests you want to develop.\nG — Spiritual Growth and Religion: goals for peace of mind, your search for meaning — relationship to nature, community, devotional life, meditation.\nH — Open: goals that don't fit the above categories.",
-            "headers": ["Category", "Specific Goal", "Importance (H/M/L)", "Ease of Attainment (H/M/L)", "Conflict with Other Goals (Yes/No)"],
+            "headers": [
+              "Category",
+              "Specific Goal",
+              "Importance (H/M/L)",
+              "Ease of Attainment (H/M/L)",
+              "Conflict with Other Goals (Yes/No)"
+            ],
             "rows": 24,
-            "col_types": ["text", "text", "text", "text", "text"]
+            "col_types": [
+              "text",
+              "text",
+              "text",
+              "text",
+              "text"
+            ]
           }
         },
         {
@@ -698,136 +1778,1383 @@
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "From all the goals in your Life Goal Inventory, select the ones that seem most important to you at this time. Do not choose more than ten (10). List them below in order of preference — most important first, least important last.",
-            "items": [
-              { "id": "priority_1", "label": "Goal Priority 1 (Most Important)" },
-              { "id": "priority_2", "label": "Goal Priority 2" },
-              { "id": "priority_3", "label": "Goal Priority 3" },
-              { "id": "priority_4", "label": "Goal Priority 4" },
-              { "id": "priority_5", "label": "Goal Priority 5" },
-              { "id": "priority_6", "label": "Goal Priority 6" },
-              { "id": "priority_7", "label": "Goal Priority 7" },
-              { "id": "priority_8", "label": "Goal Priority 8" },
-              { "id": "priority_9", "label": "Goal Priority 9" },
-              { "id": "priority_10", "label": "Goal Priority 10 (Least Important of Top 10)" }
-            ]
+            "prompt": "Your goals from the Life Goal Inventory appear below. Drag them to rank by importance — most important at the top. Your top 10 are recorded.",
+            "interaction": "drag",
+            "derives_from": {
+              "source_exercise_slug": "life-goal-inventory",
+              "group_by": "goal_inventory_rows"
+            },
+            "items": []
           }
+        }
+      ]
+    },
+    {
+      "slug": "goal-impact-matrix",
+      "title": "Goal Impact Matrix",
+      "subtitle": null,
+      "description": null,
+      "order_index": 7,
+      "group_slug": "goal-setting",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "The essence of strategy is choosing what not to do.",
+          "attribution": "— Michael Porter"
         },
+        "opening_question": "If you could only work on one goal for the next six months, which one would move the most other goals forward?",
+        "facilitator_says": "Not all goals are created equal — and some actively get in each other's way. This matrix is where strategy gets real: you are going to map exactly which of your goals support each other and which ones create friction.",
+        "why_it_matters": "Most goal-setting fails because people pursue everything at once. The Cross-Impact Matrix forces you to see your goals as a system — which ones are multipliers, which create drag, and where the real conflicts lie. Once you can see that map, your priorities stop being guesses.",
+        "closing_reflection": "Which two goals, if achieved together, would create the most momentum across the rest of your list?",
+        "bridge_to_next": "You have mapped the logic of your goals. Now we move from analysis to imagination — seeing yourself already there.",
+        "reading_material": {
+          "title": "Essentialism: The Disciplined Pursuit of Less — Greg McKeown",
+          "content": "McKeown's argument is that most people spread effort across too many things and achieve mediocrity everywhere, when disciplined focus on fewer things produces exceptional results. The Cross-Impact Matrix is the analytical version of his central question: 'What is the one thing that, by doing it, makes everything else easier or unnecessary?' Read Chapter 8 on Trade-offs — it directly maps onto what you are about to do."
+        }
+      },
+      "exercises": [
         {
           "slug": "cross-impact-matrix",
           "title": "EXERCISE: The Cross-Impact Matrix",
           "type": "table",
-          "order_index": 3,
+          "order_index": 1,
           "is_scored": false,
           "attribution": null,
           "content_json": {
             "prompt": "One of the major blocks to goal accomplishment is the conflict between goals. Take your top 8 goals and enter them across the top and down the left-hand side. Then use the following symbols to rank the effect each goal has on the others:\n\n+ = helpful impact (working on Goal 1 will HELP me with Goal 3)\n- = hindering impact (working on Goal 2 will make it MORE DIFFICULT to accomplish Goal 5)\n0 = no impact of any kind\n\nNote: Where a goal meets itself, mark 0 (obviously Goal 1 has no impact where it meets Goal 1).\n\nAfter completing the matrix, list at least five conflicts in order of importance.",
-            "headers": ["", "Goal 1", "Goal 2", "Goal 3", "Goal 4", "Goal 5", "Goal 6", "Goal 7", "Goal 8"],
+            "headers": [
+              "",
+              "Goal 1",
+              "Goal 2",
+              "Goal 3",
+              "Goal 4",
+              "Goal 5",
+              "Goal 6",
+              "Goal 7",
+              "Goal 8"
+            ],
             "rows": 8,
-            "col_types": ["text", "text", "text", "text", "text", "text", "text", "text", "text"]
+            "col_types": [
+              "text",
+              "text",
+              "text",
+              "text",
+              "text",
+              "text",
+              "text",
+              "text",
+              "text"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "slug": "visualization",
+      "title": "Visualization",
+      "subtitle": null,
+      "description": null,
+      "order_index": 8,
+      "group_slug": "goal-setting",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "Imagination is everything. It is the preview of life's coming attractions.",
+          "attribution": "— Albert Einstein"
+        },
+        "opening_question": "Can you close your eyes and see yourself — in vivid, sensory detail — already living your most important goal?",
+        "facilitator_says": "Strategy is not just analysis. The brain cannot fully distinguish between a vividly imagined experience and a real one — which means your imagination is a training ground. We are going to use it.",
+        "why_it_matters": "Olympic athletes have used mental rehearsal for decades. Neuroscience confirms why: visualising an action activates the same neural pathways as performing it. When you picture yourself succeeding — specifically, emotionally, sensorially — you are reprogramming your baseline expectation of what is possible. That shift in expectation changes behaviour.",
+        "closing_reflection": "What did you see clearly — and what was still fuzzy or hard to hold? What does that tell you?",
+        "bridge_to_next": "You have seen the destination. Now we identify what stands between here and there — and build the plan to clear it.",
+        "reading_material": {
+          "title": "Psycho-Cybernetics — Maxwell Maltz",
+          "content": "Maltz, a plastic surgeon who noticed that some patients' self-image did not change after surgery, developed a model of the mind as a goal-seeking servo-mechanism. His central insight: the subconscious cannot distinguish between a real and a vividly imagined experience. His visualisation exercises predate the sports psychology literature by decades and remain among the most practical available. Read Part One before the journal exercise."
+        }
+      },
+      "exercises": [
+        {
+          "slug": "visualization-practice",
+          "title": "The Importance of Visualization",
+          "type": "info",
+          "order_index": 1,
+          "is_scored": false,
+          "attribution": "Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada.",
+          "content_json": {
+            "content": "Research has shown that every thought we think has an affect on the chemistry of our bodies. By visualizing goal attainment, we actually increase our motivation to achieve them.\n\n**The next exercise will show you how visualization will help you in achieving your goals:**\n\n- Stand up.\n- Take a deep breath and let it out slowly.\n- Repeat two or three times. If you know other body relaxation exercises, do them now.\n- Once you are relaxed, close your eyes, get comfortable, and go to a place called the \"hallways of your mind\". This is a limitless place with an infinite number of rooms and spaces. Can you see it? Find the place that has to do with achieving all 8 of your goals.\n- Visualize yourself having achieved all 8 of these goals.\n- Take note of your posture in this situation. Note your breathing pattern and how your muscles feel. Are they tense, relaxed, alert?\n- Take note if there is anyone else with you in this place. Who are they? What are their posture and facial expressions? How are they relating to you?\n- Note everything around you in this place, including colours, sounds, textures, smells and tastes. Recognize that you can go to this place any time. And that you can change anything at any time.\n- Now take a deep breath and blow it out as if you were blowing out a candle.\n- Open your eyes and take a moment to reorientate yourself to where you are.\n\nDo this exercise at least once a day, twice if you can. The best times are in the morning when you first wake up and at night as you're dozing off to sleep. Go to this place any time you are under stress or have lost track of where you're going and what you are doing in your life. Some find it helpful to use a picture that represents their future achievements. Whether you buy one or draw one yourself, a concrete visual representation can be very powerful."
           }
         },
         {
-          "slug": "goal-achievement-plan",
-          "title": "EXERCISE: My Goal Achievement Plan",
-          "type": "text",
-          "order_index": 4,
+          "slug": "visualization-journal",
+          "title": "Visualization Journal",
+          "type": "structured-text",
+          "order_index": 2,
           "is_scored": false,
-          "attribution": null,
+          "attribution": "Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada.",
           "content_json": {
-            "prompt": "For each of your top 8 goals, work through the following 6 questions AND identify obstacles and action steps. This is your Personal Strategic Plan™.\n\nFor each goal, answer:\n1. How important is it that you achieve this goal?\n2. How does this goal relate to your long-term goals? What conflicts are there?\n3. How will you feel when you attain this goal? (Try to imagine yourself with the goal achieved.)\n4. How will you feel if you do not attain this goal?\n5. What do you think about your chances of succeeding? What will happen if you do succeed?\n6. What will happen if you fail?\n\nFor removing obstacles, consider:\n• Personal shortcomings that could prevent you from achieving the goal\n• Obstacles in the world that could prevent achievement\n• What you can do to eliminate or lessen each obstacle\n• Specific action steps that will move you toward the goal\n\nComplete this for each of your top 8 goals:",
-            "placeholder": "GOAL 1: ___\n\n1. Importance:\n2. Long-term relation / conflicts:\n3. How I'll feel when attained:\n4. How I'll feel if not attained:\n5. Chances of success:\n6. If I fail:\n\nPersonal shortcomings:\nWorld obstacles:\nAction steps:\n\n---\n\nGOAL 2: ___\n...",
-            "min_length": 200,
-            "max_length": 10000
+            "intro": "After completing the visualization practice above, record what you experienced. Return to this journal each time you repeat the practice — your answers will deepen and shift over the weeks ahead.",
+            "questions": [
+              {
+                "id": "what_seen",
+                "prompt": "What did you see in the place that has to do with achieving all 8 of your goals? Describe the scene as vividly as you can.",
+                "required": true,
+                "max_length": 1500,
+                "min_length": 20
+              },
+              {
+                "id": "who_present",
+                "prompt": "Who else was with you in this place? What were their posture and facial expressions, and how were they relating to you?",
+                "required": true,
+                "max_length": 1200,
+                "min_length": 20
+              },
+              {
+                "id": "place_details",
+                "prompt": "Note everything around you — colours, sounds, textures, smells, tastes. What stood out?",
+                "required": true,
+                "max_length": 1200,
+                "min_length": 20
+              },
+              {
+                "id": "one_action",
+                "prompt": "Name one concrete action you can take this week, drawn from what you saw, that moves you closer to your future self.",
+                "required": true,
+                "max_length": 800,
+                "min_length": 20
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "slug": "removing-obstacles-achieving-goals",
+      "title": "Removing Obstacles, Achieving Goals",
+      "subtitle": null,
+      "description": null,
+      "order_index": 9,
+      "group_slug": "strategic-planning",
+      "icon_name": null,
+      "framing": {
+        "opening_quote": {
+          "text": "It is not the mountain we conquer, but ourselves.",
+          "attribution": "— Sir Edmund Hillary"
+        },
+        "opening_question": "What is the one obstacle — inside you, not outside you — that most reliably stops you from following through?",
+        "facilitator_says": "This is where the work lands. Everything you have done — understanding your style, examining your attitudes, naming your values, mapping your roles, listing your skills, setting your goals — all of it comes to nothing without action. This section is about closing the gap.",
+        "why_it_matters": "Goal failure almost always traces to the same causes: vague plans, unexamined obstacles, and unchallenged alibis. This section attacks all three. You will plan specifically, anticipate honestly, and — in the Declaration of Self-Esteem — remind yourself of who you are before the obstacles tried to convince you otherwise.",
+        "closing_reflection": "What one action will you take in the next 48 hours that moves you toward your most important goal?",
+        "bridge_to_next": null,
+        "reading_material": {
+          "title": "The War of Art — Steven Pressfield",
+          "content": "Pressfield names the force that stops meaningful work 'Resistance' — and argues it is always proportional to the importance of the work. The more meaningful the goal, the stronger the Resistance. His book is a short, direct account of what it takes to act anyway. Read it alongside the Removing Obstacles exercise; Pressfield's inventory of Resistance tactics maps almost exactly onto the alibi list you are about to complete."
+        }
+      },
+      "exercises": [
+        {
+          "slug": "goal-introspection",
+          "title": "Goal Achievement Plan — Reflection",
+          "type": "structured-text",
+          "order_index": 1,
+          "is_scored": false,
+          "attribution": "Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada.",
+          "content_json": {
+            "intro": "Think about each of your top eight goals together as a single Personal Strategic Plan. Answer each of the six questions below. Take into account the outside influences that affect your decisions and plans.",
+            "questions": [
+              {
+                "id": "importance",
+                "prompt": "How important is it that you achieve these goals? Why now?",
+                "required": true,
+                "max_length": 1500,
+                "min_length": 30
+              },
+              {
+                "id": "long_term",
+                "prompt": "How do these goals relate to your long-term goals? What conflicts are there between them?",
+                "required": true,
+                "max_length": 1500,
+                "min_length": 30
+              },
+              {
+                "id": "feel_attained",
+                "prompt": "How will you feel when you attain these goals? Try to imagine yourself with the goals achieved — what are your feelings?",
+                "required": true,
+                "max_length": 1500,
+                "min_length": 30
+              },
+              {
+                "id": "feel_not",
+                "prompt": "How will you feel if you do not attain these goals? Try to imagine again — what are your feelings?",
+                "required": true,
+                "max_length": 1500,
+                "min_length": 30
+              },
+              {
+                "id": "chances",
+                "prompt": "What do you think about your chances of succeeding? What will happen if you do succeed?",
+                "required": true,
+                "max_length": 1500,
+                "min_length": 30
+              },
+              {
+                "id": "if_fail",
+                "prompt": "What will happen if you fail at one or more of these goals?",
+                "required": true,
+                "max_length": 1500,
+                "min_length": 30
+              }
+            ]
+          }
+        },
+        {
+          "slug": "removing-obstacles",
+          "title": "Removing Obstacles — Per Goal",
+          "type": "structured-text",
+          "order_index": 2,
+          "is_scored": false,
+          "attribution": "Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada.",
+          "content_json": {
+            "intro": "For each of your top 8 goals, name up to 4 personal shortcomings and up to 4 external obstacles that could keep you from achieving it. You need not eliminate the block entirely — anything you can do to lessen its force will start you moving toward your goal.",
+            "questions": [
+              {
+                "id": "goal1_personal_1",
+                "prompt": "Goal 1 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_personal_2",
+                "prompt": "Goal 1 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_personal_3",
+                "prompt": "Goal 1 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_personal_4",
+                "prompt": "Goal 1 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_world_1",
+                "prompt": "Goal 1 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_world_2",
+                "prompt": "Goal 1 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_world_3",
+                "prompt": "Goal 1 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_world_4",
+                "prompt": "Goal 1 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_personal_1",
+                "prompt": "Goal 2 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_personal_2",
+                "prompt": "Goal 2 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_personal_3",
+                "prompt": "Goal 2 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_personal_4",
+                "prompt": "Goal 2 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_world_1",
+                "prompt": "Goal 2 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_world_2",
+                "prompt": "Goal 2 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_world_3",
+                "prompt": "Goal 2 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_world_4",
+                "prompt": "Goal 2 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_personal_1",
+                "prompt": "Goal 3 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_personal_2",
+                "prompt": "Goal 3 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_personal_3",
+                "prompt": "Goal 3 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_personal_4",
+                "prompt": "Goal 3 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_world_1",
+                "prompt": "Goal 3 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_world_2",
+                "prompt": "Goal 3 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_world_3",
+                "prompt": "Goal 3 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_world_4",
+                "prompt": "Goal 3 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_personal_1",
+                "prompt": "Goal 4 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_personal_2",
+                "prompt": "Goal 4 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_personal_3",
+                "prompt": "Goal 4 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_personal_4",
+                "prompt": "Goal 4 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_world_1",
+                "prompt": "Goal 4 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_world_2",
+                "prompt": "Goal 4 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_world_3",
+                "prompt": "Goal 4 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_world_4",
+                "prompt": "Goal 4 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_personal_1",
+                "prompt": "Goal 5 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_personal_2",
+                "prompt": "Goal 5 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_personal_3",
+                "prompt": "Goal 5 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_personal_4",
+                "prompt": "Goal 5 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_world_1",
+                "prompt": "Goal 5 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_world_2",
+                "prompt": "Goal 5 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_world_3",
+                "prompt": "Goal 5 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_world_4",
+                "prompt": "Goal 5 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_personal_1",
+                "prompt": "Goal 6 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_personal_2",
+                "prompt": "Goal 6 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_personal_3",
+                "prompt": "Goal 6 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_personal_4",
+                "prompt": "Goal 6 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_world_1",
+                "prompt": "Goal 6 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_world_2",
+                "prompt": "Goal 6 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_world_3",
+                "prompt": "Goal 6 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_world_4",
+                "prompt": "Goal 6 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_personal_1",
+                "prompt": "Goal 7 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_personal_2",
+                "prompt": "Goal 7 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_personal_3",
+                "prompt": "Goal 7 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_personal_4",
+                "prompt": "Goal 7 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_world_1",
+                "prompt": "Goal 7 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_world_2",
+                "prompt": "Goal 7 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_world_3",
+                "prompt": "Goal 7 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_world_4",
+                "prompt": "Goal 7 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_personal_1",
+                "prompt": "Goal 8 — personal shortcoming #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_personal_2",
+                "prompt": "Goal 8 — personal shortcoming #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_personal_3",
+                "prompt": "Goal 8 — personal shortcoming #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_personal_4",
+                "prompt": "Goal 8 — personal shortcoming #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_world_1",
+                "prompt": "Goal 8 — obstacle in the world #1 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_world_2",
+                "prompt": "Goal 8 — obstacle in the world #2 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_world_3",
+                "prompt": "Goal 8 — obstacle in the world #3 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_world_4",
+                "prompt": "Goal 8 — obstacle in the world #4 that will keep you from achieving this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              }
+            ]
+          }
+        },
+        {
+          "slug": "achieving-goal-actions",
+          "title": "Achieving Goals — Specific Actions",
+          "type": "structured-text",
+          "order_index": 3,
+          "is_scored": false,
+          "attribution": "Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada.",
+          "content_json": {
+            "intro": "For each of your top 8 goals, list 5 specific things you can do that will move you toward this goal. These should be concrete actions, not statements of intent.",
+            "questions": [
+              {
+                "id": "goal1_action_1",
+                "prompt": "Goal 1 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_action_2",
+                "prompt": "Goal 1 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_action_3",
+                "prompt": "Goal 1 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_action_4",
+                "prompt": "Goal 1 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal1_action_5",
+                "prompt": "Goal 1 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_action_1",
+                "prompt": "Goal 2 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_action_2",
+                "prompt": "Goal 2 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_action_3",
+                "prompt": "Goal 2 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_action_4",
+                "prompt": "Goal 2 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal2_action_5",
+                "prompt": "Goal 2 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_action_1",
+                "prompt": "Goal 3 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_action_2",
+                "prompt": "Goal 3 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_action_3",
+                "prompt": "Goal 3 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_action_4",
+                "prompt": "Goal 3 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal3_action_5",
+                "prompt": "Goal 3 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_action_1",
+                "prompt": "Goal 4 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_action_2",
+                "prompt": "Goal 4 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_action_3",
+                "prompt": "Goal 4 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_action_4",
+                "prompt": "Goal 4 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal4_action_5",
+                "prompt": "Goal 4 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_action_1",
+                "prompt": "Goal 5 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_action_2",
+                "prompt": "Goal 5 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_action_3",
+                "prompt": "Goal 5 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_action_4",
+                "prompt": "Goal 5 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal5_action_5",
+                "prompt": "Goal 5 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_action_1",
+                "prompt": "Goal 6 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_action_2",
+                "prompt": "Goal 6 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_action_3",
+                "prompt": "Goal 6 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_action_4",
+                "prompt": "Goal 6 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal6_action_5",
+                "prompt": "Goal 6 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_action_1",
+                "prompt": "Goal 7 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_action_2",
+                "prompt": "Goal 7 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_action_3",
+                "prompt": "Goal 7 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_action_4",
+                "prompt": "Goal 7 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal7_action_5",
+                "prompt": "Goal 7 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_action_1",
+                "prompt": "Goal 8 — specific action #1 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_action_2",
+                "prompt": "Goal 8 — specific action #2 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_action_3",
+                "prompt": "Goal 8 — specific action #3 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_action_4",
+                "prompt": "Goal 8 — specific action #4 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              },
+              {
+                "id": "goal8_action_5",
+                "prompt": "Goal 8 — specific action #5 you can take that will move you toward this goal.",
+                "required": true,
+                "max_length": 400,
+                "min_length": 5
+              }
+            ]
           }
         },
         {
           "slug": "success-failure-alibis",
           "title": "EXERCISE: Success/Failure & Win/Lose — The IF List",
           "type": "checkbox",
-          "order_index": 5,
+          "order_index": 4,
           "is_scored": false,
           "attribution": "(From Lar Short's Institute of Total Person Facilitation)",
           "content_json": {
             "prompt": "The purpose of alibis is to cover up weaknesses. The energy used in supporting alibis is usually more than enough to correct the weakness. Check any alibis YOU have used — this is about honest self-awareness, not judgment.",
             "options": [
-              { "id": "if_1", "label": "If only I didn't have a husband/wife and family", "value": 1 },
-              { "id": "if_2", "label": "If I had money", "value": 1 },
-              { "id": "if_3", "label": "If I could get a job", "value": 1 },
-              { "id": "if_4", "label": "If only I had time", "value": 1 },
-              { "id": "if_5", "label": "If only my mother/father/wife/husband/lover/children understood me", "value": 1 },
-              { "id": "if_6", "label": "If only my teacher would really listen", "value": 1 },
-              { "id": "if_7", "label": "If conditions around me were only different", "value": 1 },
-              { "id": "if_8", "label": "If I could live my life over again", "value": 1 },
-              { "id": "if_9", "label": "If only I wasn't a sinner", "value": 1 },
-              { "id": "if_10", "label": "If I didn't fear what 'they' would say", "value": 1 },
-              { "id": "if_11", "label": "If I had been given a chance", "value": 1 },
-              { "id": "if_12", "label": "If I had been given another chance", "value": 1 },
-              { "id": "if_13", "label": "If I now had a chance", "value": 1 },
-              { "id": "if_14", "label": "If other people didn't 'have it in for me'", "value": 1 },
-              { "id": "if_15", "label": "If nothing happens to stop me", "value": 1 },
-              { "id": "if_16", "label": "If I didn't make excuses and was willing to learn and correct my weaknesses", "value": 1 },
-              { "id": "if_17", "label": "If I were only younger", "value": 1 },
-              { "id": "if_18", "label": "If I could only do what I want", "value": 1 },
-              { "id": "if_19", "label": "If I could only remember my birth/childhood", "value": 1 },
-              { "id": "if_20", "label": "If my body or appearance was different", "value": 1 },
-              { "id": "if_21", "label": "If I didn't have so much to do", "value": 1 },
-              { "id": "if_22", "label": "If God really loved me", "value": 1 },
-              { "id": "if_23", "label": "If I had been born rich", "value": 1 },
-              { "id": "if_24", "label": "If I could meet the 'right' people", "value": 1 },
-              { "id": "if_25", "label": "If I had the talent some people have", "value": 1 },
-              { "id": "if_26", "label": "If I dared assert myself", "value": 1 },
-              { "id": "if_27", "label": "If only I had embraced past opportunities", "value": 1 },
-              { "id": "if_28", "label": "If people didn't get on my nerves", "value": 1 },
-              { "id": "if_29", "label": "If I didn't have to keep house and look after the children", "value": 1 },
-              { "id": "if_30", "label": "If I had the nerve", "value": 1 },
-              { "id": "if_31", "label": "If I could save some money", "value": 1 },
-              { "id": "if_32", "label": "If my teacher/boss/husband/wife/kids only knew how hard I'm trying", "value": 1 },
-              { "id": "if_33", "label": "If I only had somebody to help me", "value": 1 },
-              { "id": "if_34", "label": "If the boss only appreciated me", "value": 1 },
-              { "id": "if_35", "label": "If I had enough pull/knew the right people", "value": 1 },
-              { "id": "if_36", "label": "If I had a good education", "value": 1 },
-              { "id": "if_37", "label": "If I had good health", "value": 1 },
-              { "id": "if_38", "label": "If times were better", "value": 1 },
-              { "id": "if_39", "label": "If only 'it' was easier", "value": 1 },
-              { "id": "if_40", "label": "If I could just get started", "value": 1 },
-              { "id": "if_41", "label": "If I had more personality/charisma", "value": 1 },
-              { "id": "if_42", "label": "If my talents were known", "value": 1 },
-              { "id": "if_43", "label": "If I could only get out of debt", "value": 1 },
-              { "id": "if_44", "label": "If I hadn't failed", "value": 1 },
-              { "id": "if_45", "label": "If everybody didn't oppose me", "value": 1 },
-              { "id": "if_46", "label": "If I didn't have so many worries", "value": 1 },
-              { "id": "if_47", "label": "If I could marry the right person", "value": 1 },
-              { "id": "if_48", "label": "If people weren't so dumb", "value": 1 },
-              { "id": "if_49", "label": "If my family weren't so extravagant", "value": 1 },
-              { "id": "if_50", "label": "If I were sure of myself", "value": 1 },
-              { "id": "if_51", "label": "If I just knew they could see how I see it", "value": 1 },
-              { "id": "if_52", "label": "If luck were not against me", "value": 1 },
-              { "id": "if_53", "label": "If I hadn't been born under the wrong star", "value": 1 },
-              { "id": "if_54", "label": "If it were not true that 'what will be will be'", "value": 1 },
-              { "id": "if_55", "label": "If I didn't have such bad karma", "value": 1 },
-              { "id": "if_56", "label": "If I didn't have to work hard", "value": 1 },
-              { "id": "if_57", "label": "If only the things 'I have to do' didn't make me so tired", "value": 1 },
-              { "id": "if_58", "label": "If only I had enough energy", "value": 1 },
-              { "id": "if_59", "label": "If I were in touch with my psychic powers", "value": 1 },
-              { "id": "if_60", "label": "If I hadn't lost my money", "value": 1 },
-              { "id": "if_61", "label": "If I lived somewhere else", "value": 1 },
-              { "id": "if_62", "label": "If I didn't have a past", "value": 1 },
-              { "id": "if_63", "label": "If I only had a business of my own", "value": 1 },
-              { "id": "if_64", "label": "If only I could get paid for doing what I want/like to do", "value": 1 },
-              { "id": "if_65", "label": "If other people would only listen to me", "value": 1 },
-              { "id": "if_66", "label": "If I hadn't been born", "value": 1 },
-              { "id": "if_67", "label": "If I could just get a rest", "value": 1 },
-              { "id": "if_68", "label": "If people weren't so superficial", "value": 1 },
-              { "id": "if_69", "label": "If life was a little easier", "value": 1 },
-              { "id": "if_70", "label": "If I could just finish things", "value": 1 },
-              { "id": "if_71", "label": "If I were more creative", "value": 1 },
-              { "id": "if_72", "label": "If only my teacher would finally arrive", "value": 1 },
-              { "id": "if_73", "label": "If I had someone I could really communicate with", "value": 1 },
-              { "id": "if_74", "label": "If I lived in a big city/small town/the country", "value": 1 },
-              { "id": "if_75", "label": "If only I were free", "value": 1 },
-              { "id": "if_76", "label": "If I weren't so fat/skinny", "value": 1 },
-              { "id": "if_77", "label": "If I could just get a break", "value": 1 }
+              {
+                "id": "if_1",
+                "label": "If only I didn't have a husband/wife and family",
+                "value": 1
+              },
+              {
+                "id": "if_2",
+                "label": "If I had money",
+                "value": 1
+              },
+              {
+                "id": "if_3",
+                "label": "If I could get a job",
+                "value": 1
+              },
+              {
+                "id": "if_4",
+                "label": "If only I had time",
+                "value": 1
+              },
+              {
+                "id": "if_5",
+                "label": "If only my mother/father/wife/husband/lover/children understood me",
+                "value": 1
+              },
+              {
+                "id": "if_6",
+                "label": "If only my teacher would really listen",
+                "value": 1
+              },
+              {
+                "id": "if_7",
+                "label": "If conditions around me were only different",
+                "value": 1
+              },
+              {
+                "id": "if_8",
+                "label": "If I could live my life over again",
+                "value": 1
+              },
+              {
+                "id": "if_9",
+                "label": "If only I wasn't a sinner",
+                "value": 1
+              },
+              {
+                "id": "if_10",
+                "label": "If I didn't fear what 'they' would say",
+                "value": 1
+              },
+              {
+                "id": "if_11",
+                "label": "If I had been given a chance",
+                "value": 1
+              },
+              {
+                "id": "if_12",
+                "label": "If I had been given another chance",
+                "value": 1
+              },
+              {
+                "id": "if_13",
+                "label": "If I now had a chance",
+                "value": 1
+              },
+              {
+                "id": "if_14",
+                "label": "If other people didn't 'have it in for me'",
+                "value": 1
+              },
+              {
+                "id": "if_15",
+                "label": "If nothing happens to stop me",
+                "value": 1
+              },
+              {
+                "id": "if_16",
+                "label": "If I didn't make excuses and was willing to learn and correct my weaknesses",
+                "value": 1
+              },
+              {
+                "id": "if_17",
+                "label": "If I were only younger",
+                "value": 1
+              },
+              {
+                "id": "if_18",
+                "label": "If I could only do what I want",
+                "value": 1
+              },
+              {
+                "id": "if_19",
+                "label": "If I could only remember my birth/childhood",
+                "value": 1
+              },
+              {
+                "id": "if_20",
+                "label": "If my body or appearance was different",
+                "value": 1
+              },
+              {
+                "id": "if_21",
+                "label": "If I didn't have so much to do",
+                "value": 1
+              },
+              {
+                "id": "if_22",
+                "label": "If God really loved me",
+                "value": 1
+              },
+              {
+                "id": "if_23",
+                "label": "If I had been born rich",
+                "value": 1
+              },
+              {
+                "id": "if_24",
+                "label": "If I could meet the 'right' people",
+                "value": 1
+              },
+              {
+                "id": "if_25",
+                "label": "If I had the talent some people have",
+                "value": 1
+              },
+              {
+                "id": "if_26",
+                "label": "If I dared assert myself",
+                "value": 1
+              },
+              {
+                "id": "if_27",
+                "label": "If only I had embraced past opportunities",
+                "value": 1
+              },
+              {
+                "id": "if_28",
+                "label": "If people didn't get on my nerves",
+                "value": 1
+              },
+              {
+                "id": "if_29",
+                "label": "If I didn't have to keep house and look after the children",
+                "value": 1
+              },
+              {
+                "id": "if_30",
+                "label": "If I had the nerve",
+                "value": 1
+              },
+              {
+                "id": "if_31",
+                "label": "If I could save some money",
+                "value": 1
+              },
+              {
+                "id": "if_32",
+                "label": "If my teacher/boss/husband/wife/kids only knew how hard I'm trying",
+                "value": 1
+              },
+              {
+                "id": "if_33",
+                "label": "If I only had somebody to help me",
+                "value": 1
+              },
+              {
+                "id": "if_34",
+                "label": "If the boss only appreciated me",
+                "value": 1
+              },
+              {
+                "id": "if_35",
+                "label": "If I had enough pull/knew the right people",
+                "value": 1
+              },
+              {
+                "id": "if_36",
+                "label": "If I had a good education",
+                "value": 1
+              },
+              {
+                "id": "if_37",
+                "label": "If I had good health",
+                "value": 1
+              },
+              {
+                "id": "if_38",
+                "label": "If times were better",
+                "value": 1
+              },
+              {
+                "id": "if_39",
+                "label": "If only 'it' was easier",
+                "value": 1
+              },
+              {
+                "id": "if_40",
+                "label": "If I could just get started",
+                "value": 1
+              },
+              {
+                "id": "if_41",
+                "label": "If I had more personality/charisma",
+                "value": 1
+              },
+              {
+                "id": "if_42",
+                "label": "If my talents were known",
+                "value": 1
+              },
+              {
+                "id": "if_43",
+                "label": "If I could only get out of debt",
+                "value": 1
+              },
+              {
+                "id": "if_44",
+                "label": "If I hadn't failed",
+                "value": 1
+              },
+              {
+                "id": "if_45",
+                "label": "If everybody didn't oppose me",
+                "value": 1
+              },
+              {
+                "id": "if_46",
+                "label": "If I didn't have so many worries",
+                "value": 1
+              },
+              {
+                "id": "if_47",
+                "label": "If I could marry the right person",
+                "value": 1
+              },
+              {
+                "id": "if_48",
+                "label": "If people weren't so dumb",
+                "value": 1
+              },
+              {
+                "id": "if_49",
+                "label": "If my family weren't so extravagant",
+                "value": 1
+              },
+              {
+                "id": "if_50",
+                "label": "If I were sure of myself",
+                "value": 1
+              },
+              {
+                "id": "if_51",
+                "label": "If I just knew they could see how I see it",
+                "value": 1
+              },
+              {
+                "id": "if_52",
+                "label": "If luck were not against me",
+                "value": 1
+              },
+              {
+                "id": "if_53",
+                "label": "If I hadn't been born under the wrong star",
+                "value": 1
+              },
+              {
+                "id": "if_54",
+                "label": "If it were not true that 'what will be will be'",
+                "value": 1
+              },
+              {
+                "id": "if_55",
+                "label": "If I didn't have such bad karma",
+                "value": 1
+              },
+              {
+                "id": "if_56",
+                "label": "If I didn't have to work hard",
+                "value": 1
+              },
+              {
+                "id": "if_57",
+                "label": "If only the things 'I have to do' didn't make me so tired",
+                "value": 1
+              },
+              {
+                "id": "if_58",
+                "label": "If only I had enough energy",
+                "value": 1
+              },
+              {
+                "id": "if_59",
+                "label": "If I were in touch with my psychic powers",
+                "value": 1
+              },
+              {
+                "id": "if_60",
+                "label": "If I hadn't lost my money",
+                "value": 1
+              },
+              {
+                "id": "if_61",
+                "label": "If I lived somewhere else",
+                "value": 1
+              },
+              {
+                "id": "if_62",
+                "label": "If I didn't have a past",
+                "value": 1
+              },
+              {
+                "id": "if_63",
+                "label": "If I only had a business of my own",
+                "value": 1
+              },
+              {
+                "id": "if_64",
+                "label": "If only I could get paid for doing what I want/like to do",
+                "value": 1
+              },
+              {
+                "id": "if_65",
+                "label": "If other people would only listen to me",
+                "value": 1
+              },
+              {
+                "id": "if_66",
+                "label": "If I hadn't been born",
+                "value": 1
+              },
+              {
+                "id": "if_67",
+                "label": "If I could just get a rest",
+                "value": 1
+              },
+              {
+                "id": "if_68",
+                "label": "If people weren't so superficial",
+                "value": 1
+              },
+              {
+                "id": "if_69",
+                "label": "If life was a little easier",
+                "value": 1
+              },
+              {
+                "id": "if_70",
+                "label": "If I could just finish things",
+                "value": 1
+              },
+              {
+                "id": "if_71",
+                "label": "If I were more creative",
+                "value": 1
+              },
+              {
+                "id": "if_72",
+                "label": "If only my teacher would finally arrive",
+                "value": 1
+              },
+              {
+                "id": "if_73",
+                "label": "If I had someone I could really communicate with",
+                "value": 1
+              },
+              {
+                "id": "if_74",
+                "label": "If I lived in a big city/small town/the country",
+                "value": 1
+              },
+              {
+                "id": "if_75",
+                "label": "If only I were free",
+                "value": 1
+              },
+              {
+                "id": "if_76",
+                "label": "If I weren't so fat/skinny",
+                "value": 1
+              },
+              {
+                "id": "if_77",
+                "label": "If I could just get a break",
+                "value": 1
+              }
             ],
             "allow_multiple": true
           }
@@ -836,7 +3163,7 @@
           "slug": "declaration-of-self-esteem",
           "title": "My Declaration of Self-Esteem",
           "type": "text",
-          "order_index": 6,
+          "order_index": 5,
           "is_scored": false,
           "attribution": "(by Virginia Satir, 1970 — Virginia Satir is known as the grandmother of family therapy)",
           "content_json": {
@@ -844,18 +3171,6 @@
             "placeholder": "Reading the Declaration of Self-Esteem, I feel...\n\nThe parts that resonate most with me are...\n\nAs I complete my Personal Strategic Plan™, I commit to...",
             "min_length": 20,
             "max_length": 2000
-          }
-        },
-        {
-          "slug": "copyright-footer",
-          "title": "About This Workshop",
-          "type": "info",
-          "order_index": 7,
-          "is_scored": false,
-          "attribution": null,
-          "content_json": {
-            "content": "© Sam Koshy / Compass Career Life Solutions, Canada. All rights reserved.\nWorkshop facilitated by Bijo Abraham (Career & Life Strategist), Select HR Solutions.\nshare@risewithpsp.com | +91 971 840 2480",
-            "attribution": null
           }
         }
       ]

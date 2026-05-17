@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-3);
+}
+
+.continueBtn {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-md);
+  background: var(--color-trust);
+  color: var(--color-on-trust, white);
+  border: none;
+  cursor: pointer;
+}
+
+.continueBtn:hover {
+  filter: brightness(0.96);
+}
+
+.continueBtn:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 2px;
+}

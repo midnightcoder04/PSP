@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
 import { ROUTES } from '@/lib/constants'
-import { DEV_BYPASS, resolveDevRole, devLogin } from '@/lib/devAuth'
 import styles from './LoginPage.module.css'
 
 export default function LoginPage() {
@@ -21,20 +20,6 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
-
-    if (DEV_BYPASS) {
-      if (password !== 'test123') {
-        setError('Dev bypass: password must be test123')
-        setLoading(false)
-        return
-      }
-      const role = resolveDevRole(email)
-      devLogin(role)
-      const roleHome = role === 'admin' ? ROUTES.ADMIN : role === 'facilitator' ? ROUTES.FACILITATOR : ROUTES.COURSE
-      // Reload so AuthProvider re-reads localStorage
-      window.location.replace(from ?? roleHome)
-      return
-    }
 
     const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password })
     setLoading(false)
@@ -61,7 +46,7 @@ export default function LoginPage() {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <span className={styles.logo}>PSP™</span>
+          <span className={styles.logo}>Rise with PSP™</span>
           <h1 className={styles.title}>Personal Strategic Planning</h1>
           <p className={styles.subtitle}>Sign in to continue your journey</p>
         </div>
@@ -108,16 +93,9 @@ export default function LoginPage() {
             Forgot password?
           </a>
         </div>
-
-        {DEV_BYPASS && (
-          <div style={{ marginTop: '1rem', padding: '0.75rem', background: '#fef3c7', borderRadius: '6px', fontSize: '0.75rem', color: '#92400e' }}>
-            <strong>Dev bypass active</strong> — password: <code>test123</code><br />
-            Email: <code>test</code> (participant) · <code>facilitator</code> · <code>admin</code>
-          </div>
-        )}
       </div>
       <p className={styles.attribution}>
-        Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions
+        Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions · Facilitated by Rise with PSP™
       </p>
     </div>
   )

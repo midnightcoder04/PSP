@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { useSidebarCollapseContext } from '@/hooks/useSidebarCollapse'
 import { ROUTES } from '@/lib/constants'
 import styles from './Sidebar.module.css'
 
@@ -13,10 +14,12 @@ const ADMIN_NAV: NavItem[] = [
   { to: ROUTES.ADMIN, label: 'Dashboard', icon: '⬡' },
   { to: ROUTES.ADMIN_USERS, label: 'Users', icon: '◎' },
   { to: ROUTES.ADMIN_SESSIONS, label: 'Sessions', icon: '◫' },
+  { to: ROUTES.ADMIN_TESTIMONIALS, label: 'Testimonials', icon: '✦' },
 ]
 
 const FACILITATOR_NAV: NavItem[] = [
   { to: ROUTES.FACILITATOR, label: 'Dashboard', icon: '⬡' },
+  { to: ROUTES.FACILITATOR_TESTIMONIALS, label: 'Testimonials', icon: '✦' },
 ]
 
 const PARTICIPANT_NAV: NavItem[] = [
@@ -32,13 +35,30 @@ const NAV_MAP = {
 
 export function Sidebar() {
   const { profile } = useAuth()
+  const { collapsed, toggle } = useSidebarCollapseContext()
   const role = profile?.role ?? 'participant'
   const items = NAV_MAP[role] ?? PARTICIPANT_NAV
 
   return (
-    <aside className={styles.sidebar} aria-label="Main navigation">
+    <aside
+      id="primary-sidebar"
+      className={styles.sidebar}
+      data-collapsed={collapsed}
+      aria-label="Main navigation"
+    >
       <div className={styles.brand}>
         <span className={styles.brandMark}>PSP™</span>
+        <button
+          type="button"
+          className={styles.toggle}
+          onClick={toggle}
+          aria-expanded={!collapsed}
+          aria-controls="primary-sidebar"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          <span aria-hidden="true">{collapsed ? '›' : '‹'}</span>
+        </button>
       </div>
       <nav className={styles.nav}>
         <ul role="list">
@@ -50,9 +70,11 @@ export function Sidebar() {
                 className={({ isActive }) =>
                   [styles.navLink, isActive ? styles.active : ''].join(' ')
                 }
+                aria-label={item.label}
+                title={collapsed ? item.label : undefined}
               >
                 <span className={styles.icon} aria-hidden="true">{item.icon}</span>
-                {item.label}
+                <span className={styles.label}>{item.label}</span>
               </NavLink>
             </li>
           ))}

@@ -35,15 +35,27 @@ export default function AdminDashboard() {
   }
 
   const stats = [
-    { label: 'Total Sessions',    value: overview?.total_sessions ?? 0 },
-    { label: 'Active Sessions',   value: overview?.active_sessions ?? 0 },
-    { label: 'Total Participants',value: overview?.total_participants ?? 0 },
-    { label: 'Overall Completion',value: `${overview?.overall_completion_pct ?? 0}%` },
+    { label: 'Total Sessions',    value: Number(overview?.total_sessions ?? 0) },
+    { label: 'Active Sessions',   value: Number(overview?.active_sessions ?? 0) },
+    { label: 'Total Participants',value: Number(overview?.total_participants ?? 0) },
+    { label: 'Overall Completion',value: `${Number(overview?.overall_completion_pct ?? 0)}%` },
   ]
 
+  const SECTION_SHORT: Record<string, string> = {
+    'personality':                        'Personality',
+    'attitude':                           'Attitude',
+    'values':                             'Values',
+    'roles-and-demands':                  'Roles & Demands',
+    'transferable-skills':                'Trans. Skills',
+    'specific-goals':                     'Specific Goals',
+    'goal-impact-matrix':                 'Goal Impact',
+    'visualization':                      'Visualization',
+    'removing-obstacles-achieving-goals': 'Obstacles',
+  }
+
   const chartData = (overview?.sections ?? []).map((s) => ({
-    name: s.title,
-    pct: s.avg_completion_pct ?? 0,
+    name: SECTION_SHORT[s.slug] ?? s.title,
+    pct:  Number(s.avg_completion_pct ?? 0),
   }))
 
   return (
@@ -60,9 +72,9 @@ export default function AdminDashboard() {
       {chartData.length > 0 && (
         <div className={styles.chartCard}>
           <h3 className={styles.chartTitle}>Average Section Completion (%)</h3>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={chartData} margin={{ top: 0, right: 16, bottom: 0, left: 0 }}>
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData} margin={{ top: 0, right: 16, bottom: 60, left: 0 }}>
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-35} textAnchor="end" interval={0} />
               <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
               <Tooltip formatter={(v: number) => [`${v}%`, 'Avg Completion']} />
               <Bar dataKey="pct" radius={[4, 4, 0, 0]}>

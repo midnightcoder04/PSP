@@ -11,11 +11,12 @@ vi.mock('@/hooks/useAuth', () => ({
   }),
 }))
 
+const mockUseRealtimeSession = vi.fn()
 vi.mock('@/hooks/useRealtimeSession', () => ({
-  useRealtimeSession: vi.fn(),
+  useRealtimeSession: (args: unknown) => mockUseRealtimeSession(args),
 }))
 
-const mockSessionInfo = {
+let mockSessionInfo = {
   title: 'PSP Batch 7',
   scheduled_end: '2026-06-01T00:00:00Z',
   is_active: true,
@@ -28,7 +29,7 @@ const mockStats = [
     overall_pct: 75,
     sections: [
       { slug: 'personality', completed: 3, total: 4, completed_at: null },
-      { slug: 'attitudes', completed: 2, total: 3, completed_at: null },
+      { slug: 'attitude', completed: 2, total: 3, completed_at: null },
     ],
   },
   {
@@ -45,13 +46,18 @@ const mockStats = [
 const makeSessionChain = () => ({
   select: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
-  single: vi.fn().mockResolvedValue({ data: mockSessionInfo, error: null }),
+  single: vi.fn().mockImplementation(() =>
+    Promise.resolve({ data: mockSessionInfo, error: null })
+  ),
 })
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: vi.fn(() => makeSessionChain()),
-    rpc: vi.fn().mockResolvedValue({ data: mockStats, error: null }),
+    rpc: vi.fn().mockImplementation(() => Promise.resolve({ data: mockStats, error: null })),
+    auth: {
+      getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'fac-1' } }, error: null }),
+    },
   },
 }))
 
@@ -66,7 +72,14 @@ function renderPage() {
 }
 
 describe('FacilitatorSessionDetailPage', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockSessionInfo = {
+      title: 'PSP Batch 7',
+      scheduled_end: '2026-06-01T00:00:00Z',
+      is_active: true,
+    }
+  })
 
   it('renders one row per enrolled participant', async () => {
     renderPage()
@@ -112,6 +125,42 @@ describe('FacilitatorSessionDetailPage', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Live')).toBeInTheDocument()
+    })
+  })
+
+  it('shows Session Archived badge and disables Realtime when scheduled_end is past', async () => {
+    mockSessionInfo = {
+      title: 'PSP Batch 1 (archived)',
+      scheduled_end: '2024-01-01T00:00:00Z',
+      is_active: true,
+    }
+
+    renderPage()
+
+    await waitFor(() => {
+      expect(screen.getByText('Session Archived')).toBeInTheDocument()
+    })
+
+    expect(screen.queryByText('Live')).not.toBeInTheDocument()
+
+    // Realtime hook is invoked but with enabled: false so no subscription is created.
+    const calls = mockUseRealtimeSession.mock.calls
+    expect(calls.length).toBeGreaterThan(0)
+    const lastCall = calls[calls.length - 1][0] as { enabled: boolean }
+    expect(lastCall.enabled).toBe(false)
+  })
+
+  it('shows Session Archived when is_active is false even with future end date', async () => {
+    mockSessionInfo = {
+      title: 'PSP Batch 4 (manually archived)',
+      scheduled_end: '2099-01-01T00:00:00Z',
+      is_active: false,
+    }
+
+    renderPage()
+
+    await waitFor(() => {
+      expect(screen.getByText('Session Archived')).toBeInTheDocument()
     })
   })
 })

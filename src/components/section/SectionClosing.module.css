@@ -1,0 +1,94 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-block: var(--space-4) var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.reflection {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-growth-light);
+  border-left: 3px solid var(--color-growth);
+}
+
+.label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.reflection p {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+}
+
+.bridge {
+  margin: 0;
+  font-size: var(--text-base);
+  font-style: italic;
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 0 var(--space-2);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-2);
+}
+
+.continueBtn {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-base);
+  font-style: italic;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  color: var(--color-trust);
+
+  /* glassmorphism: frosted tint + border */
+  background: color-mix(in srgb, var(--color-trust) 7%, var(--color-surface));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid color-mix(in srgb, var(--color-trust) 35%, transparent);
+  border-radius: var(--radius-full);
+  padding: 15px 25px;
+  box-shadow: 0 2px 14px color-mix(in srgb, var(--color-trust) 12%, transparent);
+
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.continueBtn:hover {
+  background: color-mix(in srgb, var(--color-trust) 14%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-trust) 55%, transparent);
+  box-shadow: 0 4px 22px color-mix(in srgb, var(--color-trust) 22%, transparent);
+}
+
+.continueBtn:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .reflection {
+    padding: var(--space-2);
+  }
+  .actions {
+    justify-content: center;
+  }
+}

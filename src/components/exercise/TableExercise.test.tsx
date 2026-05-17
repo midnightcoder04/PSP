@@ -15,6 +15,15 @@ const content = {
   rows: 2,
 }
 
+const valuesContent = {
+  prompt: 'Values Shopping Spree',
+  headers: ['#', 'Item', 'Amount Budgeted ($)'],
+  rows: 2,
+  col_types: ['number', 'text', 'currency'] as const,
+  total_target: 100000,
+  items: ['A process guaranteed to rid the world of prejudice and racism.', 'An opportunity to help the sick and impoverished and allow them happier lives.'],
+}
+
 const defaultProps = {
   exerciseId: 'ex-table-1',
   content,
@@ -77,5 +86,14 @@ describe('TableExercise', () => {
     )
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     expect(screen.getByText('Analysis')).toBeInTheDocument()
+  })
+
+  it('renders values shopping spree items as fixed rows', () => {
+    render(<TableExercise {...defaultProps} content={valuesContent} />)
+
+    expect(screen.getByText('1')).toBeInTheDocument()
+    expect(screen.getByText(valuesContent.items[0])).toBeInTheDocument()
+    expect(screen.getByText(valuesContent.items[1])).toBeInTheDocument()
+    expect(screen.getAllByRole('spinbutton')).toHaveLength(valuesContent.rows)
   })
 })

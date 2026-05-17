@@ -69,8 +69,8 @@ describe('LoginPage', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Invalid credentials')
   })
 
-  it('shows the PSP™ branding', () => {
+  it('shows the Rise with PSP™ branding', () => {
     setup()
-    expect(screen.getByText('PSP™')).toBeInTheDocument()
+    expect(screen.getByText('Rise with PSP™')).toBeInTheDocument()
   })
 })
