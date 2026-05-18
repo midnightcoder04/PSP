@@ -65,11 +65,7 @@
   cursor: not-allowed;
 }
 
-.draggableItem {
-  cursor: grab;
-}
-
-.draggableItem:active {
+.draggableItem:has(.dragHandle:active) .dragHandle {
   cursor: grabbing;
 }
 
@@ -83,7 +79,18 @@
   font-size: var(--text-base);
   letter-spacing: -2px;
   user-select: none;
+  -webkit-user-select: none;
   margin-left: var(--space-1);
+  /* Prevents browser from treating the touch as a scroll before the drag
+     delay fires — required for dnd-kit TouchSensor on mobile */
+  touch-action: none;
+  /* Minimum 44px tap target for comfortable touch interaction */
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
 }
 
 .countBadge {

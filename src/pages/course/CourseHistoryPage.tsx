@@ -24,29 +24,57 @@ export default function CourseHistoryPage() {
   useEffect(() => {
     if (!profile?.id) return
 
-    supabase
-      .from('enrollments')
-      .select(`
-        id, enrolled_at, session_id,
-        session:sessions!session_id(title, facilitator:profiles!facilitator_id(display_name))
-      `)
-      .eq('participant_id', profile.id)
-      .eq('is_active', true)
-      .order('enrolled_at', { ascending: false })
-      .then(({ data }) => {
-        const entries: HistoryEntry[] = (data ?? []).map((e) => {
-          const session = e.session as { title: string; facilitator: { display_name: string } } | null
-          return {
-            sessionId: e.session_id,
-            sessionTitle: session?.title ?? 'Unnamed Session',
-            facilitatorName: session?.facilitator?.display_name ?? 'Unknown',
-            enrolledAt: e.enrolled_at,
-            completionDate: null,
-          }
-        })
-        setHistory(entries)
-        setLoading(false)
+    async function load() {
+      // Session-based enrollments
+      const { data: enrollmentData } = await supabase
+        .from('enrollments')
+        .select(`
+          id, enrolled_at, session_id,
+          session:sessions!session_id(title, facilitator:profiles!facilitator_id(display_name))
+        `)
+        .eq('participant_id', profile!.id)
+        .eq('is_active', true)
+        .order('enrolled_at', { ascending: false })
+
+      const entries: HistoryEntry[] = (enrollmentData ?? []).map((e) => {
+        const session = e.session as { title: string; facilitator: { display_name: string } } | null
+        return {
+          sessionId: e.session_id,
+          sessionTitle: session?.title ?? 'Unnamed Session',
+          facilitatorName: session?.facilitator?.display_name ?? 'Unknown',
+          enrolledAt: e.enrolled_at,
+          completionDate: null,
+        }
       })
+
+      // Self-paced progress (session_id IS NULL) — participants working without
+      // a facilitator session have no enrollment record, so we synthesise an
+      // entry from their progress rows instead.
+      const { data: selfPacedRows } = await supabase
+        .from('progress')
+        .select('last_activity_at, section_completed_at')
+        .eq('participant_id', profile!.id)
+        .is('session_id', null)
+        .order('last_activity_at', { ascending: true })
+
+      if (selfPacedRows && selfPacedRows.length > 0) {
+        const startedAt = selfPacedRows[0].last_activity_at
+        const allComplete = selfPacedRows.every((r) => r.section_completed_at !== null)
+        const latestActivity = selfPacedRows[selfPacedRows.length - 1]?.last_activity_at ?? startedAt
+        entries.unshift({
+          sessionId: null,
+          sessionTitle: 'Self-Paced Journey',
+          facilitatorName: 'Independent',
+          enrolledAt: startedAt,
+          completionDate: allComplete ? latestActivity : null,
+        })
+      }
+
+      setHistory(entries)
+      setLoading(false)
+    }
+
+    load()
   }, [profile?.id])
 
   if (loading) {
@@ -85,7 +113,13 @@ export default function CourseHistoryPage() {
                 </Badge>
                 <button
                   className={styles.viewBtn}
-                  onClick={() => navigate(`/course/personality?session=${entry.sessionId}`)}
+                  onClick={() =>
+                    navigate(
+                      entry.sessionId
+                        ? `/course/personality?session=${entry.sessionId}`
+                        : '/course'
+                    )
+                  }
                 >
                   Review →
                 </button>

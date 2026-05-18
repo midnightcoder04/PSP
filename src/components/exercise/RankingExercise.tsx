@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, Fragment } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -181,7 +181,6 @@ function SortableItem({ id, rank, label, count, showCount }: SortableItemProps) 
       style={style}
       className={`${styles.item} ${styles.draggableItem}`}
       {...attributes}
-      {...listeners}
     >
       <span className={styles.rank}>{rank}</span>
       <span className={styles.label}>{label}</span>
@@ -190,7 +189,7 @@ function SortableItem({ id, rank, label, count, showCount }: SortableItemProps) 
           {count}
         </span>
       )}
-      <span className={styles.dragHandle} aria-hidden="true">⋮⋮</span>
+      <span className={styles.dragHandle} aria-hidden="true" {...listeners}>⋮⋮</span>
     </li>
   )
 }
@@ -285,8 +284,8 @@ export function RankingExercise({
   }
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(TouchSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
@@ -372,9 +371,8 @@ export function RankingExercise({
           <SortableContext items={order} strategy={verticalListSortingStrategy}>
             <ol className={styles.list}>
               {order.map((id, index) => (
-                <>
+                <Fragment key={id}>
                   <SortableItem
-                    key={id}
                     id={id}
                     rank={index + 1}
                     label={itemMap[id] ?? id}
@@ -382,11 +380,11 @@ export function RankingExercise({
                     showCount={showCounts}
                   />
                   {derived.recordLimit != null && index === derived.recordLimit - 1 && order.length > derived.recordLimit && (
-                    <li key="__limit__" className={styles.recordLimitDivider} aria-hidden="true">
+                    <li className={styles.recordLimitDivider} aria-hidden="true">
                       Top {derived.recordLimit} recorded · drag up to promote
                     </li>
                   )}
-                </>
+                </Fragment>
               ))}
             </ol>
           </SortableContext>
