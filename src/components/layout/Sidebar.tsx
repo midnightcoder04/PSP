@@ -35,54 +35,61 @@ const NAV_MAP = {
 
 export function Sidebar() {
   const { profile } = useAuth()
-  const { collapsed, toggle } = useSidebarCollapseContext()
+  const { collapsed, toggle, mobileOpen, closeMobile } = useSidebarCollapseContext()
   const role = profile?.role ?? 'participant'
   const items = NAV_MAP[role] ?? PARTICIPANT_NAV
 
   return (
-    <aside
-      id="primary-sidebar"
-      className={styles.sidebar}
-      data-collapsed={collapsed}
-      aria-label="Main navigation"
-    >
-      <div className={styles.brand}>
-        <span className={styles.brandMark}>PSP™</span>
-        <button
-          type="button"
-          className={styles.toggle}
-          onClick={toggle}
-          aria-expanded={!collapsed}
-          aria-controls="primary-sidebar"
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          <span aria-hidden="true">{collapsed ? '›' : '‹'}</span>
-        </button>
-      </div>
-      <nav className={styles.nav}>
-        <ul role="list">
-          {items.map((item) => (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                end={item.to === ROUTES.ADMIN || item.to === ROUTES.FACILITATOR || item.to === ROUTES.COURSE}
-                className={({ isActive }) =>
-                  [styles.navLink, isActive ? styles.active : ''].join(' ')
-                }
-                aria-label={item.label}
-                title={collapsed ? item.label : undefined}
-              >
-                <span className={styles.icon} aria-hidden="true">{item.icon}</span>
-                <span className={styles.label}>{item.label}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className={styles.footer}>
-        <span className={styles.rolePill}>{role}</span>
-      </div>
-    </aside>
+    <>
+      {mobileOpen && (
+        <div className={styles.backdrop} onClick={closeMobile} aria-hidden="true" />
+      )}
+      <aside
+        id="primary-sidebar"
+        className={styles.sidebar}
+        data-collapsed={collapsed}
+        data-mobile-open={mobileOpen}
+        aria-label="Main navigation"
+      >
+        <div className={styles.brand}>
+          <span className={styles.brandMark}>PSP™</span>
+          <button
+            type="button"
+            className={styles.toggle}
+            onClick={toggle}
+            aria-expanded={!collapsed}
+            aria-controls="primary-sidebar"
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            <span aria-hidden="true">{collapsed ? '›' : '‹'}</span>
+          </button>
+        </div>
+        <nav className={styles.nav}>
+          <ul role="list">
+            {items.map((item) => (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  end={item.to === ROUTES.ADMIN || item.to === ROUTES.FACILITATOR || item.to === ROUTES.COURSE}
+                  className={({ isActive }) =>
+                    [styles.navLink, isActive ? styles.active : ''].join(' ')
+                  }
+                  aria-label={item.label}
+                  title={collapsed && !mobileOpen ? item.label : undefined}
+                  onClick={closeMobile}
+                >
+                  <span className={styles.icon} aria-hidden="true">{item.icon}</span>
+                  <span className={styles.label}>{item.label}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className={styles.footer}>
+          <span className={styles.rolePill}>{role}</span>
+        </div>
+      </aside>
+    </>
   )
 }

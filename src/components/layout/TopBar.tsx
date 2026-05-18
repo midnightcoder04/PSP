@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
+import { useSidebarCollapseContext } from '@/hooks/useSidebarCollapse'
 import { Button } from '@/components/ui/Button'
 import { ChangePasswordModal } from '@/components/auth/ChangePasswordModal'
 import styles from './TopBar.module.css'
@@ -10,11 +11,20 @@ interface TopBarProps {
 
 export function TopBar({ title }: TopBarProps) {
   const { profile, signOut } = useAuth()
+  const { openMobile } = useSidebarCollapseContext()
   const [showChangePassword, setShowChangePassword] = useState(false)
 
   return (
     <>
       <header className={styles.topbar}>
+        <button
+          type="button"
+          className={styles.hamburger}
+          onClick={openMobile}
+          aria-label="Open navigation"
+        >
+          <span aria-hidden="true">☰</span>
+        </button>
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.right}>
           {profile && (

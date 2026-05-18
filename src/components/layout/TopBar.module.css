@@ -28,6 +28,43 @@
   color: var(--color-text-muted);
 }
 
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.hamburger:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid var(--color-trust);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .displayName { display: none; }
+}
+
+@media (min-width: 769px) {
+  .hamburger { display: none; }
+}
+
 @media (max-width: 480px) {
   .displayName { display: none; }
 }

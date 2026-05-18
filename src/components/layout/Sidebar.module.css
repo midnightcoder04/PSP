@@ -158,9 +158,52 @@
   pointer-events: none;
 }
 
+.backdrop {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  /* Slide-in drawer — hidden off-screen by default */
   .sidebar,
   .sidebar[data-collapsed='true'] {
-    display: none;
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    transition: transform var(--sidebar-transition-duration) var(--sidebar-transition-easing);
+    box-shadow: none;
+  }
+
+  /* Drawer open */
+  .sidebar[data-mobile-open='true'],
+  .sidebar[data-collapsed='true'][data-mobile-open='true'] {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* When the drawer is open, always show full labels regardless of collapse state */
+  .sidebar[data-collapsed='true'][data-mobile-open='true'] .brandMark,
+  .sidebar[data-collapsed='true'][data-mobile-open='true'] .rolePill {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar[data-collapsed='true'][data-mobile-open='true'] .label {
+    opacity: 1;
+    pointer-events: auto;
+    width: auto;
+    overflow: visible;
+  }
+
+  .sidebar[data-collapsed='true'][data-mobile-open='true'] .navLink {
+    justify-content: flex-start;
+    padding: 10px 12px;
+  }
+
+  /* Semi-transparent backdrop behind the drawer */
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: var(--color-overlay);
+    z-index: 99;
   }
 }

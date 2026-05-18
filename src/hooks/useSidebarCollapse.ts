@@ -12,11 +12,15 @@ import { useState, useEffect, useCallback, createContext, useContext } from 'rea
  */
 
 const STORAGE_KEY = 'psp:sidebar:collapsed'
+const MOBILE_BREAKPOINT = 768
 
 export interface SidebarCollapseState {
   collapsed: boolean
   toggle: () => void
   setCollapsed: (next: boolean) => void
+  mobileOpen: boolean
+  openMobile: () => void
+  closeMobile: () => void
 }
 
 function readInitial(): boolean {
@@ -30,6 +34,7 @@ function readInitial(): boolean {
 
 export function useSidebarCollapse(): SidebarCollapseState {
   const [collapsed, setCollapsedRaw] = useState<boolean>(readInitial)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -40,10 +45,22 @@ export function useSidebarCollapse(): SidebarCollapseState {
     }
   }, [collapsed])
 
+  // Auto-close the mobile drawer when the viewport widens past the breakpoint
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    function onResize() {
+      if (window.innerWidth > MOBILE_BREAKPOINT) setMobileOpen(false)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   const toggle = useCallback(() => setCollapsedRaw((c) => !c), [])
   const setCollapsed = useCallback((next: boolean) => setCollapsedRaw(next), [])
+  const openMobile = useCallback(() => setMobileOpen(true), [])
+  const closeMobile = useCallback(() => setMobileOpen(false), [])
 
-  return { collapsed, toggle, setCollapsed }
+  return { collapsed, toggle, setCollapsed, mobileOpen, openMobile, closeMobile }
 }
 
 export const SidebarCollapseContext = createContext<SidebarCollapseState | null>(null)
