@@ -533,6 +533,14 @@ export interface Database {
         Args: { p_participant_id: string; p_session_id: string | null }
         Returns: Array<{ section_slug: string; exercise_slug: string }>
       }
+      peek_invite: {
+        Args: { p_token: string }
+        Returns: Json
+      }
+      claim_invite_slot: {
+        Args: { p_token: string }
+        Returns: string | null
+      }
     }
     Enums: {
       [_ in never]: never
