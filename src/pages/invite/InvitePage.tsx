@@ -10,8 +10,6 @@ type InviteStatus = 'loading' | 'valid' | 'invalid' | 'success'
 interface InviteInfo {
   session_id: string
   session_title: string
-  max_uses: number
-  use_count: number
   expires_at: string | null
 }
 
@@ -33,11 +31,10 @@ export default function InvitePage() {
   useEffect(() => {
     if (!token) { setStatus('invalid'); setInvalidReason('No invite token provided.'); return }
 
+    // peek_invite is a SECURITY DEFINER RPC that returns only the single invite
+    // matching the token — safe for anon callers without exposing the full table.
     supabase
-      .from('session_invites')
-      .select('session_id, max_uses, use_count, is_active, expires_at, sessions(title)')
-      .eq('token', token)
-      .single()
+      .rpc('peek_invite', { p_token: token })
       .then(({ data, error }) => {
         if (error || !data) {
           setStatus('invalid')
@@ -45,31 +42,24 @@ export default function InvitePage() {
           return
         }
 
-        if (!data.is_active) {
+        const result = data as { error?: string; session_id?: string; session_title?: string; expires_at?: string | null }
+
+        if (result.error) {
+          const reasons: Record<string, string> = {
+            INVITE_NOT_FOUND: 'This invite link was not found.',
+            INVITE_INACTIVE:  'This invite link has been revoked.',
+            INVITE_EXPIRED:   'This invite link has expired.',
+            INVITE_EXHAUSTED: 'This invite link has reached its maximum number of registrations.',
+          }
           setStatus('invalid')
-          setInvalidReason('This invite link has been revoked.')
+          setInvalidReason(reasons[result.error] ?? 'This invite link is unavailable.')
           return
         }
 
-        if (data.expires_at && new Date(data.expires_at) < new Date()) {
-          setStatus('invalid')
-          setInvalidReason('This invite link has expired.')
-          return
-        }
-
-        if (data.use_count >= data.max_uses) {
-          setStatus('invalid')
-          setInvalidReason('This invite link has reached its maximum number of registrations.')
-          return
-        }
-
-        const sessionTitle = (data.sessions as { title: string } | null)?.title ?? ''
         setInvite({
-          session_id: data.session_id,
-          session_title: sessionTitle,
-          max_uses: data.max_uses,
-          use_count: data.use_count,
-          expires_at: data.expires_at,
+          session_id:    result.session_id!,
+          session_title: result.session_title ?? '',
+          expires_at:    result.expires_at ?? null,
         })
         setStatus('valid')
       })

@@ -2,7 +2,7 @@
 // verify_jwt: false (public — called before the user has an account)
 //
 // Validates an invite token, creates a participant account, auto-enrolls them,
-// and increments the invite use_count.
+// and atomically increments the invite use_count via claim_invite_slot().
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -38,7 +38,8 @@ Deno.serve(async (req: Request) => {
     })
   }
 
-  // Validate the invite token
+  // Read invite for session title and UX-level early exits (active/expired checks).
+  // The authoritative slot-exhaustion check is the atomic claim below.
   const { data: invite, error: inviteErr } = await adminClient
     .from('session_invites')
     .select('id, session_id, max_uses, use_count, is_active, expires_at, sessions(title)')
@@ -66,7 +67,13 @@ Deno.serve(async (req: Request) => {
     })
   }
 
-  if (invite.use_count >= invite.max_uses) {
+  // Atomically claim a slot before creating the user. claim_invite_slot() does a
+  // single UPDATE ... WHERE use_count < max_uses, eliminating the TOCTOU race
+  // that the old read-check-write pattern was vulnerable to.
+  const { data: claimedSessionId, error: claimErr } = await adminClient
+    .rpc('claim_invite_slot', { p_token: token })
+
+  if (claimErr || !claimedSessionId) {
     return new Response(JSON.stringify({ error: 'INVITE_EXHAUSTED' }), {
       status: 410,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -103,21 +110,15 @@ Deno.serve(async (req: Request) => {
   await adminClient
     .from('enrollments')
     .upsert(
-      { session_id: invite.session_id, participant_id: userId, is_active: true },
+      { session_id: claimedSessionId, participant_id: userId, is_active: true },
       { onConflict: 'session_id,participant_id' }
     )
-
-  // Increment use count
-  await adminClient
-    .from('session_invites')
-    .update({ use_count: invite.use_count + 1 })
-    .eq('id', invite.id)
 
   const sessionTitle = (invite.sessions as { title: string } | null)?.title ?? ''
 
   return new Response(JSON.stringify({
     success: true,
-    session_id: invite.session_id,
+    session_id: claimedSessionId,
     session_title: sessionTitle,
   }), {
     status: 200,
