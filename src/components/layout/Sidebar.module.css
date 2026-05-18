@@ -37,7 +37,14 @@
   transition: opacity var(--sidebar-transition-duration) var(--sidebar-transition-easing);
 }
 
+.sidebar[data-collapsed='true'] .brand {
+  justify-content: center;
+  padding: var(--space-2) var(--space-1);
+}
+
 .sidebar[data-collapsed='true'] .brandMark {
+  width: 0;
+  overflow: hidden;
   opacity: 0;
   pointer-events: none;
 }

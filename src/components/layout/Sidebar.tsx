@@ -56,13 +56,13 @@ export function Sidebar() {
           <button
             type="button"
             className={styles.toggle}
-            onClick={toggle}
-            aria-expanded={!collapsed}
+            onClick={mobileOpen ? closeMobile : toggle}
+            aria-expanded={mobileOpen ? true : !collapsed}
             aria-controls="primary-sidebar"
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={mobileOpen ? 'Close navigation' : collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={mobileOpen ? 'Close navigation' : collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <span aria-hidden="true">{collapsed ? '›' : '‹'}</span>
+            <span aria-hidden="true">{collapsed && !mobileOpen ? '›' : '‹'}</span>
           </button>
         </div>
         <nav className={styles.nav}>
