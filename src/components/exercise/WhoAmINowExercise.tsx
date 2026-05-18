@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -30,6 +30,42 @@ interface WhoAmINowProps {
   participantId: string
   sessionId?: string | null
   readOnly?: boolean
+}
+
+const DEFAULT_COUNT = 10
+
+/**
+ * Parse saved rows into { items, order }.
+ *
+ * New format: row = [rank, text, id]  — restores both text and drag order.
+ * Old format: row = [rank, text]      — restores text only, order resets to id order.
+ */
+function parseRows(
+  rows: string[][],
+  ids: string[]
+): { items: Record<string, string>; order: string[] } {
+  const empty = Object.fromEntries(ids.map((id) => [id, '']))
+  if (!rows.length) return { items: empty, order: [...ids] }
+
+  if (rows[0].length >= 3) {
+    const idSet = new Set(ids)
+    const nextOrder: string[] = []
+    const nextItems = { ...empty }
+    for (const row of rows) {
+      const id = String(row[2])
+      if (idSet.has(id)) {
+        nextOrder.push(id)
+        nextItems[id] = String(row[1] ?? '')
+      }
+    }
+    if (nextOrder.length === ids.length) return { items: nextItems, order: nextOrder }
+  }
+
+  // Old format: positional — can't restore drag order
+  return {
+    items: Object.fromEntries(ids.map((id, i) => [id, String((rows[i] ?? [])[1] ?? '')])),
+    order: [...ids],
+  }
 }
 
 function SortableRow({ id, index, value, onChange, readOnly }: {
@@ -66,39 +102,43 @@ function SortableRow({ id, index, value, onChange, readOnly }: {
 }
 
 export function WhoAmINowExercise({ exerciseId, initialResponse, participantId, sessionId, readOnly = false }: WhoAmINowProps) {
-  const defaultCount = 10
-  // Parse initial rows into an items map: id -> text
-  const initialRows = initialResponse?.rows ?? []
-  const normalized = Array.from({ length: defaultCount }, (_, i) => {
-    const saved = initialRows[i] ?? []
-    // Expect saved format like ["1", "I am a parent"]
-    return String(saved[1] ?? '')
-  })
+  const ids = useMemo(() => Array.from({ length: DEFAULT_COUNT }, (_, i) => `who-${i}`), [])
 
-  const ids = useMemo(() => Array.from({ length: defaultCount }, (_, i) => `who-${i}`), [])
-  const [order, setOrder] = useState<string[]>(ids)
-  const [items, setItems] = useState<Record<string, string>>(() => Object.fromEntries(ids.map((id, i) => [id, normalized[i]])))
+  // Capture the response available at mount time for the lazy state initializers.
+  // Using a ref prevents the initializer closures from going stale.
+  const initialResponseRef = useRef(initialResponse)
 
+  const [order, setOrder] = useState<string[]>(() =>
+    parseRows((initialResponseRef.current?.rows ?? []) as string[][], ids).order
+  )
+  const [items, setItems] = useState<Record<string, string>>(() =>
+    parseRows((initialResponseRef.current?.rows ?? []) as string[][], ids).items
+  )
+
+  // One-shot sync: handle the async case where initialResponse is null on mount
+  // but arrives shortly after (data loads after component renders).
+  // We deliberately do NOT re-sync on every initialResponse change — doing so
+  // would remap item texts to wrong IDs whenever an optimistic save round-trips
+  // back through SectionPage's localUpdate → responses → initialResponse prop.
+  const syncedRef = useRef((initialResponseRef.current?.rows?.length ?? 0) > 0)
   useEffect(() => {
-    // When initialResponse changes, adopt it
-    const rows = initialResponse?.rows ?? []
-    const next: Record<string, string> = {}
-    ids.forEach((id, i) => {
-      next[id] = String((rows[i] ?? [])[1] ?? '')
-    })
-    setItems(next)
-    // Keep existing order unless initial response provided a different sequence
-    // We intentionally do not reorder based on saved ranks here.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialResponse])
+    if (syncedRef.current) return
+    const rows = (initialResponse?.rows ?? []) as string[][]
+    if (!rows.length) return
+    syncedRef.current = true
+    const parsed = parseRows(rows, ids)
+    setOrder(parsed.order)
+    setItems(parsed.items)
+  }, [initialResponse, ids])
 
   const { save } = useExerciseSave({ exerciseId, participantId, sessionId })
 
   function persist(nextOrder: string[], nextItems: Record<string, string>, complete?: boolean) {
-    const rows = nextOrder.map((id, idx) => [String(idx + 1), nextItems[id] ?? ''])
-    const anyFilled = rows.some((r) => r.some((c) => String(c).trim() !== ''))
-    const payload: WhoAmINowResponse = { rows }
-    save(payload, complete ?? anyFilled)
+    // row = [rank, text, id] — id in position 2 lets parseRows restore drag
+    // order correctly on page reload without remapping texts to wrong IDs.
+    const rows = nextOrder.map((id, idx) => [String(idx + 1), nextItems[id] ?? '', id])
+    const anyFilled = rows.some((r) => String(r[1]).trim() !== '')
+    save({ rows }, complete ?? anyFilled)
   }
 
   function handleChange(id: string, value: string) {
@@ -116,14 +156,12 @@ export function WhoAmINowExercise({ exerciseId, initialResponse, participantId, 
 
   function onDragEnd(e: DragEndEvent) {
     const { active, over } = e
-    if (!over) return
-    if (active.id === over.id) return
+    if (!over || active.id === over.id) return
     const oldIndex = order.indexOf(String(active.id))
     const newIndex = order.indexOf(String(over.id))
     if (oldIndex < 0 || newIndex < 0) return
     const next = arrayMove(order, oldIndex, newIndex)
     setOrder(next)
-    // Persist and mark complete so slide gate can progress
     persist(next, items, true)
   }
 
