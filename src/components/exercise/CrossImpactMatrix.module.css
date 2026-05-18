@@ -110,6 +110,11 @@
   overflow-x: auto;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
+  /* Scroll-shadow on the right to hint at horizontal overflow on mobile */
+  background:
+    linear-gradient(to right, var(--color-surface) 0%, transparent 40px) left center / 40px 100% no-repeat,
+    linear-gradient(to left,  var(--color-border)  0%, transparent 40px) right center / 40px 100% no-repeat;
+  background-attachment: local, scroll;
 }
 
 .matrix {
@@ -297,4 +302,98 @@
 
 .cell[data-symbol='0'] .cellSelect {
   color: var(--color-text);
+}
+
+/* ── Responsive ── */
+
+/* Sticky column headers so numbers stay visible during vertical scroll */
+.matrix thead tr {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+/* Tablet: compact column headers */
+@media (max-width: 720px) {
+  .matrix {
+    min-width: 420px;
+  }
+
+  .cornerCell {
+    width: 110px;
+  }
+
+  .colHeadInner {
+    min-height: 80px;
+  }
+
+  .rowHead {
+    /* match reduced cornerCell width */
+    max-width: 110px;
+  }
+
+  .rowLabel {
+    max-width: 72px;
+  }
+
+  .cell {
+    height: 34px;
+  }
+
+  .diagMark {
+    line-height: 34px;
+  }
+
+  .cellSelect {
+    height: 34px;
+  }
+}
+
+/* Phone: hide column text labels — numbers alone are enough since row
+   headers already show the full goal name on the sticky left column */
+@media (max-width: 540px) {
+  .matrix {
+    min-width: 320px;
+  }
+
+  .colLabel {
+    display: none;
+  }
+
+  .colHeadInner {
+    min-height: 36px;
+    justify-content: center;
+  }
+
+  .cornerCell {
+    width: 90px;
+  }
+
+  .rowHead {
+    max-width: 90px;
+    padding: 4px 6px 4px 6px;
+  }
+
+  .rowLabel {
+    max-width: 56px;
+    font-size: 10px;
+  }
+
+  .cell {
+    height: 32px;
+  }
+
+  .diagMark {
+    line-height: 32px;
+  }
+
+  .cellSelect {
+    height: 32px;
+    font-size: var(--text-base);
+  }
+
+  /* Prevent iOS auto-zoom on goal name inputs (< 16px triggers zoom) */
+  .goalInput {
+    font-size: 1rem;
+  }
 }
