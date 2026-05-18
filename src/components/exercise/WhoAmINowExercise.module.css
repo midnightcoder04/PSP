@@ -42,7 +42,15 @@
 }
 .handle {
   width: 2rem;
-  text-align: center;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--muted-text);
   cursor: grab;
+  /* Required for dnd-kit TouchSensor: prevents browser from treating the
+     touch as a scroll gesture before the drag delay expires */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
