@@ -30,14 +30,18 @@ const mockEnrollments = [
   },
 ]
 
+const mockSelfPacedProgress = [
+  { last_activity_at: '2026-02-01T00:00:00Z', section_completed_at: '2026-02-10T00:00:00Z' },
+  { last_activity_at: '2026-02-15T00:00:00Z', section_completed_at: null },
+]
+
 // Builds a Supabase-like query chain that resolves with the given data.
-// Every chain method returns the chain itself; the chain is a thenable
-// so `.then(cb)` calls cb with { data, error: null }.
 function makeChain<T>(data: T) {
   const result = { data, error: null as null }
   const chain: Record<string, unknown> = {
     select: vi.fn(() => chain),
     eq: vi.fn(() => chain),
+    is: vi.fn(() => chain),
     order: vi.fn(() => chain),
     then: (onFulfilled: (v: typeof result) => unknown) =>
       Promise.resolve(result).then(onFulfilled),
@@ -45,17 +49,23 @@ function makeChain<T>(data: T) {
   return chain
 }
 
-let currentChainData: typeof mockEnrollments | [] = mockEnrollments
+type TableName = 'enrollments' | 'progress'
+let enrollmentData: typeof mockEnrollments | [] = mockEnrollments
+let progressData: typeof mockSelfPacedProgress | [] = []
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
-    from: vi.fn(() => makeChain(currentChainData)),
+    from: vi.fn((table: TableName) => {
+      if (table === 'progress') return makeChain(progressData)
+      return makeChain(enrollmentData)
+    }),
   },
 }))
 
 describe('CourseHistoryPage', () => {
   beforeEach(() => {
-    currentChainData = mockEnrollments
+    enrollmentData = mockEnrollments
+    progressData = []
   })
 
   it('renders a list of past enrollments with session titles', async () => {
@@ -111,8 +121,9 @@ describe('CourseHistoryPage', () => {
     })
   })
 
-  it('shows empty state when there are no past enrollments', async () => {
-    currentChainData = []
+  it('shows empty state when there are no enrollments and no self-paced progress', async () => {
+    enrollmentData = []
+    progressData = []
 
     render(
       <MemoryRouter>
@@ -125,5 +136,43 @@ describe('CourseHistoryPage', () => {
     })
 
     expect(screen.getByRole('button', { name: /Go to My Course/i })).toBeInTheDocument()
+  })
+
+  it('shows a Self-Paced Journey entry when no enrollment but progress exists', async () => {
+    enrollmentData = []
+    progressData = mockSelfPacedProgress
+
+    render(
+      <MemoryRouter>
+        <CourseHistoryPage />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('Self-Paced Journey')).toBeInTheDocument()
+    })
+
+    expect(screen.getByText(/Independent/i)).toBeInTheDocument()
+    expect(screen.getByText('In Progress')).toBeInTheDocument()
+  })
+
+  it('shows Completed badge for self-paced when all sections have completion dates', async () => {
+    enrollmentData = []
+    progressData = [
+      { last_activity_at: '2026-02-01T00:00:00Z', section_completed_at: '2026-02-10T00:00:00Z' },
+      { last_activity_at: '2026-02-20T00:00:00Z', section_completed_at: '2026-02-20T00:00:00Z' },
+    ]
+
+    render(
+      <MemoryRouter>
+        <CourseHistoryPage />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('Self-Paced Journey')).toBeInTheDocument()
+    })
+
+    expect(screen.getByText('Completed')).toBeInTheDocument()
   })
 })
