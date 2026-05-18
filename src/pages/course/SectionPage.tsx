@@ -67,23 +67,37 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         return
       }
 
-      const { data: exs } = await supabase
-        .from('exercises')
-        .select('*')
-        .eq('section_id', sec.id)
-        .order('order_index')
+      // Round 2: exercises, peer-sections (group position), and progress all
+      // only need sec.id / sec.group_slug — fire them in parallel.
+      const [exsResult, peersResult, progResult] = await Promise.all([
+        supabase
+          .from('exercises')
+          .select('*')
+          .eq('section_id', sec.id)
+          .order('order_index'),
+        sec.group_slug && (GROUP_SLUGS as readonly string[]).includes(sec.group_slug)
+          ? supabase
+              .from('sections')
+              .select('slug, order_index')
+              .eq('group_slug', sec.group_slug)
+              .order('order_index')
+          : Promise.resolve({ data: null, error: null }),
+        supabase
+          .from('progress')
+          .select('last_exercise_id')
+          .eq('participant_id', profile!.id)
+          .eq('section_id', sec.id)
+          .is('session_id', null)
+          .maybeSingle(),
+      ])
 
+      const exs = exsResult.data ?? []
       setSection(sec)
-      setExercises(exs ?? [])
+      setExercises(exs)
 
-      // Derive position-in-group for the section-page affordance.
-      if (sec.group_slug && (GROUP_SLUGS as readonly string[]).includes(sec.group_slug)) {
-        const { data: peers } = await supabase
-          .from('sections')
-          .select('slug, order_index')
-          .eq('group_slug', sec.group_slug)
-          .order('order_index')
-        const peerList = peers ?? []
+      // Derive position-in-group from parallel peers result.
+      const peerList = peersResult.data ?? []
+      if (peerList.length > 0) {
         const idx = peerList.findIndex((p) => p.slug === sec.slug)
         if (idx >= 0) {
           setGroupPosition({ position: idx + 1, total: peerList.length })
@@ -92,15 +106,15 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         setGroupPosition(null)
       }
 
-      if (exs && exs.length > 0) {
+      setResumeExerciseId(progResult.data?.last_exercise_id ?? null)
+
+      // Round 3: responses need exercise IDs from round 2.
+      if (exs.length > 0) {
         const { data: resps } = await supabase
           .from('responses')
-          .select('*')
+          .select('id, exercise_id, response_json, is_complete, session_id, participant_id, created_at, updated_at')
           .eq('participant_id', profile!.id)
-          .in(
-            'exercise_id',
-            exs.map((e) => e.id)
-          )
+          .in('exercise_id', exs.map((e) => e.id))
           .is('session_id', null)
 
         const respMap: Record<string, Response> = {}
@@ -109,16 +123,6 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         }
         setResponses(respMap)
       }
-
-      // Resume position: read progress.last_exercise_id for this section.
-      const { data: prog } = await supabase
-        .from('progress')
-        .select('last_exercise_id')
-        .eq('participant_id', profile!.id)
-        .eq('section_id', sec.id)
-        .is('session_id', null)
-        .maybeSingle()
-      setResumeExerciseId(prog?.last_exercise_id ?? null)
 
       setLoading(false)
     }
