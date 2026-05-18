@@ -23,6 +23,7 @@ import { SectionIntroSlide } from '@/components/section/SectionIntroSlide'
 import { SectionClosingSlide } from '@/components/section/SectionClosingSlide'
 import { SectionGroupContext } from '@/components/section/SectionGroupContext'
 import { SlideNav } from '@/components/section/SlideNav'
+import { fetchGoalNames } from '@/lib/goalNames'
 import { SECTION_SLUGS, GROUP_SLUGS, ROUTES, type GroupSlug } from '@/lib/constants'
 import { groupExercisesBySlide } from '@/lib/exerciseCompletion'
 import { resolveCoreStyleFromResponses } from '@/lib/coreStyle'
@@ -47,6 +48,7 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   // section's position within its group (1-of-5 etc.). Derived from a one-time
   // fetch of all sections that share the current group_slug.
   const [groupPosition, setGroupPosition] = useState<{ position: number; total: number } | null>(null)
+  const [goalNames, setGoalNames] = useState<string[]>([])
 
   const sessionId = null // session context wires in a later iteration
 
@@ -125,6 +127,13 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
       }
 
       setLoading(false)
+
+      // Fetch goal names for exercises that group questions per goal
+      if (sec.slug === 'removing-obstacles-achieving-goals') {
+        fetchGoalNames(profile!.id, sessionId).then((names) => {
+          if (names.some((n) => n)) setGoalNames(names)
+        })
+      }
     }
 
     load()
@@ -427,6 +436,27 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
         )
       }
       case 'structured-text':
+        if (
+          exercise.slug === 'removing-obstacles' ||
+          exercise.slug === 'achieving-goal-actions'
+        ) {
+          try {
+            const contentCopy = JSON.parse(JSON.stringify(content)) as any
+            if (Array.isArray(contentCopy.questions)) {
+              contentCopy.questions = contentCopy.questions.map((q: any) => ({ ...q, min_length: 1 }))
+            }
+            return (
+              <StructuredTextExercise
+                {...commonProps}
+                content={contentCopy as Parameters<typeof StructuredTextExercise>[0]['content']}
+                initialResponse={resp?.response_json as Parameters<typeof StructuredTextExercise>[0]['initialResponse']}
+                goalNames={goalNames.length > 0 ? goalNames : undefined}
+              />
+            )
+          } catch {
+            // fall through to default
+          }
+        }
         // Auto-fill the blank in the 'My Top Three Values' prompts from the
         // Values Shopping Spree -> What Do I Value derived totals. We look up
         // the upstream exercises and compute the top three labels, then
