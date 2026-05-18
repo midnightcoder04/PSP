@@ -60,7 +60,7 @@ export default function CourseHistoryPage() {
       if (selfPacedRows && selfPacedRows.length > 0) {
         const startedAt = selfPacedRows[0].last_activity_at
         const allComplete = selfPacedRows.every((r) => r.section_completed_at !== null)
-        const latestActivity = selfPacedRows.at(-1)?.last_activity_at ?? startedAt
+        const latestActivity = selfPacedRows[selfPacedRows.length - 1]?.last_activity_at ?? startedAt
         entries.unshift({
           sessionId: null,
           sessionTitle: 'Self-Paced Journey',
