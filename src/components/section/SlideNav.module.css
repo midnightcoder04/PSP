@@ -103,4 +103,23 @@
     left: 0;
     padding: 8px var(--space-2);
   }
+
+  /* When hint is present, push it onto its own row above the buttons */
+  .row {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .hint {
+    order: -1;
+    width: 100%;
+    text-align: center;
+    font-size: var(--text-xs);
+    padding-top: 2px;
+  }
+
+  /* "Back to course" is reachable via the hamburger menu on mobile */
+  .backLink {
+    display: none;
+  }
 }

@@ -55,11 +55,12 @@
 
 @media (max-width: 640px) {
   .widget {
-    /* On small screens keep the widget compact and tuck into the bottom-right */
+    /* Before JS paint: tuck into bottom-right. After JS runs, inline style
+       overrides left/top and resets right/bottom to auto. */
     left: auto;
     transform: none;
     right: var(--space-3);
-    bottom: calc(var(--space-3) + 96px);
+    bottom: calc(var(--space-3) + 120px);
     min-width: 140px;
     padding: var(--space-1) var(--space-2);
     font-size: calc(var(--text-sm) - 1px);

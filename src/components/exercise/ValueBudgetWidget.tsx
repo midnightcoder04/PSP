@@ -27,7 +27,8 @@ export function ValueBudgetWidget({ budget, spent }: ValueBudgetWidgetProps) {
       const winW = window.innerWidth
       const winH = window.innerHeight
       const isMobile = winW <= 640
-      const bottomOffset = isMobile ? 96 : 180
+      // 120px accounts for the two-row SlideNav height when the hint line is visible
+      const bottomOffset = isMobile ? 120 : 180
       const el = ref.current
       const rect = el?.getBoundingClientRect()
       const width = rect?.width || 180
@@ -88,7 +89,7 @@ export function ValueBudgetWidget({ budget, spent }: ValueBudgetWidgetProps) {
       onPointerUp={onPointerUp}
       style={
         position
-          ? { left: `${position.left}px`, top: `${position.top}px`, transform: 'none' as const }
+          ? { left: `${position.left}px`, top: `${position.top}px`, transform: 'none' as const, right: 'auto', bottom: 'auto' }
           : undefined
       }
     >
