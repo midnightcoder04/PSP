@@ -31,13 +31,6 @@ export interface UseSlideStateResult {
 function groupComplete(group: Exercise[], responses: Record<string, Response>): boolean {
   return group.every((ex) => {
     if (ex.type === 'info') return true
-    // 006-iter6 / US3 (T042b): narrow optional-checkbox rule scoped to the
-    // matched-style traits checklist dispatcher. All other checkboxes retain
-    // the standard "needs a complete response" contract.
-    if (ex.type === 'checkbox') {
-      const cj = ex.content_json as { computed?: string } | null | undefined
-      if (cj?.computed === 'core_style_options') return true
-    }
     return responses[ex.id]?.is_complete === true
   })
 }

@@ -47,7 +47,7 @@ function SortableRow({ id, index, value, onChange, readOnly }: {
   }
 
   return (
-    <li ref={setNodeRef} style={style} className={styles.row} {...attributes} {...listeners}>
+    <li ref={setNodeRef} style={style} className={styles.row} {...attributes}>
       <div className={styles.rank}>{index + 1}.</div>
       <textarea
         className={styles.input}
@@ -58,7 +58,7 @@ function SortableRow({ id, index, value, onChange, readOnly }: {
         rows={2}
         aria-label={`Who am I statement ${index + 1}`}
       />
-      <div className={styles.handle} aria-hidden>
+      <div className={styles.handle} aria-hidden {...listeners}>
         ⋮⋮
       </div>
     </li>
@@ -109,8 +109,8 @@ export function WhoAmINowExercise({ exerciseId, initialResponse, participantId, 
   }
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(TouchSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
