@@ -203,10 +203,10 @@ describe('useSlideState', () => {
     expect(result.current.isAtIntro).toBe(true)
   })
 
-  // ── 006-iter6 / US3 (T042a) — narrow optional-checkbox rule ──────────────
-  // Per FR-013 (U1 resolution): a checkbox whose content_json.computed ===
-  // 'core_style_options' is treated as always-complete. Other checkboxes
-  // (including those with is_scored=false) retain the standard contract.
+  // ── 006-iter6 / US3 (T042a) — characteristics checklist gating ──────────
+  // The core_style_options checklist was made required (008-bug-fixes):
+  // all checkboxes, including computed ones, now use the standard
+  // is_complete contract. The old always-complete bypass was removed.
 
   function exCheckbox(id: string, computed: string | undefined, slideGroup = 0): Exercise {
     return {
@@ -223,13 +223,18 @@ describe('useSlideState', () => {
     }
   }
 
-  it("T042a-1: checkbox with computed='core_style_options' is always complete (no response needed)", () => {
-    const optionalCheckbox = exCheckbox('opt', 'core_style_options')
-    const sg = [[optionalCheckbox]]
-    const { result } = renderHook(() =>
+  it("T042a-1: checkbox with computed='core_style_options' requires a complete response (not auto-complete)", () => {
+    const checklist = exCheckbox('opt', 'core_style_options')
+    const sg = [[checklist]]
+    const { result: r1 } = renderHook(() =>
       useSlideState({ intro: false, slideGroups: sg, responses: {}, resumeExerciseId: 'opt' })
     )
-    expect(result.current.canGoNext).toBe(true)
+    expect(r1.current.canGoNext).toBe(false)
+
+    const { result: r2 } = renderHook(() =>
+      useSlideState({ intro: false, slideGroups: sg, responses: { opt: resp('opt', true) }, resumeExerciseId: 'opt' })
+    )
+    expect(r2.current.canGoNext).toBe(true)
   })
 
   it('T042a-2: checkbox without that computed flag still requires a complete response', () => {
