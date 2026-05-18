@@ -256,3 +256,68 @@
   color: var(--color-text);
   min-height: 34px;
 }
+
+/* Mobile: stacked card layout — one card per row */
+@media (max-width: 640px) {
+  .tableWrap {
+    border: none;
+    border-radius: 0;
+    overflow-x: visible;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .table,
+  .table tbody,
+  .table thead,
+  .table tr {
+    display: block;
+  }
+
+  .table colgroup {
+    display: none;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .table tr {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .td {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--color-border);
+    border-right: none;
+  }
+
+  .td:last-child {
+    border-bottom-color: transparent;
+  }
+
+  .td::before {
+    content: attr(data-label);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cellSelect {
+    padding: 9px 2.25rem 9px 10px;
+  }
+}

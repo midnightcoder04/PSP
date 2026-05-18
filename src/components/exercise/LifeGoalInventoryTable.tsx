@@ -210,7 +210,7 @@ export function LifeGoalInventoryTable({
                   const isGoalColumn = colIdx === 1
 
                   return (
-                    <td key={colIdx} className={styles.td} data-col-index={colIdx}>
+                    <td key={colIdx} className={styles.td} data-col-index={colIdx} data-label={getDisplayHeader(header)}>
                       {readOnly ? (
                         <span className={styles.cellText}>{cell}</span>
                       ) : options ? (
