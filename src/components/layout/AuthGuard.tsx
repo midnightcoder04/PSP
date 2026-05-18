@@ -20,7 +20,7 @@ export function AuthGuard({ children, requiredRole }: AuthGuardProps) {
   const { session, profile, loading } = useAuth()
   const location = useLocation()
 
-  if (loading) {
+  if (loading || (!!session && !profile)) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Spinner size="lg" />

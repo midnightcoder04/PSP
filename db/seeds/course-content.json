@@ -215,14 +215,14 @@
         },
         {
           "slug": "core-style-traits-checklist",
-          "title": "Your Characteristics Checklist (Optional)",
+          "title": "Your Characteristics Checklist",
           "type": "checkbox",
           "order_index": 11,
           "slide_group": 9,
           "is_scored": false,
           "attribution": "(Adapted with permission from How To Read and Understand People Copyright 1988 Target Training International)",
           "content_json": {
-            "prompt": "Tick the characteristics that resonate with you. This is optional — you can move on without ticking any.",
+            "prompt": "Tick the characteristics that resonate with you.",
             "allow_multiple": true,
             "computed": "core_style_options",
             "computed_inputs": [
