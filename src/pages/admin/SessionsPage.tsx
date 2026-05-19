@@ -19,6 +19,10 @@ interface SessionRow {
   enrollment_count: number
 }
 
+function isSessionArchived(s: Pick<SessionRow, 'is_active' | 'scheduled_end'>): boolean {
+  return !s.is_active || (!!s.scheduled_end && new Date(s.scheduled_end) < new Date())
+}
+
 export default function SessionsPage() {
   const { profile } = useAuth()
   const navigate = useNavigate()
@@ -98,7 +102,7 @@ export default function SessionsPage() {
                       : 'Undated'}
                   </td>
                   <td>{s.enrollment_count}</td>
-                  <td><Badge variant={s.is_active ? 'success' : 'muted'}>{s.is_active ? 'Active' : 'Archived'}</Badge></td>
+                  <td><Badge variant={isSessionArchived(s) ? 'muted' : 'success'}>{isSessionArchived(s) ? 'Archived' : 'Active'}</Badge></td>
                   <td>
                     <Button variant="ghost" size="sm" onClick={() => navigate(`/admin/sessions/${s.id}`)}>
                       Manage →

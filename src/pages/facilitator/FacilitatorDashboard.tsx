@@ -20,6 +20,10 @@ interface SessionCard {
   overall_pct: number
 }
 
+function isSessionArchived(s: Pick<SessionCard, 'is_active' | 'scheduled_end'>): boolean {
+  return !s.is_active || (!!s.scheduled_end && new Date(s.scheduled_end) < new Date())
+}
+
 export default function FacilitatorDashboard() {
   const { profile } = useAuth()
   const navigate = useNavigate()
@@ -89,8 +93,8 @@ export default function FacilitatorDashboard() {
           {sessions.map((s) => (
             <div key={s.id} className={styles.card}>
               <div className={styles.cardTop}>
-                <Badge variant={s.is_active ? 'success' : 'muted'}>
-                  {s.is_active ? 'Active' : 'Archived'}
+                <Badge variant={isSessionArchived(s) ? 'muted' : 'success'}>
+                  {isSessionArchived(s) ? 'Archived' : 'Active'}
                 </Badge>
                 <ProgressRing pct={s.overall_pct} size={48} strokeWidth={4} label="Average completion" />
               </div>

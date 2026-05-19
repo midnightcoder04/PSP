@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { PageShell } from '@/components/layout/PageShell'
 import { Button } from '@/components/ui/Button'
@@ -7,6 +7,13 @@ import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { BulkAddModal } from '@/components/admin/BulkAddModal'
 import styles from './AdminSessionDetailPage.module.css'
+
+interface SessionInfo {
+  title: string
+  is_active: boolean
+  scheduled_start: string | null
+  scheduled_end: string | null
+}
 
 interface EnrollmentRow {
   id: string
@@ -16,9 +23,19 @@ interface EnrollmentRow {
   enrolled_at: string
 }
 
+function isSessionArchived(s: Pick<SessionInfo, 'is_active' | 'scheduled_end'>): boolean {
+  return !s.is_active || (!!s.scheduled_end && new Date(s.scheduled_end) < new Date())
+}
+
+function toDateInputValue(iso: string | null): string {
+  if (!iso) return ''
+  return iso.slice(0, 10)
+}
+
 export default function AdminSessionDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const [session, setSession] = useState<{ title: string } | null>(null)
+  const navigate = useNavigate()
+  const [session, setSession] = useState<SessionInfo | null>(null)
   const [enrollments, setEnrollments] = useState<EnrollmentRow[]>([])
   const [participants, setParticipants] = useState<Array<{ id: string; display_name: string; email: string }>>([])
   const [loading, setLoading] = useState(true)
@@ -27,12 +44,22 @@ export default function AdminSessionDetailPage() {
   const [removing, setRemoving] = useState<string | null>(null)
   const [showBulkAdd, setShowBulkAdd] = useState(false)
 
+  // Date editing
+  const [editStart, setEditStart] = useState('')
+  const [editEnd, setEditEnd] = useState('')
+  const [savingDates, setSavingDates] = useState(false)
+
+  // Archive / delete
+  const [togglingArchive, setTogglingArchive] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
   async function load() {
     if (!id) return
     setLoading(true)
 
     const [{ data: sess }, { data: enr }, { data: parts }] = await Promise.all([
-      supabase.from('sessions').select('title').eq('id', id).single(),
+      supabase.from('sessions').select('title, is_active, scheduled_start, scheduled_end').eq('id', id).single(),
       supabase.from('enrollments').select(`
         id, participant_id, enrolled_at,
         participant:profiles!participant_id(display_name, email)
@@ -41,6 +68,8 @@ export default function AdminSessionDetailPage() {
     ])
 
     setSession(sess)
+    setEditStart(toDateInputValue(sess?.scheduled_start ?? null))
+    setEditEnd(toDateInputValue(sess?.scheduled_end ?? null))
     setEnrollments((enr ?? []).map((e) => ({
       id: e.id,
       participant_id: e.participant_id,
@@ -73,8 +102,35 @@ export default function AdminSessionDetailPage() {
     load()
   }
 
+  async function saveDates() {
+    if (!id || !session) return
+    setSavingDates(true)
+    await supabase.from('sessions').update({
+      scheduled_start: editStart || null,
+      scheduled_end: editEnd || null,
+    }).eq('id', id)
+    setSavingDates(false)
+    load()
+  }
+
+  async function toggleArchive() {
+    if (!id || !session) return
+    setTogglingArchive(true)
+    await supabase.from('sessions').update({ is_active: !session.is_active }).eq('id', id)
+    setTogglingArchive(false)
+    load()
+  }
+
+  async function deleteSession() {
+    if (!id) return
+    setDeleting(true)
+    await supabase.from('sessions').delete().eq('id', id)
+    navigate('/admin/sessions')
+  }
+
   const enrolled = new Set(enrollments.map((e) => e.participant_id))
   const available = participants.filter((p) => !enrolled.has(p.id))
+  const archived = session ? isSessionArchived(session) : false
 
   if (loading) {
     return (
@@ -86,6 +142,46 @@ export default function AdminSessionDetailPage() {
 
   return (
     <PageShell title={session?.title ?? 'Session'}>
+
+      {/* ── Status bar ── */}
+      <div className={styles.statusBar}>
+        <Badge variant={archived ? 'muted' : 'success'}>{archived ? 'Archived' : 'Active'}</Badge>
+        <Button
+          variant="secondary"
+          size="sm"
+          loading={togglingArchive}
+          onClick={toggleArchive}
+        >
+          {session?.is_active ? 'Archive session' : 'Unarchive session'}
+        </Button>
+      </div>
+
+      {/* ── Date editing ── */}
+      <div className={styles.dateRow}>
+        <label className={styles.dateLabel}>
+          Start
+          <input
+            type="date"
+            className={styles.dateInput}
+            value={editStart}
+            onChange={(e) => setEditStart(e.target.value)}
+          />
+        </label>
+        <label className={styles.dateLabel}>
+          End
+          <input
+            type="date"
+            className={styles.dateInput}
+            value={editEnd}
+            onChange={(e) => setEditEnd(e.target.value)}
+          />
+        </label>
+        <Button size="sm" loading={savingDates} onClick={saveDates}>
+          Save dates
+        </Button>
+      </div>
+
+      {/* ── Enroll / bulk-add ── */}
       <div className={styles.enrollRow}>
         <select
           className={styles.select}
@@ -136,6 +232,27 @@ export default function AdminSessionDetailPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ── Danger zone (only when archived) ── */}
+      {archived && (
+        <div className={styles.dangerZone}>
+          {confirmDelete ? (
+            <div className={styles.confirmDelete}>
+              <p>Delete this session and all its data permanently?</p>
+              <div className={styles.confirmButtons}>
+                <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)}>Cancel</Button>
+                <Button variant="danger" size="sm" loading={deleting} onClick={deleteSession}>
+                  Yes, delete
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <button className={styles.deleteBtn} onClick={() => setConfirmDelete(true)}>
+              Delete session
+            </button>
+          )}
         </div>
       )}
     </PageShell>
