@@ -188,6 +188,9 @@ export default function InvitePage() {
             placeholder="you@example.com"
             required
           />
+          {email.trim() && !isValidEmail(email.trim()) ? (
+            <p className={styles.error}>Please enter a valid email address.</p>
+          ) : null}
 
           <label className={styles.fieldLabel} htmlFor="inv-pass">Password (≥ 8 characters)</label>
           <input

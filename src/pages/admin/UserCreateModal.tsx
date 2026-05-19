@@ -94,6 +94,9 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
             placeholder="name@example.com"
             autoComplete="off"
           />
+          {email.trim() && !isValidEmail(email.trim().toLowerCase()) ? (
+            <p className={styles.fieldError}>Please enter a valid email address.</p>
+          ) : null}
 
           <label htmlFor="cu-name">Display name</label>
           <input
