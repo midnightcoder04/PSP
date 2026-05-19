@@ -88,7 +88,7 @@ export default function FacilitatorSessionDetailPage() {
   const [session, setSession] = useState<SessionInfo | null>(null)
   const [participants, setParticipants] = useState<ParticipantRow[]>([])
   const [loading, setLoading] = useState(true)
-  const [maxBulkAdd, setMaxBulkAdd] = useState(1)
+  const [maxBulkAdd, setMaxBulkAdd] = useState(10)
   const [showBulkAdd, setShowBulkAdd] = useState(false)
 
   const isArchived = session
@@ -122,7 +122,7 @@ export default function FacilitatorSessionDetailPage() {
         .eq('id', authData.user.id)
         .single()
         .then(({ data: profile }) => {
-          if (profile?.max_bulk_add) setMaxBulkAdd(profile.max_bulk_add)
+          if (profile) setMaxBulkAdd(profile.max_bulk_add ?? 10)
         })
     })
   }, [id, loadStats])
@@ -148,7 +148,7 @@ export default function FacilitatorSessionDetailPage() {
           ? <Badge variant="muted">Session Archived</Badge>
           : <Badge variant="success">Live</Badge>}
         <span className={styles.participantCount}>{participants.length} participant{participants.length !== 1 ? 's' : ''}</span>
-        {maxBulkAdd > 1 ? (
+        {!isArchived ? (
           <Button size="sm" variant="secondary" onClick={() => setShowBulkAdd(true)}>
             Add members
           </Button>

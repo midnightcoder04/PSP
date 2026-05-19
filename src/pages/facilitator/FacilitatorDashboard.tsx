@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { Spinner } from '@/components/ui/Spinner'
+import { SessionCreateModal } from '@/pages/admin/SessionCreateModal'
 import styles from './FacilitatorDashboard.module.css'
 
 interface SessionCard {
@@ -24,6 +25,7 @@ export default function FacilitatorDashboard() {
   const navigate = useNavigate()
   const [sessions, setSessions] = useState<SessionCard[]>([])
   const [loading, setLoading] = useState(true)
+  const [showCreate, setShowCreate] = useState(false)
 
   const load = useCallback(async () => {
     if (!profile?.id) return
@@ -73,9 +75,14 @@ export default function FacilitatorDashboard() {
 
   return (
     <PageShell title="My Sessions">
+      <div className={styles.toolbar}>
+        <p className={styles.count}>{sessions.length} session{sessions.length !== 1 ? 's' : ''}</p>
+        <Button onClick={() => setShowCreate(true)}>New Session</Button>
+      </div>
+
       {sessions.length === 0 ? (
         <div className={styles.empty}>
-          <p>You have no assigned sessions yet. Contact an admin to get assigned to a session.</p>
+          <p>No sessions yet. Create one to get started.</p>
         </div>
       ) : (
         <div className={styles.grid}>
@@ -103,6 +110,15 @@ export default function FacilitatorDashboard() {
             </div>
           ))}
         </div>
+      )}
+
+      {showCreate && profile && (
+        <SessionCreateModal
+          adminId={profile.id}
+          lockedFacilitatorId={profile.id}
+          onClose={() => setShowCreate(false)}
+          onCreated={() => { setShowCreate(false); load() }}
+        />
       )}
     </PageShell>
   )

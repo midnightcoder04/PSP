@@ -5,26 +5,28 @@ import styles from './SessionCreateModal.module.css'
 
 interface SessionCreateModalProps {
   adminId: string
+  lockedFacilitatorId?: string
   onClose: () => void
   onCreated: () => void
 }
 
-export function SessionCreateModal({ adminId, onClose, onCreated }: SessionCreateModalProps) {
+export function SessionCreateModal({ adminId, lockedFacilitatorId, onClose, onCreated }: SessionCreateModalProps) {
   const [title, setTitle] = useState('')
-  const [facilitatorId, setFacilitatorId] = useState('')
+  const [facilitatorId, setFacilitatorId] = useState(lockedFacilitatorId ?? '')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [facilitators, setFacilitators] = useState<Array<{ id: string; display_name: string }>>([])
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
+    if (lockedFacilitatorId) return
     supabase
       .from('profiles')
       .select('id, display_name')
       .eq('role', 'facilitator')
       .eq('is_active', true)
       .then(({ data }) => setFacilitators(data ?? []))
-  }, [])
+  }, [lockedFacilitatorId])
 
   async function handleCreate() {
     if (!title.trim() || !facilitatorId) return
@@ -52,19 +54,23 @@ export function SessionCreateModal({ adminId, onClose, onCreated }: SessionCreat
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Batch 7 — May 2026"
           />
-          <label>Facilitator</label>
-          <select
-            className={styles.input}
-            value={facilitatorId}
-            onChange={(e) => setFacilitatorId(e.target.value)}
-          >
-            <option value="">Select facilitator…</option>
-            {facilitators.map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.display_name}
-              </option>
-            ))}
-          </select>
+          {!lockedFacilitatorId && (
+            <>
+              <label>Facilitator</label>
+              <select
+                className={styles.input}
+                value={facilitatorId}
+                onChange={(e) => setFacilitatorId(e.target.value)}
+              >
+                <option value="">Select facilitator…</option>
+                {facilitators.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.display_name}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           <label>Start Date</label>
           <input
             type="date"
@@ -87,7 +93,7 @@ export function SessionCreateModal({ adminId, onClose, onCreated }: SessionCreat
           <Button
             onClick={handleCreate}
             loading={saving}
-            disabled={!title.trim() || !facilitatorId}
+            disabled={!title.trim() || (!lockedFacilitatorId && !facilitatorId)}
           >
             Create
           </Button>
