@@ -17,6 +17,7 @@ export function SessionCreateModal({ adminId, lockedFacilitatorId, onClose, onCr
   const [endDate, setEndDate] = useState('')
   const [facilitators, setFacilitators] = useState<Array<{ id: string; display_name: string }>>([])
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (lockedFacilitatorId) return
@@ -31,7 +32,8 @@ export function SessionCreateModal({ adminId, lockedFacilitatorId, onClose, onCr
   async function handleCreate() {
     if (!title.trim() || !facilitatorId) return
     setSaving(true)
-    await supabase.from('sessions').insert({
+    setError(null)
+    const { error: insertError } = await supabase.from('sessions').insert({
       title: title.trim(),
       facilitator_id: facilitatorId,
       scheduled_start: startDate || null,
@@ -39,6 +41,7 @@ export function SessionCreateModal({ adminId, lockedFacilitatorId, onClose, onCr
       created_by: adminId,
     })
     setSaving(false)
+    if (insertError) { setError(insertError.message); return }
     onCreated()
   }
 
@@ -86,6 +89,7 @@ export function SessionCreateModal({ adminId, lockedFacilitatorId, onClose, onCr
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
+        {error ? <p className={styles.error}>{error}</p> : null}
         <div className={styles.modalActions}>
           <Button variant="secondary" onClick={onClose}>
             Cancel

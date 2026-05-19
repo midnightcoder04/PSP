@@ -54,6 +54,12 @@
   box-shadow: 0 0 0 3px rgba(45, 91, 227, 0.12);
 }
 
+.error {
+  font-size: var(--text-sm);
+  color: var(--color-error, #c0392b);
+  margin: calc(var(--space-4) * -1) 0 var(--space-3);
+}
+
 .modalActions {
   display: flex;
   justify-content: flex-end;
