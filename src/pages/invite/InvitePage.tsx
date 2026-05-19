@@ -7,6 +7,10 @@ import styles from './InvitePage.module.css'
 
 type InviteStatus = 'loading' | 'valid' | 'invalid' | 'success'
 
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
 interface InviteInfo {
   session_id: string
   session_title: string
@@ -71,6 +75,10 @@ export default function InvitePage() {
 
     if (!email.trim() || !displayName.trim()) {
       setFormError('Email and name are required.')
+      return
+    }
+    if (!isValidEmail(email.trim())) {
+      setFormError('Please enter a valid email address.')
       return
     }
     if (password.length < 8) {
@@ -205,7 +213,7 @@ export default function InvitePage() {
 
           {formError ? <p className={styles.error}>{formError}</p> : null}
 
-          <Button type="submit" loading={submitting} disabled={submitting}>
+          <Button type="submit" loading={submitting} disabled={submitting || !isValidEmail(email.trim())}>
             Create account &amp; enroll
           </Button>
         </form>

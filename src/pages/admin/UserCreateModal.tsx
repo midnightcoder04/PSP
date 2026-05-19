@@ -5,6 +5,10 @@ import styles from './UserCreateModal.module.css'
 
 type Role = 'admin' | 'facilitator' | 'participant'
 
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
 interface UserCreateModalProps {
   onClose: () => void
   onCreated: () => void
@@ -22,7 +26,7 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
   async function handleCreate() {
     const trimmedEmail = email.trim().toLowerCase()
     const trimmedName = displayName.trim()
-    if (!trimmedEmail || !trimmedName || password.length < 8) return
+    if (!trimmedEmail || !isValidEmail(trimmedEmail) || !trimmedName || password.length < 8) return
     setSubmitting(true)
     setError(null)
 
@@ -156,7 +160,7 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
             onClick={handleCreate}
             loading={submitting}
             disabled={
-              !email.trim() || !displayName.trim() || password.length < 8 || submitting
+              !email.trim() || !isValidEmail(email.trim().toLowerCase()) || !displayName.trim() || password.length < 8 || submitting
             }
           >
             Create user
