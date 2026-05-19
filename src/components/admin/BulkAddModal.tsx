@@ -78,7 +78,7 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
 
   // Invite tab
   const [invites, setInvites] = useState<InviteRow[]>([])
-  const [inviteMaxUses, setInviteMaxUses] = useState(50)
+  const [inviteMaxUses, setInviteMaxUses] = useState(Math.min(50, maxBulkAdd ?? 50))
   const [inviteExpiry, setInviteExpiry] = useState('')
   const [generatingLink, setGeneratingLink] = useState(false)
   const [copiedToken, setCopiedToken] = useState<string | null>(null)
@@ -299,13 +299,17 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
 
             <div className={styles.inviteGenRow}>
               <label className={styles.inviteLabel}>
-                Max registrations
+                Max registrations{maxBulkAdd !== undefined ? ` (limit: ${maxBulkAdd})` : ''}
                 <input
                   type="number"
                   min={1}
+                  max={maxBulkAdd}
                   className={styles.inviteInput}
                   value={inviteMaxUses}
-                  onChange={(e) => setInviteMaxUses(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                  onChange={(e) => {
+                    const n = Math.max(1, parseInt(e.target.value, 10) || 1)
+                    setInviteMaxUses(maxBulkAdd !== undefined ? Math.min(n, maxBulkAdd) : n)
+                  }}
                 />
               </label>
               <label className={styles.inviteLabel}>
