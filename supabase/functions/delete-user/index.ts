@@ -19,7 +19,6 @@ Deno.serve(async (req: Request) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!
 
   const authHeader = req.headers.get('Authorization')
   if (!authHeader) {
@@ -29,20 +28,19 @@ Deno.serve(async (req: Request) => {
     })
   }
 
-  // Identify caller via their JWT
-  const callerClient = createClient(supabaseUrl, anonKey, {
-    global: { headers: { Authorization: authHeader } },
-  })
-  const { data: { user: caller }, error: authErr } = await callerClient.auth.getUser()
+  // Service-role client for all privileged operations
+  const adminClient = createClient(supabaseUrl, serviceRoleKey)
+
+  // Validate caller's JWT by passing the token explicitly — avoids relying on
+  // stored session state which doesn't exist in a Deno edge function context.
+  const token = authHeader.replace('Bearer ', '')
+  const { data: { user: caller }, error: authErr } = await adminClient.auth.getUser(token)
   if (authErr || !caller) {
     return new Response(JSON.stringify({ error: 'UNAUTHORIZED_INVALID_JWT' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
-
-  // Service-role client for privileged operations
-  const adminClient = createClient(supabaseUrl, serviceRoleKey)
 
   // Verify caller is an admin
   const { data: callerProfile } = await adminClient
