@@ -79,7 +79,6 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
   // Invite tab
   const [invites, setInvites] = useState<InviteRow[]>([])
   const [inviteMaxUses, setInviteMaxUses] = useState<number | ''>(Math.min(50, maxBulkAdd ?? 50))
-  const [inviteExpiry, setInviteExpiry] = useState('')
   const [generatingLink, setGeneratingLink] = useState(false)
   const [copiedToken, setCopiedToken] = useState<string | null>(null)
   const [revokingId, setRevokingId] = useState<string | null>(null)
@@ -188,7 +187,7 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
       session_id: sessionId,
       created_by: me.user.id,
       max_uses: typeof inviteMaxUses === 'number' ? inviteMaxUses : Math.min(50, maxBulkAdd ?? 50),
-      expires_at: inviteExpiry ? new Date(inviteExpiry).toISOString() : null,
+      expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // fixed 1-hour window
     })
     setGeneratingLink(false)
     loadInvites()
@@ -319,15 +318,6 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
                       setInviteMaxUses(Math.min(50, maxBulkAdd ?? 50))
                     }
                   }}
-                />
-              </label>
-              <label className={styles.inviteLabel}>
-                Expiry (optional)
-                <input
-                  type="date"
-                  className={styles.inviteInput}
-                  value={inviteExpiry}
-                  onChange={(e) => setInviteExpiry(e.target.value)}
                 />
               </label>
               <Button onClick={generateInvite} loading={generatingLink} size="sm">
