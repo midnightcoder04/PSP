@@ -78,7 +78,7 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
 
   // Invite tab
   const [invites, setInvites] = useState<InviteRow[]>([])
-  const [inviteMaxUses, setInviteMaxUses] = useState(Math.min(50, maxBulkAdd ?? 50))
+  const [inviteMaxUses, setInviteMaxUses] = useState<number | ''>(Math.min(50, maxBulkAdd ?? 50))
   const [inviteExpiry, setInviteExpiry] = useState('')
   const [generatingLink, setGeneratingLink] = useState(false)
   const [copiedToken, setCopiedToken] = useState<string | null>(null)
@@ -187,7 +187,7 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
     await supabase.from('session_invites').insert({
       session_id: sessionId,
       created_by: me.user.id,
-      max_uses: inviteMaxUses,
+      max_uses: typeof inviteMaxUses === 'number' ? inviteMaxUses : Math.min(50, maxBulkAdd ?? 50),
       expires_at: inviteExpiry ? new Date(inviteExpiry).toISOString() : null,
     })
     setGeneratingLink(false)
@@ -307,8 +307,17 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
                   className={styles.inviteInput}
                   value={inviteMaxUses}
                   onChange={(e) => {
-                    const n = Math.max(1, parseInt(e.target.value, 10) || 1)
-                    setInviteMaxUses(maxBulkAdd !== undefined ? Math.min(n, maxBulkAdd) : n)
+                    const v = e.target.value
+                    if (v === '') { setInviteMaxUses(''); return }
+                    const n = parseInt(v, 10)
+                    if (!isNaN(n)) {
+                      setInviteMaxUses(maxBulkAdd !== undefined ? Math.min(Math.max(1, n), maxBulkAdd) : Math.max(1, n))
+                    }
+                  }}
+                  onBlur={() => {
+                    if (inviteMaxUses === '' || (typeof inviteMaxUses === 'number' && inviteMaxUses < 1)) {
+                      setInviteMaxUses(Math.min(50, maxBulkAdd ?? 50))
+                    }
                   }}
                 />
               </label>
