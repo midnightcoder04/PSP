@@ -5,6 +5,52 @@
   min-height: 60vh;
 }
 
+/* ── Status bar ── */
+.statusBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* ── Date row ── */
+.dateRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: flex-end;
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.dateLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dateInput {
+  padding: 8px 10px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+}
+
+.dateInput:focus { border-color: var(--color-trust); }
+
+/* ── Enroll row ── */
 .enrollRow {
   display: flex;
   gap: var(--space-2);
@@ -66,3 +112,47 @@
 
 .table tr:last-child td { border-bottom: none; }
 .table tr:hover td { background: var(--color-bg); }
+
+/* ── Danger zone ── */
+.dangerZone {
+  margin-top: var(--space-8);
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.deleteBtn {
+  all: unset;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.dangerZone:hover .deleteBtn {
+  opacity: 1;
+  color: var(--color-error, #c0392b);
+}
+
+.confirmDelete {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.confirmDelete p {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.confirmButtons {
+  display: flex;
+  gap: var(--space-2);
+}

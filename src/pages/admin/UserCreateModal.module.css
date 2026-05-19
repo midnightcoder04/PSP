@@ -67,6 +67,12 @@
   margin: 0 0 var(--space-3) 0;
 }
 
+.fieldError {
+  font-size: var(--text-xs);
+  color: var(--color-error, #c0392b);
+  margin: calc(var(--space-1) * -1) 0 0;
+}
+
 .modalActions {
   display: flex;
   justify-content: flex-end;

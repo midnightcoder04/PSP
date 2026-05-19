@@ -14,7 +14,7 @@ const mockSessions = [
     id: 'ses-1',
     title: 'PSP Batch 7',
     scheduled_start: '2026-05-01T09:00:00Z',
-    scheduled_end: '2026-05-10T17:00:00Z',
+    scheduled_end: '2027-01-01T00:00:00Z',
     is_active: true,
     enrollments: [{ count: 8 }],
   },

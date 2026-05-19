@@ -78,8 +78,7 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
 
   // Invite tab
   const [invites, setInvites] = useState<InviteRow[]>([])
-  const [inviteMaxUses, setInviteMaxUses] = useState(50)
-  const [inviteExpiry, setInviteExpiry] = useState('')
+  const [inviteMaxUses, setInviteMaxUses] = useState<number | ''>(Math.min(50, maxBulkAdd ?? 50))
   const [generatingLink, setGeneratingLink] = useState(false)
   const [copiedToken, setCopiedToken] = useState<string | null>(null)
   const [revokingId, setRevokingId] = useState<string | null>(null)
@@ -187,8 +186,8 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
     await supabase.from('session_invites').insert({
       session_id: sessionId,
       created_by: me.user.id,
-      max_uses: inviteMaxUses,
-      expires_at: inviteExpiry ? new Date(inviteExpiry).toISOString() : null,
+      max_uses: typeof inviteMaxUses === 'number' ? inviteMaxUses : Math.min(50, maxBulkAdd ?? 50),
+      expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // fixed 1-hour window
     })
     setGeneratingLink(false)
     loadInvites()
@@ -299,22 +298,26 @@ export function BulkAddModal({ sessionId, sessionTitle, maxBulkAdd, onClose, onA
 
             <div className={styles.inviteGenRow}>
               <label className={styles.inviteLabel}>
-                Max registrations
+                Max registrations{maxBulkAdd !== undefined ? ` (limit: ${maxBulkAdd})` : ''}
                 <input
                   type="number"
                   min={1}
+                  max={maxBulkAdd}
                   className={styles.inviteInput}
                   value={inviteMaxUses}
-                  onChange={(e) => setInviteMaxUses(Math.max(1, parseInt(e.target.value, 10) || 1))}
-                />
-              </label>
-              <label className={styles.inviteLabel}>
-                Expiry (optional)
-                <input
-                  type="date"
-                  className={styles.inviteInput}
-                  value={inviteExpiry}
-                  onChange={(e) => setInviteExpiry(e.target.value)}
+                  onChange={(e) => {
+                    const v = e.target.value
+                    if (v === '') { setInviteMaxUses(''); return }
+                    const n = parseInt(v, 10)
+                    if (!isNaN(n)) {
+                      setInviteMaxUses(maxBulkAdd !== undefined ? Math.min(Math.max(1, n), maxBulkAdd) : Math.max(1, n))
+                    }
+                  }}
+                  onBlur={() => {
+                    if (inviteMaxUses === '' || (typeof inviteMaxUses === 'number' && inviteMaxUses < 1)) {
+                      setInviteMaxUses(Math.min(50, maxBulkAdd ?? 50))
+                    }
+                  }}
                 />
               </label>
               <Button onClick={generateInvite} loading={generatingLink} size="sm">

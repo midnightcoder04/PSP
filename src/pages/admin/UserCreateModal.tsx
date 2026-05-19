@@ -5,6 +5,10 @@ import styles from './UserCreateModal.module.css'
 
 type Role = 'admin' | 'facilitator' | 'participant'
 
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
+
 interface UserCreateModalProps {
   onClose: () => void
   onCreated: () => void
@@ -15,14 +19,14 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
   const [displayName, setDisplayName] = useState('')
   const [role, setRole] = useState<Role>('participant')
   const [password, setPassword] = useState('')
-  const [maxBulkAdd, setMaxBulkAdd] = useState(1)
+  const [maxBulkAdd, setMaxBulkAdd] = useState<number | ''>(10)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleCreate() {
     const trimmedEmail = email.trim().toLowerCase()
     const trimmedName = displayName.trim()
-    if (!trimmedEmail || !trimmedName || password.length < 8) return
+    if (!trimmedEmail || !isValidEmail(trimmedEmail) || !trimmedName || password.length < 8) return
     setSubmitting(true)
     setError(null)
 
@@ -49,9 +53,10 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
 
     // Set max_bulk_add for facilitators after account is created
     if (role === 'facilitator' && errPayload?.user?.id) {
+      const bulkLimit = typeof maxBulkAdd === 'number' && maxBulkAdd >= 1 ? maxBulkAdd : 10
       await supabase
         .from('profiles')
-        .update({ max_bulk_add: maxBulkAdd })
+        .update({ max_bulk_add: bulkLimit })
         .eq('id', errPayload.user.id)
     }
 
@@ -89,6 +94,9 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
             placeholder="name@example.com"
             autoComplete="off"
           />
+          {email.trim() && !isValidEmail(email.trim().toLowerCase()) ? (
+            <p className={styles.fieldError}>Please enter a valid email address.</p>
+          ) : null}
 
           <label htmlFor="cu-name">Display name</label>
           <input
@@ -120,7 +128,15 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
                 className={styles.input}
                 min={1}
                 value={maxBulkAdd}
-                onChange={(e) => setMaxBulkAdd(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                onChange={(e) => {
+                  const v = e.target.value
+                  if (v === '') { setMaxBulkAdd(''); return }
+                  const n = parseInt(v, 10)
+                  if (!isNaN(n)) setMaxBulkAdd(Math.max(1, n))
+                }}
+                onBlur={() => {
+                  if (maxBulkAdd === '' || (typeof maxBulkAdd === 'number' && maxBulkAdd < 1)) setMaxBulkAdd(10)
+                }}
               />
             </>
           ) : null}
@@ -147,7 +163,7 @@ export function UserCreateModal({ onClose, onCreated }: UserCreateModalProps) {
             onClick={handleCreate}
             loading={submitting}
             disabled={
-              !email.trim() || !displayName.trim() || password.length < 8 || submitting
+              !email.trim() || !isValidEmail(email.trim().toLowerCase()) || !displayName.trim() || password.length < 8 || submitting
             }
           >
             Create user
