@@ -41,27 +41,26 @@ export default function FacilitatorDashboard() {
       .eq('facilitator_id', profile.id)
       .order('created_at', { ascending: false })
 
-    const cards: SessionCard[] = []
-    for (const s of sessionData ?? []) {
-      let overall_pct = 0
-      const { data: stats } = await supabase.rpc('get_session_stats', { p_session_id: s.id })
-      if (stats && stats.length > 0) {
-        overall_pct = Math.round(
-          stats.reduce((sum: number, p: { overall_pct: number }) => sum + (p.overall_pct ?? 0), 0) / stats.length
-        )
-      }
+    const sessions = sessionData ?? []
+    const statResults = await Promise.all(
+      sessions.map(s => supabase.rpc('get_session_stats', { p_session_id: s.id }))
+    )
 
-      cards.push({
+    const cards: SessionCard[] = sessions.map((s, i) => {
+      const stats = (statResults[i].data ?? []) as Array<{ overall_pct: number }>
+      const overall_pct = stats.length > 0
+        ? Math.round(stats.reduce((sum, p) => sum + (p.overall_pct ?? 0), 0) / stats.length)
+        : 0
+      return {
         id: s.id,
         title: s.title,
         scheduled_start: s.scheduled_start,
         scheduled_end: s.scheduled_end,
         is_active: s.is_active,
-        // get_session_stats only returns active enrollments, so its length is the correct count
-        enrollment_count: stats?.length ?? 0,
+        enrollment_count: stats.length,
         overall_pct,
-      })
-    }
+      }
+    })
 
     setSessions(cards)
     setLoading(false)
