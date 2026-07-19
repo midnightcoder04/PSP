@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { BulkAddModal } from '@/components/admin/BulkAddModal'
+import { SessionSettingsCard } from '@/components/admin/SessionSettingsCard'
 import styles from './AdminSessionDetailPage.module.css'
 
 interface SessionInfo {
@@ -155,6 +156,8 @@ export default function AdminSessionDetailPage() {
           {session?.is_active ? 'Archive session' : 'Unarchive session'}
         </Button>
       </div>
+
+      {id ? <SessionSettingsCard sessionId={id} /> : null}
 
       {/* ── Date editing ── */}
       <div className={styles.dateRow}>

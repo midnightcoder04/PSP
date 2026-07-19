@@ -3,9 +3,16 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import FacilitatorSessionDetailPage from './FacilitatorSessionDetailPage'
 
+const mockProfile = {
+  id: 'fac-1',
+  display_name: 'Facilitator Bob',
+  role: 'facilitator',
+  can_present: false,
+}
+
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({
-    profile: { id: 'fac-1', display_name: 'Facilitator Bob', role: 'facilitator' },
+    profile: mockProfile,
     signOut: vi.fn(),
     loading: false,
   }),
@@ -18,7 +25,7 @@ vi.mock('@/hooks/useRealtimeSession', () => ({
 
 let mockSessionInfo = {
   title: 'PSP Batch 7',
-  scheduled_end: '2026-06-01T00:00:00Z',
+  scheduled_end: '2099-01-01T00:00:00Z',
   is_active: true,
 }
 
@@ -46,6 +53,10 @@ const mockStats = [
 const makeSessionChain = () => ({
   select: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
+  // SessionSettingsCard loads training_topics (.order) + session_topics; keep
+  // these resolvable so the card renders without touching the roster asserts.
+  order: vi.fn().mockResolvedValue({ data: [], error: null }),
+  maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
   single: vi.fn().mockImplementation(() =>
     Promise.resolve({ data: mockSessionInfo, error: null })
   ),
@@ -74,9 +85,10 @@ function renderPage() {
 describe('FacilitatorSessionDetailPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockProfile.can_present = false
     mockSessionInfo = {
       title: 'PSP Batch 7',
-      scheduled_end: '2026-06-01T00:00:00Z',
+      scheduled_end: '2099-01-01T00:00:00Z',
       is_active: true,
     }
   })
@@ -148,6 +160,45 @@ describe('FacilitatorSessionDetailPage', () => {
     expect(calls.length).toBeGreaterThan(0)
     const lastCall = calls[calls.length - 1][0] as { enabled: boolean }
     expect(lastCall.enabled).toBe(false)
+  })
+
+  it('hides Present controls for facilitators without presenter access', async () => {
+    renderPage()
+
+    await waitFor(() => {
+      expect(screen.getByText('Live')).toBeInTheDocument()
+    })
+
+    expect(screen.queryByRole('button', { name: /^present$/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /customize cover/i })).not.toBeInTheDocument()
+  })
+
+  it('shows Present and Customize cover for presenters on live sessions', async () => {
+    mockProfile.can_present = true
+    renderPage()
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /^present$/i })).toBeInTheDocument()
+    })
+
+    expect(screen.getByRole('button', { name: /customize cover/i })).toBeInTheDocument()
+  })
+
+  it('hides Present controls on archived sessions even for presenters', async () => {
+    mockProfile.can_present = true
+    mockSessionInfo = {
+      title: 'PSP Batch 1 (archived)',
+      scheduled_end: '2024-01-01T00:00:00Z',
+      is_active: true,
+    }
+
+    renderPage()
+
+    await waitFor(() => {
+      expect(screen.getByText('Session Archived')).toBeInTheDocument()
+    })
+
+    expect(screen.queryByRole('button', { name: /^present$/i })).not.toBeInTheDocument()
   })
 
   it('shows Session Archived when is_active is false even with future end date', async () => {

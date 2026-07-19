@@ -1,0 +1,387 @@
+/* DeckSlideView — renders one presentation slide, filling its container.
+   The parent (presenter stage or admin preview) owns the aspect ratio and
+   scaling; everything here uses container-relative + clamp() sizing so the
+   same markup works full-screen and as a scaled preview thumbnail. */
+
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vh, 24px);
+  padding: clamp(16px, 5vmin, 64px);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  text-align: center;
+  overflow: hidden;
+  /* DISC accent palette (matches the D.I.S.C. logo) */
+  --disc-d: #e23b4e;
+  --disc-i: #eab52c;
+  --disc-s: #2fb57c;
+  --disc-c: #29abe2;
+  --deck-accent: var(--color-trust);
+}
+
+/* ── Shared text styles ─────────────────────────────────── */
+
+.heading {
+  font-size: clamp(1.4rem, 4.5vmin, 3rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.bigTitle {
+  font-size: clamp(1.8rem, 7vmin, 4.5rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 2.8vmin, 1.6rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.kicker {
+  font-size: clamp(0.8rem, 2vmin, 1.1rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--deck-accent);
+  margin: 0;
+}
+
+.intro {
+  font-size: clamp(0.95rem, 2.4vmin, 1.4rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.caption {
+  font-size: clamp(0.8rem, 2vmin, 1.1rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ── cover ──────────────────────────────────────────────── */
+
+.slide[data-kind='cover'] {
+  flex-direction: row;
+  gap: clamp(24px, 6vmin, 72px);
+  text-align: left;
+}
+
+.coverImage {
+  max-height: 70%;
+  max-width: 38%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.coverText {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.5vh, 16px);
+  max-width: 55%;
+}
+
+.coverTitle {
+  font-size: clamp(1.8rem, 6.5vmin, 4.2rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-trust);
+  margin: 0;
+}
+
+.coverSubtitle {
+  font-size: clamp(1.1rem, 3vmin, 1.9rem);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.coverSession {
+  font-size: clamp(1.2rem, 3.4vmin, 2.2rem);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin: clamp(8px, 2vh, 20px) 0 0;
+}
+
+.coverSessionSub {
+  font-size: clamp(0.95rem, 2.4vmin, 1.5rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.coverMeta {
+  font-size: clamp(0.9rem, 2.2vmin, 1.35rem);
+  color: var(--color-warmth);
+  font-weight: var(--weight-medium);
+  margin: 0;
+}
+
+.coverOrg {
+  font-size: clamp(0.7rem, 1.7vmin, 0.95rem);
+  color: var(--color-text-faint);
+  margin: clamp(10px, 2.5vh, 28px) 0 0;
+}
+
+/* ── quote ──────────────────────────────────────────────── */
+
+.quote {
+  max-width: 80%;
+  margin: 0;
+}
+
+.quote p {
+  font-size: clamp(1.5rem, 5.5vmin, 3.6rem);
+  font-weight: var(--weight-medium);
+  line-height: 1.35;
+  margin: 0 0 clamp(12px, 3vh, 32px);
+}
+
+.quote cite {
+  font-style: normal;
+  font-size: clamp(1rem, 2.6vmin, 1.6rem);
+  color: var(--color-text-muted);
+}
+
+/* ── statement ──────────────────────────────────────────── */
+
+.statementBody {
+  max-width: 75%;
+  font-size: clamp(1.05rem, 2.8vmin, 1.7rem);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+}
+
+.statementBody p { margin: 0 0 clamp(6px, 1.5vh, 14px); }
+.statementBody ol,
+.statementBody ul { text-align: left; margin: 0; padding-left: 1.4em; }
+
+/* ── bullets ────────────────────────────────────────────── */
+
+.bullets {
+  text-align: left;
+  max-width: min(85%, 1100px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.6vh, 16px);
+  font-size: clamp(0.95rem, 2.6vmin, 1.55rem);
+  line-height: var(--leading-normal);
+}
+
+.bullets[data-dense] {
+  font-size: clamp(0.85rem, 2.1vmin, 1.25rem);
+  gap: clamp(4px, 1vh, 10px);
+}
+
+.bullets li {
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.45em;
+  height: 0.45em;
+  border-radius: 50%;
+  background: var(--deck-accent);
+}
+
+/* ── two-col ────────────────────────────────────────────── */
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(16px, 4vmin, 48px);
+  width: 100%;
+  max-width: 1200px;
+  align-items: start;
+}
+
+.columns[data-count='3'] { grid-template-columns: repeat(3, 1fr); }
+.columns[data-count='4'] { grid-template-columns: repeat(4, 1fr); }
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 2vh, 18px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(12px, 3vmin, 32px);
+  min-height: 100%;
+}
+
+.columnImage {
+  max-height: clamp(80px, 22vh, 220px);
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.columnHeading {
+  font-size: clamp(1rem, 2.8vmin, 1.7rem);
+  font-weight: var(--weight-bold);
+  color: var(--deck-accent);
+  margin: 0;
+}
+
+.columnBullets {
+  text-align: left;
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: clamp(0.8rem, 2vmin, 1.15rem);
+  line-height: var(--leading-normal);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 0.8vh, 8px);
+}
+
+/* ── disc-profile ───────────────────────────────────────── */
+
+.slide[data-kind='disc-profile'][data-style='D'] { --deck-accent: var(--disc-d); }
+.slide[data-kind='disc-profile'][data-style='I'] { --deck-accent: var(--disc-i); }
+.slide[data-kind='disc-profile'][data-style='S'] { --deck-accent: var(--disc-s); }
+.slide[data-kind='disc-profile'][data-style='C'] { --deck-accent: var(--disc-c); }
+
+.discHeader {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 3vmin, 32px);
+  text-align: left;
+}
+
+.discLetter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(48px, 11vmin, 110px);
+  height: clamp(48px, 11vmin, 110px);
+  border-radius: var(--radius-md);
+  background: var(--deck-accent);
+  color: #fff;
+  font-size: clamp(1.8rem, 6.5vmin, 4rem);
+  font-weight: var(--weight-bold);
+}
+
+.discSubtitle {
+  font-size: clamp(0.9rem, 2.3vmin, 1.4rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.discBody {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 2fr;
+  gap: clamp(16px, 4vmin, 56px);
+  width: 100%;
+  max-width: 1200px;
+  text-align: left;
+  align-items: start;
+}
+
+.discAdjectives {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1.2vh, 12px);
+  font-size: clamp(1rem, 2.7vmin, 1.6rem);
+  font-weight: var(--weight-semibold);
+  color: var(--deck-accent);
+}
+
+.discStatements {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 0.9vh, 9px);
+  font-size: clamp(0.85rem, 2.2vmin, 1.3rem);
+  line-height: var(--leading-normal);
+}
+
+.discStatements li {
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.discStatements li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: var(--deck-accent);
+}
+
+/* ── numbered-list ──────────────────────────────────────── */
+
+.numbered {
+  text-align: left;
+  max-width: min(85%, 1100px);
+  margin: 0;
+  padding-left: 1.6em;
+  font-size: clamp(0.95rem, 2.5vmin, 1.5rem);
+  line-height: var(--leading-normal);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 1.4vh, 14px);
+}
+
+.numbered[data-dense] {
+  font-size: clamp(0.85rem, 2.1vmin, 1.25rem);
+  gap: clamp(4px, 1vh, 10px);
+}
+
+.numbered li::marker {
+  color: var(--deck-accent);
+  font-weight: var(--weight-bold);
+}
+
+/* ── image ──────────────────────────────────────────────── */
+
+.mainImage {
+  max-width: min(90%, 1000px);
+  max-height: 62%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+/* ── contact ────────────────────────────────────────────── */
+
+.contactImage {
+  max-height: clamp(80px, 20vh, 200px);
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+.contactLines {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1.2vh, 12px);
+  font-size: clamp(1rem, 2.8vmin, 1.7rem);
+  color: var(--color-text-muted);
+}
+
+.contactLines p { margin: 0; }

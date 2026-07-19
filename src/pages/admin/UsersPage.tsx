@@ -90,6 +90,18 @@ export default function UsersPage() {
     setToggling(null)
   }
 
+  async function togglePresenter(id: string, current: boolean) {
+    setToggling(`present:${id}`)
+    await supabase
+      .from('profiles')
+      .update({ can_present: !current, updated_at: new Date().toISOString() })
+      .eq('id', id)
+    setProfiles((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, can_present: !current } : p))
+    )
+    setToggling(null)
+  }
+
   function sessionLabel(p: ProfileWithSession) {
     if (p.role !== 'participant') return null
     const { sessionInfo } = p
@@ -196,9 +208,14 @@ export default function UsersPage() {
                   <td className={styles.name}>{p.display_name}</td>
                   <td className={styles.email}>{p.email}</td>
                   <td>
-                    <Badge variant={p.role === 'admin' ? 'info' : p.role === 'facilitator' ? 'warning' : 'muted'}>
-                      {p.role}
-                    </Badge>
+                    <span className={styles.roleCell}>
+                      <Badge variant={p.role === 'admin' ? 'info' : p.role === 'facilitator' ? 'warning' : 'muted'}>
+                        {p.role}
+                      </Badge>
+                      {p.role === 'facilitator' && p.can_present ? (
+                        <Badge variant="success">Presenter</Badge>
+                      ) : null}
+                    </span>
                   </td>
                   <td>{sessionLabel(p)}</td>
                   <td>
@@ -208,6 +225,16 @@ export default function UsersPage() {
                   </td>
                   <td className={styles.date}>{new Date(p.created_at).toLocaleDateString()}</td>
                   <td className={styles.actions}>
+                    {p.role === 'facilitator' ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        loading={toggling === `present:${p.id}`}
+                        onClick={() => togglePresenter(p.id, p.can_present)}
+                      >
+                        {p.can_present ? 'Revoke presenter' : 'Grant presenter'}
+                      </Button>
+                    ) : null}
                     <Button
                       variant="ghost"
                       size="sm"

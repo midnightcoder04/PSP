@@ -67,6 +67,7 @@
 .inactive td { opacity: 0.5; }
 
 .name { font-weight: var(--weight-medium); }
+.roleCell { display: flex; align-items: center; gap: var(--space-2); white-space: nowrap; }
 .email { color: var(--color-text-muted); }
 .date  { color: var(--color-text-faint); white-space: nowrap; }
 

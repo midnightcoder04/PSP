@@ -15,6 +15,8 @@ const ADMIN_NAV: NavItem[] = [
   { to: ROUTES.ADMIN_USERS, label: 'Users', icon: '◎' },
   { to: ROUTES.ADMIN_SESSIONS, label: 'Sessions', icon: '◫' },
   { to: ROUTES.ADMIN_TESTIMONIALS, label: 'Testimonials', icon: '✦' },
+  { to: ROUTES.ADMIN_DECK, label: 'Deck', icon: '▤' },
+  { to: ROUTES.ADMIN_TOPICS, label: 'Topics', icon: '◇' },
 ]
 
 const FACILITATOR_NAV: NavItem[] = [
