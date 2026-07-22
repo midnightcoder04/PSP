@@ -180,6 +180,30 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
               ))}
             </ul>
           </div>
+          {(c.youAre?.length || c.environment?.length) ? (
+            <div className={styles.discEnvironment}>
+              {c.youAre?.length ? (
+                <div className={styles.discEnvCol}>
+                  <h2 className={styles.discEnvHeading}>{`If you are a ${c.title}, you are…`}</h2>
+                  <ul className={styles.discEnvBullets}>
+                    {c.youAre.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              {c.environment?.length ? (
+                <div className={styles.discEnvCol}>
+                  <h2 className={styles.discEnvHeading}>{`Ideal Environment for the ${c.title}`}</h2>
+                  <ul className={styles.discEnvBullets}>
+                    {c.environment.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       )
     }

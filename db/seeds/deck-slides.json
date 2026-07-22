@@ -109,11 +109,21 @@
       "content_json": {
         "title": "What are you predominantly?",
         "columns": [
-          { "heading": "Introvert", "bullets": [], "image": "/deck/introvert.png" },
-          { "heading": "Extrovert", "bullets": [], "image": "/deck/extrovert.png" }
+          {
+            "heading": "Introvert",
+            "bullets": [],
+            "image": "/deck/introvert.png"
+          },
+          {
+            "heading": "Extrovert",
+            "bullets": [],
+            "image": "/deck/extrovert.png"
+          }
         ]
       },
-      "linked_exercise_slugs": ["core-style-q1-extroversion"]
+      "linked_exercise_slugs": [
+        "core-style-q1-extroversion"
+      ]
     },
     {
       "slug": "personality-people-task",
@@ -123,11 +133,21 @@
       "content_json": {
         "title": "What are you predominantly?",
         "columns": [
-          { "heading": "People Oriented", "bullets": [], "image": "/deck/people-task-1.jpg" },
-          { "heading": "Task Oriented", "bullets": [], "image": "/deck/people-task-2.jpg" }
+          {
+            "heading": "People Oriented",
+            "bullets": [],
+            "image": "/deck/people-task-1.jpg"
+          },
+          {
+            "heading": "Task Oriented",
+            "bullets": [],
+            "image": "/deck/people-task-2.jpg"
+          }
         ]
       },
-      "linked_exercise_slugs": ["core-style-q2-orientation"]
+      "linked_exercise_slugs": [
+        "core-style-q2-orientation"
+      ]
     },
     {
       "slug": "personality-high-d",
@@ -138,7 +158,15 @@
         "style": "D",
         "title": "HIGH D",
         "subtitle": "Extroverted + Task Oriented",
-        "adjectives": ["Ambitious", "Forceful", "Decisive", "Direct", "Independent", "Challenging", "Results oriented"],
+        "adjectives": [
+          "Ambitious",
+          "Forceful",
+          "Decisive",
+          "Direct",
+          "Independent",
+          "Challenging",
+          "Results oriented"
+        ],
         "statements": [
           "I have a desire to win",
           "Argumentative",
@@ -150,36 +178,18 @@
           "I am not afraid of high risk",
           "I tend to create fear in others",
           "I tend to be impatient"
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
-      "slug": "personality-high-d-environment",
-      "kind": "two-col",
-      "chapter": "personality",
-      "order_index": 120,
-      "content_json": {
-        "title": "HIGH D",
-        "columns": [
-          {
-            "heading": "If you are a HIGH D, you are…",
-            "bullets": [
-              "Able to make decisions quickly",
-              "Willing to state unpopular opinions",
-              "Risk taking"
-            ]
-          },
-          {
-            "heading": "Ideal Environment for the HIGH D",
-            "bullets": [
-              "Freedom from controls, supervision and details",
-              "Evaluation based on results, not process or method",
-              "An innovative and futuristic oriented environment",
-              "Non-routine work with challenge and opportunity",
-              "A forum for them to express their ideas and viewpoints"
-            ]
-          }
+        ],
+        "youAre": [
+          "Able to make decisions quickly",
+          "Willing to state unpopular opinions",
+          "Risk taking"
+        ],
+        "environment": [
+          "Freedom from controls, supervision and details",
+          "Evaluation based on results, not process or method",
+          "An innovative and futuristic oriented environment",
+          "Non-routine work with challenge and opportunity",
+          "A forum for them to express their ideas and viewpoints"
         ]
       },
       "linked_exercise_slugs": []
@@ -193,7 +203,14 @@
         "style": "I",
         "title": "HIGH I",
         "subtitle": "Extroverted + People Oriented",
-        "adjectives": ["Expressive", "Enthusiastic", "Friendly", "Demonstrative", "Talkative", "Stimulating"],
+        "adjectives": [
+          "Expressive",
+          "Enthusiastic",
+          "Friendly",
+          "Demonstrative",
+          "Talkative",
+          "Stimulating"
+        ],
         "statements": [
           "I have a good sense of humor",
           "I treat everyone as a friend",
@@ -205,37 +222,19 @@
           "I prefer to back away from conflict",
           "I tend to be disorganized",
           "I am very trusting of others"
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
-      "slug": "personality-high-i-environment",
-      "kind": "two-col",
-      "chapter": "personality",
-      "order_index": 140,
-      "content_json": {
-        "title": "HIGH I",
-        "columns": [
-          {
-            "heading": "If you are a HIGH I, you are…",
-            "bullets": [
-              "A natural optimist",
-              "Trusting of others",
-              "Able to make others feel welcome and/or included"
-            ]
-          },
-          {
-            "heading": "Ideal Environment for the HIGH I",
-            "bullets": [
-              "Assignments with a high degree of people contacts",
-              "Tasks involving motivating groups and establishing a network of contacts",
-              "Democratic supervisor with whom they can associate",
-              "Freedom from control and detail",
-              "Freedom of movement",
-              "Multi-changing work tasks"
-            ]
-          }
+        ],
+        "youAre": [
+          "A natural optimist",
+          "Trusting of others",
+          "Able to make others feel welcome and/or included"
+        ],
+        "environment": [
+          "Assignments with a high degree of people contacts",
+          "Tasks involving motivating groups and establishing a network of contacts",
+          "Democratic supervisor with whom they can associate",
+          "Freedom from control and detail",
+          "Freedom of movement",
+          "Multi-changing work tasks"
         ]
       },
       "linked_exercise_slugs": []
@@ -249,7 +248,14 @@
         "style": "S",
         "title": "HIGH S",
         "subtitle": "Introverted + People Oriented",
-        "adjectives": ["Methodical", "Systematic", "Reliable", "Steady", "Relaxed", "Modest"],
+        "adjectives": [
+          "Methodical",
+          "Systematic",
+          "Reliable",
+          "Steady",
+          "Relaxed",
+          "Modest"
+        ],
         "statements": [
           "I need secure situations",
           "I'm a good planner",
@@ -263,36 +269,18 @@
           "I tend to hold a grudge",
           "I tend to adapt very quickly to others",
           "I tend to resist changes"
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
-      "slug": "personality-high-s-environment",
-      "kind": "two-col",
-      "chapter": "personality",
-      "order_index": 160,
-      "content_json": {
-        "title": "HIGH S",
-        "columns": [
-          {
-            "heading": "If you are a HIGH S, you are…",
-            "bullets": [
-              "Have a tenacity for order",
-              "Possess a natural ability to organize tasks"
-            ]
-          },
-          {
-            "heading": "Ideal Environment for the HIGH S",
-            "bullets": [
-              "Jobs for which standards and methods are established",
-              "Environment where long standing relationships can be or are developed",
-              "Personal attention and recognition for tasks complete and well done",
-              "Stable and predictable environment",
-              "Environment that allows time for change",
-              "Environment where people can be dealt with on a personal, intimate basis"
-            ]
-          }
+        ],
+        "youAre": [
+          "Have a tenacity for order",
+          "Possess a natural ability to organize tasks"
+        ],
+        "environment": [
+          "Jobs for which standards and methods are established",
+          "Environment where long standing relationships can be or are developed",
+          "Personal attention and recognition for tasks complete and well done",
+          "Stable and predictable environment",
+          "Environment that allows time for change",
+          "Environment where people can be dealt with on a personal, intimate basis"
         ]
       },
       "linked_exercise_slugs": []
@@ -306,7 +294,14 @@
         "style": "C",
         "title": "HIGH C",
         "subtitle": "Introverted + Task Oriented",
-        "adjectives": ["Analytical", "Contemplative", "Conservative", "Exacting", "Careful", "Deliberate"],
+        "adjectives": [
+          "Analytical",
+          "Contemplative",
+          "Conservative",
+          "Exacting",
+          "Careful",
+          "Deliberate"
+        ],
         "statements": [
           "I like to organize and analyze",
           "I work well alone",
@@ -321,37 +316,19 @@
           "I tend to feel emotions are very irrational",
           "I tend to see faults in others",
           "I tend to analyze things to death"
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
-      "slug": "personality-high-c-environment",
-      "kind": "two-col",
-      "chapter": "personality",
-      "order_index": 180,
-      "content_json": {
-        "title": "HIGH C",
-        "columns": [
-          {
-            "heading": "If you are a HIGH C, you are…",
-            "bullets": [
-              "A natural systems developer",
-              "A good quality control person",
-              "Willing to dig for information"
-            ]
-          },
-          {
-            "heading": "Ideal Environment for the HIGH C",
-            "bullets": [
-              "Where critical thinking is needed and rewarded",
-              "Assignments can be followed through to completion",
-              "Technical, task-oriented work, specialized",
-              "Noise and people are at a minimum",
-              "Close relationship with a small group of people",
-              "Environment where quality and/or standards are important"
-            ]
-          }
+        ],
+        "youAre": [
+          "A natural systems developer",
+          "A good quality control person",
+          "Willing to dig for information"
+        ],
+        "environment": [
+          "Where critical thinking is needed and rewarded",
+          "Assignments can be followed through to completion",
+          "Technical, task-oriented work, specialized",
+          "Noise and people are at a minimum",
+          "Close relationship with a small group of people",
+          "Environment where quality and/or standards are important"
         ]
       },
       "linked_exercise_slugs": []
@@ -364,13 +341,57 @@
       "content_json": {
         "title": "The Four Core Styles",
         "columns": [
-          { "heading": "HIGH D", "bullets": ["Ambitious", "Forceful", "Decisive", "Direct", "Independent", "Challenging", "Results oriented"] },
-          { "heading": "HIGH I", "bullets": ["Expressive", "Enthusiastic", "Friendly", "Demonstrative", "Talkative", "Stimulating"] },
-          { "heading": "HIGH S", "bullets": ["Methodical", "Systematic", "Reliable", "Steady", "Relaxed", "Modest"] },
-          { "heading": "HIGH C", "bullets": ["Analytical", "Contemplative", "Conservative", "Exacting", "Careful", "Deliberate"] }
+          {
+            "heading": "HIGH D",
+            "bullets": [
+              "Ambitious",
+              "Forceful",
+              "Decisive",
+              "Direct",
+              "Independent",
+              "Challenging",
+              "Results oriented"
+            ]
+          },
+          {
+            "heading": "HIGH I",
+            "bullets": [
+              "Expressive",
+              "Enthusiastic",
+              "Friendly",
+              "Demonstrative",
+              "Talkative",
+              "Stimulating"
+            ]
+          },
+          {
+            "heading": "HIGH S",
+            "bullets": [
+              "Methodical",
+              "Systematic",
+              "Reliable",
+              "Steady",
+              "Relaxed",
+              "Modest"
+            ]
+          },
+          {
+            "heading": "HIGH C",
+            "bullets": [
+              "Analytical",
+              "Contemplative",
+              "Conservative",
+              "Exacting",
+              "Careful",
+              "Deliberate"
+            ]
+          }
         ]
       },
-      "linked_exercise_slugs": ["core-style-q1-extroversion", "core-style-q2-orientation"],
+      "linked_exercise_slugs": [
+        "core-style-q1-extroversion",
+        "core-style-q2-orientation"
+      ],
       "notes": "Open the responses panel to show the room's core-style distribution."
     },
     {
@@ -380,7 +401,7 @@
       "order_index": 200,
       "content_json": {
         "title": "What are Attitudes?",
-        "src": "/deck/crowd.jpg"
+        "src": "/deck/attitudes-mindfulness.svg"
       },
       "linked_exercise_slugs": []
     },
@@ -521,21 +542,54 @@
     },
     {
       "slug": "attitudes-revealed",
-      "kind": "bullets",
+      "kind": "two-col",
       "chapter": "attitudes",
       "order_index": 280,
       "content_json": {
         "title": "The Six Attitudes",
-        "bullets": [
-          "A) The Theoretical Attitude — I use my intellect to systematically understand and discover the truth. The discovery of Truth and Knowledge is my main motivation in life. I seek knowledge for its own sake.",
-          "B) The Aesthetic Attitude — I enjoy and experience the beauty around me and find meaning and fulfilment within the experience of living. My main motivation is to experience the Inner Vision.",
-          "C) The Traditional Attitude — I pursue and understand the highest meaning of life within an established system of beliefs. My main motivation is to search and find the highest value in life.",
-          "D) The Utilitarian Attitude — I see most things in terms of their usefulness and practicality. My main motivation is to turn what I do and have into a useful purpose.",
-          "E) The Social Attitude — I enjoy helping others and believe that all decisions should be sensitive to people's needs. My main goal in life is to do what I can to eliminate hate and conflict in the world.",
-          "F) The Individualistic Attitude — I want to achieve the highest position possible and wield the greatest power in my chosen field and will do everything within my ability to reach these goals."
+        "columns": [
+          {
+            "heading": "A) The Theoretical Attitude",
+            "bullets": [
+              "I use my intellect to systematically understand and discover the truth. The discovery of Truth and Knowledge is my main motivation in life. I seek knowledge for its own sake."
+            ]
+          },
+          {
+            "heading": "B) The Aesthetic Attitude",
+            "bullets": [
+              "I enjoy and experience the beauty around me and find meaning and fulfilment within the experience of living. My main motivation is to experience the Inner Vision."
+            ]
+          },
+          {
+            "heading": "C) The Traditional Attitude",
+            "bullets": [
+              "I pursue and understand the highest meaning of life within an established system of beliefs. My main motivation is to search and find the highest value in life."
+            ]
+          },
+          {
+            "heading": "D) The Utilitarian Attitude",
+            "bullets": [
+              "I see most things in terms of their usefulness and practicality. My main motivation is to turn what I do and have into a useful purpose."
+            ]
+          },
+          {
+            "heading": "E) The Social Attitude",
+            "bullets": [
+              "I enjoy helping others and believe that all decisions should be sensitive to people's needs. My main goal in life is to do what I can to eliminate hate and conflict in the world."
+            ]
+          },
+          {
+            "heading": "F) The Individualistic Attitude",
+            "bullets": [
+              "I want to achieve the highest position possible and wield the greatest power in my chosen field and will do everything within my ability to reach these goals."
+            ]
+          }
         ]
       },
-      "linked_exercise_slugs": ["identifying-attitudes", "attitude-types-watusi"],
+      "linked_exercise_slugs": [
+        "identifying-attitudes",
+        "attitude-types-watusi"
+      ],
       "notes": "Open the responses panel to show which attitudes the room identified with, and the W.A.T.U.S.I. spread."
     },
     {
@@ -545,7 +599,7 @@
       "order_index": 290,
       "content_json": {
         "title": "What are Values?",
-        "src": "/deck/crowd.jpg"
+        "src": "/deck/values-preferences.svg"
       },
       "linked_exercise_slugs": []
     },
@@ -570,7 +624,9 @@
           "To be President of The World."
         ]
       },
-      "linked_exercise_slugs": ["values-shopping-spree"]
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ]
     },
     {
       "slug": "values-shopping-2",
@@ -593,7 +649,9 @@
           "To win the Nobel Prize in my chosen field, and be praised everywhere in the world."
         ]
       },
-      "linked_exercise_slugs": ["values-shopping-spree"]
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ]
     },
     {
       "slug": "values-shopping-3",
@@ -615,7 +673,9 @@
           "A Super Pass that lets me into any concert, play, opera, art show or ballet and to travel anywhere I want by land, sea or air."
         ]
       },
-      "linked_exercise_slugs": ["values-shopping-spree"]
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ]
     },
     {
       "slug": "values-shopping-4",
@@ -633,7 +693,9 @@
           "Uninterrupted conversations with any spiritual leader(s) I want, past or present."
         ]
       },
-      "linked_exercise_slugs": ["values-shopping-spree"],
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ],
       "notes": "Open the responses panel to show what the room spent their $10,000 on."
     },
     {
@@ -645,7 +707,9 @@
         "title": "MY VALUES",
         "subtitle": "Ranking what matters most"
       },
-      "linked_exercise_slugs": ["what-do-i-value"]
+      "linked_exercise_slugs": [
+        "what-do-i-value"
+      ]
     },
     {
       "slug": "values-my-top-values",
@@ -656,7 +720,9 @@
         "title": "MY VALUES",
         "subtitle": "My top three values"
       },
-      "linked_exercise_slugs": ["top-three-values"]
+      "linked_exercise_slugs": [
+        "top-three-values"
+      ]
     },
     {
       "slug": "values-definitions-1",
@@ -708,7 +774,9 @@
         "title": "MY LIFE LINE",
         "body": "\"What you think and what you believe are what will come true for you. Your thoughts create your life. Once you accept this you can start to deliberately create what you want in your life.\"\n— Louise Hay"
       },
-      "linked_exercise_slugs": ["life-line-exercise"]
+      "linked_exercise_slugs": [
+        "life-line-exercise"
+      ]
     },
     {
       "slug": "roles-and-demands",
@@ -719,7 +787,9 @@
         "title": "ROLES & THEIR DEMANDS",
         "body": "Write 10 roles that you play or want to play.\nPrioritize them."
       },
-      "linked_exercise_slugs": ["who-am-i-now"]
+      "linked_exercise_slugs": [
+        "who-am-i-now"
+      ]
     },
     {
       "slug": "roles-past-inventory",
@@ -729,7 +799,9 @@
       "content_json": {
         "title": "PAST INVENTORY"
       },
-      "linked_exercise_slugs": ["past-experience-inventory"]
+      "linked_exercise_slugs": [
+        "past-experience-inventory"
+      ]
     },
     {
       "slug": "roles-contract",
@@ -739,7 +811,9 @@
       "content_json": {
         "title": "A CONTRACT WITH MYSELF"
       },
-      "linked_exercise_slugs": ["contract-with-myself"]
+      "linked_exercise_slugs": [
+        "contract-with-myself"
+      ]
     },
     {
       "slug": "roles-mission-statement",
@@ -749,7 +823,9 @@
       "content_json": {
         "title": "MY MISSION STATEMENT"
       },
-      "linked_exercise_slugs": ["mission-statement"]
+      "linked_exercise_slugs": [
+        "mission-statement"
+      ]
     },
     {
       "slug": "skills-transferable",
@@ -782,7 +858,9 @@
           "My sixth"
         ]
       },
-      "linked_exercise_slugs": ["favorite-strongest-skills"]
+      "linked_exercise_slugs": [
+        "favorite-strongest-skills"
+      ]
     },
     {
       "slug": "goals-goal-setting",
@@ -792,7 +870,10 @@
       "content_json": {
         "title": "GOAL SETTING"
       },
-      "linked_exercise_slugs": ["life-goal-inventory", "goal-priorities"]
+      "linked_exercise_slugs": [
+        "life-goal-inventory",
+        "goal-priorities"
+      ]
     },
     {
       "slug": "goals-cross-matrix",
@@ -802,7 +883,9 @@
       "content_json": {
         "title": "CROSS MATRIX"
       },
-      "linked_exercise_slugs": ["cross-impact-matrix"]
+      "linked_exercise_slugs": [
+        "cross-impact-matrix"
+      ]
     },
     {
       "slug": "goals-visualisation",
@@ -814,15 +897,33 @@
         "columns": [
           {
             "heading": "Left Brain",
-            "bullets": ["logic", "sequencing", "linear thinking", "mathematics", "facts", "thinking in words"]
+            "bullets": [
+              "logic",
+              "sequencing",
+              "linear thinking",
+              "mathematics",
+              "facts",
+              "thinking in words"
+            ]
           },
           {
             "heading": "Right Brain",
-            "bullets": ["imagination", "holistic thinking", "intuition", "arts", "rhythm", "nonverbal cues", "feelings visualization", "daydreaming"]
+            "bullets": [
+              "imagination",
+              "holistic thinking",
+              "intuition",
+              "arts",
+              "rhythm",
+              "nonverbal cues",
+              "feelings visualization",
+              "daydreaming"
+            ]
           }
         ]
       },
-      "linked_exercise_slugs": ["visualization-journal"]
+      "linked_exercise_slugs": [
+        "visualization-journal"
+      ]
     },
     {
       "slug": "goals-strategic-plan",
@@ -832,7 +933,11 @@
       "content_json": {
         "title": "STRATEGIC PLAN"
       },
-      "linked_exercise_slugs": ["removing-obstacles", "achieving-goal-actions", "declaration-of-self-esteem"]
+      "linked_exercise_slugs": [
+        "removing-obstacles",
+        "achieving-goal-actions",
+        "declaration-of-self-esteem"
+      ]
     },
     {
       "slug": "closing-thank-you",

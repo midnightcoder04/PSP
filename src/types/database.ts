@@ -180,6 +180,8 @@ export interface DeckDiscProfileContent {
   subtitle?: string
   adjectives: string[]
   statements: string[]
+  youAre?: string[]
+  environment?: string[]
 }
 
 export interface DeckNumberedContent {

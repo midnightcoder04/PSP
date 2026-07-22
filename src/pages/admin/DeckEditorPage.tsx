@@ -205,6 +205,8 @@ function SlideForm({
           <TextField label="Subtitle" value={c.subtitle ?? ''} onChange={set('subtitle')} />
           <LinesField label="Adjectives" value={c.adjectives ?? []} onChange={set('adjectives')} />
           <LinesField label="Statements" value={c.statements ?? []} onChange={set('statements')} rows={8} />
+          <LinesField label="You are" value={c.youAre ?? []} onChange={set('youAre')} />
+          <LinesField label="Ideal Environment" value={c.environment ?? []} onChange={set('environment')} />
         </>
       )
     }

@@ -138,6 +138,40 @@ describe('DeckSlideView', () => {
     expect(screen.getByText(/desire to win/i)).toBeInTheDocument()
   })
 
+  it('renders the merged you-are/ideal-environment sections on a disc-profile slide when present', () => {
+    render(
+      <DeckSlideView
+        slide={makeSlide('disc-profile', {
+          style: 'D',
+          title: 'HIGH D',
+          subtitle: 'Extroverted + Task Oriented',
+          adjectives: ['Ambitious'],
+          statements: ['I have a desire to win'],
+          youAre: ['Able to make decisions quickly'],
+          environment: ['Freedom from controls, supervision and details'],
+        })}
+      />
+    )
+    expect(screen.getByText(/If you are a HIGH D, you are…/i)).toBeInTheDocument()
+    expect(screen.getByText('Able to make decisions quickly')).toBeInTheDocument()
+    expect(screen.getByText(/Ideal Environment for the HIGH D/i)).toBeInTheDocument()
+    expect(screen.getByText(/Freedom from controls, supervision and details/i)).toBeInTheDocument()
+  })
+
+  it('omits the you-are/ideal-environment sections on a disc-profile slide when absent', () => {
+    render(
+      <DeckSlideView
+        slide={makeSlide('disc-profile', {
+          style: 'I',
+          title: 'HIGH I',
+          adjectives: ['Expressive'],
+          statements: ['I have a good sense of humor'],
+        })}
+      />
+    )
+    expect(screen.queryByText(/Ideal Environment/i)).not.toBeInTheDocument()
+  })
+
   it('renders a numbered-list slide honoring the start offset', () => {
     render(
       <DeckSlideView
