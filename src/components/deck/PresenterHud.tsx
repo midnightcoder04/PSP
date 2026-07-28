@@ -12,6 +12,7 @@ interface PresenterHudProps {
   onToggleMenu: () => void
   onToggleResponses: () => void
   onToggleFullscreen: () => void
+  onDownloadPdf: () => void
   onExit: () => void
 }
 
@@ -27,6 +28,7 @@ export function PresenterHud({
   onToggleMenu,
   onToggleResponses,
   onToggleFullscreen,
+  onDownloadPdf,
   onExit,
 }: PresenterHudProps) {
   return (
@@ -77,6 +79,14 @@ export function PresenterHud({
             ◉ <span className={styles.btnLabel}>Responses</span>
           </button>
         ) : null}
+        <button
+          type="button"
+          className={styles.hudBtn}
+          onClick={onDownloadPdf}
+          title="Download deck as PDF (P)"
+        >
+          ⤓ <span className={styles.btnLabel}>PDF</span>
+        </button>
         <button
           type="button"
           className={styles.hudBtn}

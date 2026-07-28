@@ -172,6 +172,49 @@ describe('DeckSlideView', () => {
     expect(screen.queryByText(/Ideal Environment/i)).not.toBeInTheDocument()
   })
 
+  it('renders a comfort-zones slide with one Venn pair per core style', () => {
+    render(
+      <DeckSlideView
+        slide={makeSlide('comfort-zones', {
+          style: 'D',
+          title: 'Comfort Zones for HIGH D',
+          caption: 'Adapted with permission',
+          pairs: [
+            { other: 'D', level: 'moderate', text: 'Same approach toward life.' },
+            { other: 'I', level: 'high', text: 'Both are extroverted.' },
+            { other: 'S', level: 'low', text: 'Low Comfort Zone due to dissimilar personalities.' },
+            { other: 'C', level: 'low', text: "D's need for immediate results clashes." },
+          ],
+        })}
+      />
+    )
+    expect(screen.getByText('Comfort Zones for HIGH D')).toBeInTheDocument()
+    expect(screen.getByText(/Both are extroverted/)).toBeInTheDocument()
+    expect(screen.getByText('Adapted with permission')).toBeInTheDocument()
+    // Four Venn diagrams, labelled by Comfort Zone size for screen readers.
+    expect(screen.getAllByRole('img')).toHaveLength(4)
+    expect(screen.getByLabelText('High Comfort Zone')).toBeInTheDocument()
+    expect(screen.getAllByLabelText('Low Comfort Zone')).toHaveLength(2)
+  })
+
+  it('draws a wider Venn overlap for a higher Comfort Zone level', () => {
+    const pairsFor = (level: string) => [{ other: 'D', level, text: 'x' }]
+    const overlapWidth = (level: string) => {
+      const { container, unmount } = render(
+        <DeckSlideView
+          slide={makeSlide('comfort-zones', { style: 'D', title: 'T', pairs: pairsFor(level) })}
+        />
+      )
+      const circles = container.querySelectorAll('circle')
+      const cx = [...circles].map((c) => Number(c.getAttribute('cx')))
+      unmount()
+      return Math.abs(cx[1] - cx[0])
+    }
+    // Closer centres = more overlap = bigger shared Comfort Zone.
+    expect(overlapWidth('very-high')).toBeLessThan(overlapWidth('high'))
+    expect(overlapWidth('high')).toBeLessThan(overlapWidth('low'))
+  })
+
   it('renders a numbered-list slide honoring the start offset', () => {
     render(
       <DeckSlideView

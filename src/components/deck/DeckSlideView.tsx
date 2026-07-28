@@ -8,6 +8,8 @@ import type {
   DeckBulletsContent,
   DeckTwoColContent,
   DeckDiscProfileContent,
+  DeckComfortZonesContent,
+  ComfortZoneLevel,
   DeckNumberedContent,
   DeckImageContent,
   DeckContactContent,
@@ -54,6 +56,48 @@ function Prose({ text }: { text: string }) {
         }
       })}
     </>
+  )
+}
+
+/**
+ * How much of each circle's diameter the two circles share, per Comfort Zone
+ * level. The lens between them is the Comfort Zone, so a bigger fraction reads
+ * as "these two styles have more room to work together".
+ */
+const COMFORT_OVERLAP: Record<ComfortZoneLevel, number> = {
+  low: 0.18,
+  moderate: 0.36,
+  high: 0.58,
+  'very-high': 0.85,
+}
+
+const COMFORT_LEVEL_LABEL: Record<ComfortZoneLevel, string> = {
+  low: 'Low Comfort Zone',
+  moderate: 'Moderate Comfort Zone',
+  high: 'High Comfort Zone',
+  'very-high': 'Very high Comfort Zone',
+}
+
+/**
+ * Two overlapping circles, sized by `level`. Both circles are translucent, so
+ * the lens where they meet renders darker without needing a clip path (and so
+ * without needing unique SVG ids per slide).
+ */
+function ComfortVenn({ level }: { level: ComfortZoneLevel }) {
+  const overlap = COMFORT_OVERLAP[level] ?? COMFORT_OVERLAP.moderate
+  const r = 26
+  // Centre-to-centre distance: 2r when disjoint, 0 when fully coincident.
+  const gap = (r * 2 * (1 - overlap)) / 2
+  return (
+    <svg
+      className={styles.venn}
+      viewBox="0 0 100 60"
+      role="img"
+      aria-label={COMFORT_LEVEL_LABEL[level] ?? 'Comfort Zone'}
+    >
+      <circle className={styles.vennCircle} cx={50 - gap} cy={30} r={r} />
+      <circle className={styles.vennCircle} cx={50 + gap} cy={30} r={r} />
+    </svg>
   )
 }
 
@@ -204,6 +248,31 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
               ) : null}
             </div>
           ) : null}
+        </div>
+      )
+    }
+
+    case 'comfort-zones': {
+      const c = content as DeckComfortZonesContent
+      return (
+        <div className={styles.slide} data-kind="comfort-zones" data-style={c.style}>
+          <div className={styles.comfortHeader}>
+            <h1 className={styles.heading}>{c.title}</h1>
+            {c.subtitle ? <p className={styles.subtitle}>{c.subtitle}</p> : null}
+          </div>
+          <div className={styles.comfortGrid}>
+            {(c.pairs ?? []).map((pair, i) => (
+              <div key={i} className={styles.comfortPair} data-other={pair.other}>
+                <div className={styles.vennRow}>
+                  <span className={styles.vennLetter} data-side="self">{c.style}</span>
+                  <ComfortVenn level={pair.level} />
+                  <span className={styles.vennLetter} data-side="other">{pair.other}</span>
+                </div>
+                <p className={styles.comfortText}>{pair.text}</p>
+              </div>
+            ))}
+          </div>
+          {c.caption ? <p className={styles.caption}>{c.caption}</p> : null}
         </div>
       )
     }

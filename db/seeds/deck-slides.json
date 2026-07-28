@@ -195,6 +195,41 @@
       "linked_exercise_slugs": []
     },
     {
+      "slug": "personality-comfort-zones-d",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 120,
+      "content_json": {
+        "style": "D",
+        "title": "Comfort Zones for HIGH D",
+        "subtitle": "How much room a High D has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "moderate",
+            "text": "Though both have the same approach toward life, their tendency to challenge and need to have their own way reduces their Comfort Zone."
+          },
+          {
+            "other": "I",
+            "level": "high",
+            "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
+          },
+          {
+            "other": "S",
+            "level": "low",
+            "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
+          },
+          {
+            "other": "C",
+            "level": "low",
+            "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
+          }
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
       "slug": "personality-high-i",
       "kind": "disc-profile",
       "chapter": "personality",
@@ -235,6 +270,41 @@
           "Freedom from control and detail",
           "Freedom of movement",
           "Multi-changing work tasks"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-comfort-zones-i",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 140,
+      "content_json": {
+        "style": "I",
+        "title": "Comfort Zones for HIGH I",
+        "subtitle": "How much room a High I has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "high",
+            "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
+          },
+          {
+            "other": "I",
+            "level": "very-high",
+            "text": "High Comfort Zone is maximized by their enjoyment of and need for personal interaction."
+          },
+          {
+            "other": "S",
+            "level": "moderate",
+            "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
+          },
+          {
+            "other": "C",
+            "level": "high",
+            "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
+          }
         ]
       },
       "linked_exercise_slugs": []
@@ -286,6 +356,41 @@
       "linked_exercise_slugs": []
     },
     {
+      "slug": "personality-comfort-zones-s",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 160,
+      "content_json": {
+        "style": "S",
+        "title": "Comfort Zones for HIGH S",
+        "subtitle": "How much room a High S has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "low",
+            "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
+          },
+          {
+            "other": "I",
+            "level": "moderate",
+            "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
+          },
+          {
+            "other": "S",
+            "level": "very-high",
+            "text": "Similar opinions and their high tolerance and sociability create a very high Comfort Zone."
+          },
+          {
+            "other": "C",
+            "level": "high",
+            "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
+          }
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
       "slug": "personality-high-c",
       "kind": "disc-profile",
       "chapter": "personality",
@@ -329,6 +434,41 @@
           "Noise and people are at a minimum",
           "Close relationship with a small group of people",
           "Environment where quality and/or standards are important"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-comfort-zones-c",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 180,
+      "content_json": {
+        "style": "C",
+        "title": "Comfort Zones for HIGH C",
+        "subtitle": "How much room a High C has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "low",
+            "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
+          },
+          {
+            "other": "I",
+            "level": "high",
+            "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
+          },
+          {
+            "other": "S",
+            "level": "high",
+            "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
+          },
+          {
+            "other": "C",
+            "level": "high",
+            "text": "Respect for rules and established protocol and their desire to avoid conflict create a High Comfort Zone."
+          }
         ]
       },
       "linked_exercise_slugs": []

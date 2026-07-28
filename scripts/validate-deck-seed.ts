@@ -25,6 +25,7 @@ const DECK_KINDS = new Set([
   'bullets',
   'two-col',
   'disc-profile',
+  'comfort-zones',
   'numbered-list',
   'image',
   'contact',
@@ -43,6 +44,11 @@ const DECK_CHAPTERS = new Set([
 
 const SLUG_RE = /^[a-z][a-z0-9-]*[a-z0-9]$/
 
+// comfort-zones slides pair the slide's style against every core style, in the
+// canonical D-I-S-C order, sized by one of four Comfort Zone levels.
+const CORE_STYLES = ['D', 'I', 'S', 'C']
+const COMFORT_LEVELS = new Set(['low', 'moderate', 'high', 'very-high'])
+
 // Required string fields per kind (arrays validated separately)
 const REQUIRED_STRINGS: Record<string, string[]> = {
   cover: ['title'],
@@ -52,6 +58,7 @@ const REQUIRED_STRINGS: Record<string, string[]> = {
   bullets: ['title'],
   'two-col': ['title'],
   'disc-profile': ['style', 'title'],
+  'comfort-zones': ['style', 'title'],
   'numbered-list': ['title'],
   image: ['src'],
   contact: ['title'],
@@ -130,6 +137,29 @@ export function validateDeckSeed(
       }
       if (!Array.isArray(c.adjectives) || !Array.isArray(c.statements)) {
         errors.push(`${label}: disc-profile needs adjectives[] and statements[]`)
+      }
+    }
+    if (slide.kind === 'comfort-zones') {
+      if (!['D', 'I', 'S', 'C'].includes(String(c.style))) {
+        errors.push(`${label}: comfort-zones style must be D|I|S|C`)
+      }
+      // One pair per core style, in D-I-S-C order, each with a Venn size.
+      const pairs = c.pairs
+      if (!Array.isArray(pairs) || pairs.length !== 4) {
+        errors.push(`${label}: comfort-zones needs pairs[] with all four core styles`)
+      } else {
+        pairs.forEach((pair, pi) => {
+          const p = pair as Record<string, unknown>
+          if (p.other !== CORE_STYLES[pi]) {
+            errors.push(`${label}: pairs[${pi}].other must be "${CORE_STYLES[pi]}" (D-I-S-C order)`)
+          }
+          if (!COMFORT_LEVELS.has(String(p.level))) {
+            errors.push(`${label}: pairs[${pi}].level must be ${[...COMFORT_LEVELS].join('|')}`)
+          }
+          if (typeof p.text !== 'string' || p.text.length === 0) {
+            errors.push(`${label}: pairs[${pi}].text missing`)
+          }
+        })
       }
     }
     if (slide.kind === 'bullets' && !Array.isArray(c.bullets)) {

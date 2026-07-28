@@ -19,6 +19,9 @@ import type {
 } from '@/types/database'
 import styles from './PresentationPage.module.css'
 
+/** Names start hidden on every slide; the presenter reveals them per slide. */
+const HIDE_NAMES_DEFAULT = true
+
 export default function PresentationPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -31,9 +34,15 @@ export default function PresentationPage() {
   const [loading, setLoading] = useState(true)
   const [menuOpen, setMenuOpen] = useState(false)
   const [responsesOpen, setResponsesOpen] = useState(false)
-  // Per-slide "hide names" preference for the live responses panel
+  // Per-slide "hide names" preference for the live responses panel and the team
+  // collaboration slide. Unset slides fall back to HIDE_NAMES_DEFAULT — names are
+  // hidden until the presenter opts in, so nothing personal lands on a projector
+  // by accident.
   const [hideNamesBySlide, setHideNamesBySlide] = useState<ReadonlyMap<string, boolean>>(new Map())
   const [isFullscreen, setIsFullscreen] = useState(false)
+  // While true the whole deck is mounted in a print-only container; see
+  // downloadPdf below. Reset once the browser's print dialog closes.
+  const [printing, setPrinting] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const authorized = profile?.can_present === true
@@ -116,11 +125,30 @@ export default function PresentationPage() {
     return () => document.removeEventListener('fullscreenchange', onChange)
   }, [])
 
+  // ── Download as PDF ──────────────────────────────────────────────────────
+  // No PDF library: the deck is already 16:9 CSS, so the reliable route is to
+  // mount every slide in a print-only container and hand off to the browser's
+  // own "Save as PDF" destination. One slide per landscape page.
+  const downloadPdf = useCallback(() => setPrinting(true), [])
+
+  useEffect(() => {
+    if (!printing) return
+    // window.print() snapshots the document synchronously, so wait for React to
+    // paint the print container before opening the dialog.
+    const raf = requestAnimationFrame(() => window.print?.())
+    const onAfterPrint = () => setPrinting(false)
+    window.addEventListener('afterprint', onAfterPrint)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('afterprint', onAfterPrint)
+    }
+  }, [printing])
+
   const toggleHideNames = useCallback(() => {
     if (!current) return
     setHideNamesBySlide((prev) => {
       const next = new Map(prev)
-      next.set(current.id, !(prev.get(current.id) ?? false))
+      next.set(current.id, !(prev.get(current.id) ?? HIDE_NAMES_DEFAULT))
       return next
     })
   }, [current])
@@ -159,6 +187,11 @@ export default function PresentationPage() {
         case 'F':
           toggleFullscreen()
           break
+        case 'p':
+        case 'P':
+          e.preventDefault()
+          downloadPdf()
+          break
         case 'Escape':
           setMenuOpen(false)
           break
@@ -166,7 +199,7 @@ export default function PresentationPage() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [goNext, goPrev, hasLinkedExercises, toggleHideNames, toggleFullscreen])
+  }, [goNext, goPrev, hasLinkedExercises, toggleHideNames, toggleFullscreen, downloadPdf])
 
   const exitTo = `/facilitator/sessions/${id}`
 
@@ -210,13 +243,14 @@ export default function PresentationPage() {
   }
 
   return (
+    <>
     <div ref={containerRef} className={styles.container}>
       <div className={styles.stageArea}>
         <div className={styles.stage}>
           {current.kind === 'team-collaboration' && id ? (
             <TeamCollaborationSlide
               sessionId={id}
-              hideNames={hideNamesBySlide.get(current.id) ?? false}
+              hideNames={hideNamesBySlide.get(current.id) ?? HIDE_NAMES_DEFAULT}
             />
           ) : (
             <DeckSlideView slide={current} coverOverride={coverOverride} />
@@ -229,7 +263,7 @@ export default function PresentationPage() {
           key={current.id}
           sessionId={id}
           slide={current}
-          hideNames={hideNamesBySlide.get(current.id) ?? false}
+          hideNames={hideNamesBySlide.get(current.id) ?? HIDE_NAMES_DEFAULT}
           onToggleHideNames={toggleHideNames}
           onClose={() => setResponsesOpen(false)}
         />
@@ -247,6 +281,7 @@ export default function PresentationPage() {
         onToggleMenu={() => setMenuOpen((v) => !v)}
         onToggleResponses={() => setResponsesOpen((v) => !v)}
         onToggleFullscreen={toggleFullscreen}
+        onDownloadPdf={downloadPdf}
         onExit={() => navigate(exitTo)}
       />
 
@@ -260,5 +295,23 @@ export default function PresentationPage() {
         />
       ) : null}
     </div>
+
+    {/* Print-only mirror of the whole deck — one slide per landscape page.
+        Sits outside .container because .container is hidden when printing.
+        The team-collaboration slide renders as its static placeholder here;
+        live participant data is not part of a downloaded deck. */}
+    {printing ? (
+      <>
+        <style>{'@page { size: landscape; margin: 0; }'}</style>
+        <div className={styles.printDeck} aria-hidden="true">
+          {slides.map((slide) => (
+            <div key={slide.id} className={styles.printSlide}>
+              <DeckSlideView slide={slide} coverOverride={coverOverride} />
+            </div>
+          ))}
+        </div>
+      </>
+    ) : null}
+    </>
   )
 }

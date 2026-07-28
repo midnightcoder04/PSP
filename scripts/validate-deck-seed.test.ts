@@ -35,9 +35,79 @@ describe('deck-slides.json seed', () => {
       .sort()
     expect(styles).toEqual(['C', 'D', 'I', 'S'])
   })
+
+  it('has a comfort-zones slide for each core style, right after its profile slide', () => {
+    const byOrder = [...deck.slides].sort(
+      (a: { order_index: number }, b: { order_index: number }) => a.order_index - b.order_index
+    )
+    for (const style of ['D', 'I', 'S', 'C']) {
+      const profileAt = byOrder.findIndex(
+        (s: { kind: string; content_json: { style?: string } }) =>
+          s.kind === 'disc-profile' && s.content_json.style === style
+      )
+      const next = byOrder[profileAt + 1]
+      expect(next.kind).toBe('comfort-zones')
+      expect(next.content_json.style).toBe(style)
+      // Every core style is covered, in D-I-S-C order.
+      expect(next.content_json.pairs.map((p: { other: string }) => p.other)).toEqual([
+        'D', 'I', 'S', 'C',
+      ])
+    }
+  })
 })
 
 describe('validateDeckSeed', () => {
+  it('rejects a comfort-zones slide with an unknown level', () => {
+    const errors = validateDeckSeed(
+      {
+        slides: [
+          {
+            slug: 'cz-slide',
+            kind: 'comfort-zones',
+            chapter: 'personality',
+            order_index: 1,
+            content_json: {
+              style: 'D',
+              title: 'Comfort Zones for HIGH D',
+              pairs: [
+                { other: 'D', level: 'medium', text: 'x' },
+                { other: 'I', level: 'high', text: 'x' },
+                { other: 'S', level: 'low', text: 'x' },
+                { other: 'C', level: 'low', text: 'x' },
+              ],
+            },
+            linked_exercise_slugs: [],
+          },
+        ],
+      },
+      courseSlugs
+    )
+    expect(errors.some((e) => e.includes('pairs[0].level'))).toBe(true)
+  })
+
+  it('rejects a comfort-zones slide missing a core style pair', () => {
+    const errors = validateDeckSeed(
+      {
+        slides: [
+          {
+            slug: 'cz-slide',
+            kind: 'comfort-zones',
+            chapter: 'personality',
+            order_index: 1,
+            content_json: {
+              style: 'S',
+              title: 'Comfort Zones for HIGH S',
+              pairs: [{ other: 'D', level: 'low', text: 'x' }],
+            },
+            linked_exercise_slugs: [],
+          },
+        ],
+      },
+      courseSlugs
+    )
+    expect(errors.some((e) => e.includes('all four core styles'))).toBe(true)
+  })
+
   it('rejects an unknown kind', () => {
     const errors = validateDeckSeed(
       { slides: [{ slug: 'x-slide', kind: 'nope', chapter: 'opening', order_index: 1, content_json: {}, linked_exercise_slugs: [] }] },

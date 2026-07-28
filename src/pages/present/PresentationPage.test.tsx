@@ -54,6 +54,12 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ profile: mockProfile, signOut: vi.fn(), loading: false }),
 }))
 
+// The responses panel's live data is exercised in ResponsesPanel.test.tsx; here
+// it only needs to render so the hide-names default can be asserted.
+vi.mock('@/hooks/usePresentationResponses', () => ({
+  usePresentationResponses: () => ({ rows: [], loading: false, refresh: vi.fn() }),
+}))
+
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: vi.fn((table: string) => {
@@ -74,6 +80,22 @@ vi.mock('@/lib/supabase', () => ({
         return {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockResolvedValue({ data: [], error: null }),
+        }
+      }
+      if (table === 'exercises') {
+        return {
+          select: vi.fn().mockReturnThis(),
+          in: vi.fn().mockResolvedValue({
+            data: [
+              {
+                slug: 'core-style-q1-extroversion',
+                title: 'Core Style Q1',
+                type: 'checkbox',
+                content_json: { options: [] },
+              },
+            ],
+            error: null,
+          }),
         }
       }
       // session_deck_overrides
@@ -160,6 +182,23 @@ describe('PresentationPage', () => {
     expect(await screen.findByRole('button', { name: /responses/i })).toBeInTheDocument()
   })
 
+  it('hides participant names by default and lets the presenter reveal them', async () => {
+    const user = userEvent.setup()
+    await renderPage()
+    await screen.findByText('Personal Strategic Planning™')
+
+    // Slide 2 is the only one linked to an exercise, so it can open the panel.
+    fireEvent.keyDown(window, { key: 'ArrowRight' })
+    await screen.findByRole('button', { name: /responses/i })
+    fireEvent.keyDown(window, { key: 'r' })
+
+    const toggle = await screen.findByRole('checkbox', { name: /hide names/i })
+    expect(toggle).toBeChecked()
+
+    await user.click(toggle)
+    expect(toggle).not.toBeChecked()
+  })
+
   it('injects the team-collaboration slide for team-based sessions', async () => {
     mockSessionType = 'team-based'
     await renderPage()
@@ -178,6 +217,34 @@ describe('PresentationPage', () => {
     await renderPage()
     await screen.findByText('Personal Strategic Planning™')
     expect(screen.getByText('1 / 3')).toBeInTheDocument()
+  })
+
+  it('mounts every slide and opens the print dialog when downloading a PDF', async () => {
+    const user = userEvent.setup()
+    const print = vi.fn()
+    vi.stubGlobal('print', print)
+    // jsdom has no rAF-driven paint; run the callback immediately.
+    const raf = vi
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation((cb) => {
+        cb(0)
+        return 1
+      })
+
+    try {
+      await renderPage()
+      await screen.findByText('Personal Strategic Planning™')
+
+      await user.click(screen.getByRole('button', { name: /pdf/i }))
+
+      expect(print).toHaveBeenCalled()
+      // Slide 3 is not the current slide, so it can only come from the print
+      // deck — every slide is mounted, not just the visible one.
+      expect(screen.getByText('MY VALUES')).toBeInTheDocument()
+    } finally {
+      raf.mockRestore()
+      vi.unstubAllGlobals()
+    }
   })
 
   it('shows an authorization notice to unflagged facilitators', async () => {

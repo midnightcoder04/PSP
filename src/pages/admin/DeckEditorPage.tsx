@@ -15,6 +15,8 @@ import type {
   DeckBulletsContent,
   DeckTwoColContent,
   DeckDiscProfileContent,
+  DeckComfortZonesContent,
+  ComfortZoneLevel,
   DeckNumberedContent,
   DeckImageContent,
   DeckContactContent,
@@ -207,6 +209,39 @@ function SlideForm({
           <LinesField label="Statements" value={c.statements ?? []} onChange={set('statements')} rows={8} />
           <LinesField label="You are" value={c.youAre ?? []} onChange={set('youAre')} />
           <LinesField label="Ideal Environment" value={c.environment ?? []} onChange={set('environment')} />
+        </>
+      )
+    }
+    case 'comfort-zones': {
+      const c = draft as unknown as DeckComfortZonesContent
+      const pairs = c.pairs ?? []
+      const setPair = (i: number, patch: Partial<DeckComfortZonesContent['pairs'][number]>) =>
+        onChange({
+          ...draft,
+          pairs: pairs.map((p, j) => (j === i ? { ...p, ...patch } : p)),
+        } as unknown as Draft)
+      return (
+        <>
+          <TextField label="Title" value={c.title ?? ''} onChange={set('title')} />
+          <TextField label="Subtitle" value={c.subtitle ?? ''} onChange={set('subtitle')} />
+          <TextField label="Caption" value={c.caption ?? ''} onChange={set('caption')} />
+          {pairs.map((pair, i) => (
+            <fieldset key={i} className={styles.columnGroup}>
+              <legend>{c.style} ↔ {pair.other}</legend>
+              <TextField
+                label="Text"
+                value={pair.text ?? ''}
+                onChange={(v) => setPair(i, { text: v })}
+                multiline
+              />
+              {/* Comfort Zone size — drives how far the two circles overlap. */}
+              <TextField
+                label="Level (low | moderate | high | very-high)"
+                value={pair.level ?? ''}
+                onChange={(v) => setPair(i, { level: v as ComfortZoneLevel })}
+              />
+            </fieldset>
+          ))}
         </>
       )
     }

@@ -112,6 +112,32 @@
 .disc[data-style='S'] { --disc-accent: var(--disc-S); }
 .disc[data-style='C'] { --disc-accent: var(--disc-C); }
 
+/* Numbered top-3 list (attitudes). Counter markers sit inside the dd so the
+   ranks stay visible without stealing the card's horizontal space. */
+.ranked {
+  list-style: none;
+  counter-reset: rank;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ranked li {
+  counter-increment: rank;
+  display: flex;
+  gap: 0.4em;
+  line-height: var(--leading-snug, 1.35);
+}
+
+.ranked li::before {
+  content: counter(rank) '.';
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
 .values {
   display: flex;
   flex-wrap: wrap;

@@ -390,6 +390,100 @@
   gap: clamp(1px, 0.35vh, 4px);
 }
 
+/* ── comfort-zones ──────────────────────────────────────── */
+
+.slide[data-kind='comfort-zones'] { gap: clamp(10px, 2.4vh, 28px); }
+
+.slide[data-kind='comfort-zones'][data-style='D'] { --deck-accent: var(--disc-d); }
+.slide[data-kind='comfort-zones'][data-style='I'] { --deck-accent: var(--disc-i); }
+.slide[data-kind='comfort-zones'][data-style='S'] { --deck-accent: var(--disc-s); }
+.slide[data-kind='comfort-zones'][data-style='C'] { --deck-accent: var(--disc-c); }
+
+.comfortHeader {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.8vh, 8px);
+  align-items: center;
+}
+
+.comfortGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 2.6vmin, 34px);
+  width: 100%;
+  max-width: 1200px;
+  align-items: stretch;
+}
+
+.comfortPair {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1.2vh, 14px);
+  align-items: center;
+  height: 100%;
+}
+
+/* auto | 1fr | auto — the letters keep their size and the diagram takes the
+   rest, so four columns always fit the stage. */
+.vennRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.vennLetter {
+  font-size: clamp(1.3rem, 4vmin, 2.9rem);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  color: var(--color-text);
+}
+
+/* The paired style is tinted with its own DISC colour so the audience can see
+   at a glance which two styles are being compared. */
+.comfortPair[data-other='D'] .vennLetter[data-side='other'] { color: var(--disc-d); }
+.comfortPair[data-other='I'] .vennLetter[data-side='other'] { color: var(--disc-i); }
+.comfortPair[data-other='S'] .vennLetter[data-side='other'] { color: var(--disc-s); }
+.comfortPair[data-other='C'] .vennLetter[data-side='other'] { color: var(--disc-c); }
+
+.vennLetter[data-side='self'] { color: var(--deck-accent); }
+
+/* Width follows the column; preserveAspectRatio keeps the circles round and
+   centred, so a fixed height just letterboxes on narrow columns. */
+.venn {
+  width: 100%;
+  height: clamp(56px, 17vmin, 170px);
+}
+
+/* Translucent fills: where the two circles meet, the colour doubles up and the
+   shared Comfort Zone reads as the darker lens. */
+.vennCircle {
+  fill: var(--deck-accent);
+  fill-opacity: 0.26;
+  stroke: var(--color-text);
+  stroke-width: 1.4;
+}
+
+.comfortText {
+  margin: 0;
+  flex: 1 1 auto; /* equal-height caption boxes across the four columns */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--deck-accent);
+  border-radius: var(--radius-md);
+  padding: clamp(6px, 1.6vmin, 16px);
+  font-size: clamp(0.68rem, 1.55vmin, 1.05rem);
+  line-height: var(--leading-normal);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.comfortPair[data-other='D'] .comfortText { border-top-color: var(--disc-d); }
+.comfortPair[data-other='I'] .comfortText { border-top-color: var(--disc-i); }
+.comfortPair[data-other='S'] .comfortText { border-top-color: var(--disc-s); }
+.comfortPair[data-other='C'] .comfortText { border-top-color: var(--disc-c); }
+
 /* ── numbered-list ──────────────────────────────────────── */
 
 .numbered {

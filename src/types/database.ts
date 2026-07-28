@@ -134,6 +134,7 @@ export type DeckSlideKind =
   | 'bullets'
   | 'two-col'
   | 'disc-profile'
+  | 'comfort-zones'
   | 'numbered-list'
   | 'image'
   | 'contact'
@@ -184,6 +185,20 @@ export interface DeckDiscProfileContent {
   environment?: string[]
 }
 
+// One "Comfort Zones for HIGH x" slide: the style paired against each of the
+// four core styles, drawn as overlapping circles. `level` is the qualitative
+// size of the shared Comfort Zone (how much the two circles overlap) — kept as
+// a word, not a number, so the admin text editor stays text-level.
+export type ComfortZoneLevel = 'low' | 'moderate' | 'high' | 'very-high'
+
+export interface DeckComfortZonesContent {
+  style: 'D' | 'I' | 'S' | 'C'
+  title: string
+  subtitle?: string
+  caption?: string
+  pairs: { other: 'D' | 'I' | 'S' | 'C'; level: ComfortZoneLevel; text: string }[]
+}
+
 export interface DeckNumberedContent {
   title: string
   start?: number // first item number (for lists continued across slides)
@@ -210,6 +225,7 @@ export type DeckSlideContent =
   | DeckBulletsContent
   | DeckTwoColContent
   | DeckDiscProfileContent
+  | DeckComfortZonesContent
   | DeckNumberedContent
   | DeckImageContent
   | DeckContactContent
