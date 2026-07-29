@@ -148,10 +148,20 @@ export interface DeckCoverContent {
   image?: string
 }
 
+// A band of client/partner logos, grouped by the line of business they belong
+// to. Each logo is a file under public/ plus the organization's name, which
+// doubles as the img alt text (several logos are wordmarks in other scripts).
+export interface DeckLogoGroup {
+  heading: string
+  logos: { name: string; src: string }[]
+}
+
 export interface DeckSectionTitleContent {
   title: string
   subtitle?: string
   kicker?: string
+  logos_title?: string
+  logo_groups?: DeckLogoGroup[]
 }
 
 export interface DeckQuoteContent {

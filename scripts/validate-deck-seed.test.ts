@@ -18,8 +18,8 @@ describe('deck-slides.json seed', () => {
     expect(errors, errors.join('\n')).toEqual([])
   })
 
-  it('contains the full 49-slide deck', () => {
-    expect(deck.slides).toHaveLength(49)
+  it('contains the full 50-slide deck', () => {
+    expect(deck.slides).toHaveLength(50)
   })
 
   it('has exactly one cover slide and one contact slide', () => {
@@ -147,6 +147,37 @@ describe('validateDeckSeed', () => {
     const errors = validateDeckSeed({ slides: [slide, { ...slide }] }, courseSlugs)
     expect(errors.some((e) => e.includes('duplicate slug'))).toBe(true)
     expect(errors.some((e) => e.includes('duplicate order_index'))).toBe(true)
+  })
+
+  it('rejects a logo whose asset is missing or that has no name', () => {
+    const errors = validateDeckSeed(
+      {
+        slides: [
+          {
+            slug: 'x-slide',
+            kind: 'section-title',
+            chapter: 'opening',
+            order_index: 1,
+            content_json: {
+              title: 'X',
+              logo_groups: [
+                {
+                  heading: 'Clients',
+                  logos: [
+                    { name: 'Ghost Co', src: '/deck/logos/does-not-exist.png' },
+                    { src: '/deck/logos/hr-block.png' },
+                  ],
+                },
+              ],
+            },
+            linked_exercise_slugs: [],
+          },
+        ],
+      },
+      courseSlugs
+    )
+    expect(errors.some((e) => e.includes('does-not-exist.png'))).toBe(true)
+    expect(errors.some((e) => e.includes('logos[1].name missing'))).toBe(true)
   })
 
   it('rejects a missing image asset path', () => {

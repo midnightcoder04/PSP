@@ -10,6 +10,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 // to overwrite content_json/notes from the seed file.
 const force = process.argv.includes('--force')
 
+// --only=slug[,slug] narrows the run to specific slides. Pairs with --force to
+// push one content change without rewriting the other 49 slides over whatever
+// admins have edited in-app.
+const onlyArg = process.argv.find((a) => a.startsWith('--only='))
+const only = onlyArg ? new Set(onlyArg.slice('--only='.length).split(',').filter(Boolean)) : null
+
 const supabaseUrl = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL ?? ''
 
 const secretKey =
@@ -44,6 +50,7 @@ console.log(`→ Using key from: ${usedVar}`)
 const keyPrefix = secretKey.slice(0, 12)
 console.log(`→ Key prefix: ${keyPrefix}…`)
 console.log(`→ Mode: ${force ? 'FORCE (overwrite existing slides)' : 'insert-missing-only'}`)
+if (only) console.log(`→ Only: ${[...only].join(', ')}`)
 
 const supabase = createClient(supabaseUrl, secretKey, {
   auth: { persistSession: false, autoRefreshToken: false },
@@ -67,12 +74,21 @@ async function seedDeck() {
   const seedPath = resolve(__dirname, '../db/seeds/deck-slides.json')
   const data: DeckSeedData = JSON.parse(readFileSync(seedPath, 'utf-8'))
 
-  console.log(`Seeding ${data.slides.length} deck slides...`)
+  const slides = only ? data.slides.filter((s) => only.has(s.slug)) : data.slides
+  if (only) {
+    const missing = [...only].filter((slug) => !data.slides.some((s) => s.slug === slug))
+    if (missing.length > 0) {
+      console.error(`--only slug(s) not in the seed file: ${missing.join(', ')}`)
+      process.exit(1)
+    }
+  }
+
+  console.log(`Seeding ${slides.length} deck slides...`)
 
   let inserted = 0
   let skipped = 0
 
-  for (const slide of data.slides) {
+  for (const slide of slides) {
     const row = { ...slide, notes: slide.notes ?? null }
 
     const { error, data: upserted } = await supabase

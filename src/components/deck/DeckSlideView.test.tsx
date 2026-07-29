@@ -72,6 +72,36 @@ describe('DeckSlideView', () => {
     expect(screen.queryByText('Spring Cohort 2026')).not.toBeInTheDocument()
   })
 
+  it('renders the client logo wall on a section-title slide', () => {
+    render(
+      <DeckSlideView
+        slide={makeSlide('section-title', {
+          title: 'Empowering Individuals Globally',
+          logos_title: 'Hiring partner · Trusted by leading organizations',
+          logo_groups: [
+            {
+              heading: 'Recruitment Consulting',
+              logos: [{ name: 'Wells Fargo', src: '/deck/logos/wells-fargo.png' }],
+            },
+            {
+              heading: 'Corporate Training & People Development',
+              logos: [{ name: 'ThinkPalm', src: '/deck/logos/thinkpalm.png' }],
+            },
+          ],
+        })}
+      />
+    )
+    expect(screen.getByText('Recruitment Consulting')).toBeInTheDocument()
+    expect(screen.getByText(/trusted by leading organizations/i)).toBeInTheDocument()
+    expect(screen.getByAltText('Wells Fargo')).toHaveAttribute('src', '/deck/logos/wells-fargo.png')
+    expect(screen.getByAltText('ThinkPalm')).toBeInTheDocument()
+  })
+
+  it('leaves a section-title slide without logo_groups unchanged', () => {
+    const { container } = render(<DeckSlideView slide={makeSlide('section-title', { title: 'MY VALUES' })} />)
+    expect(container.querySelectorAll('img')).toHaveLength(0)
+  })
+
   it('renders a quote slide with attribution', () => {
     render(
       <DeckSlideView

@@ -129,11 +129,31 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
 
     case 'section-title': {
       const c = content as DeckSectionTitleContent
+      const groups = c.logo_groups ?? []
       return (
-        <div className={styles.slide} data-kind="section-title">
+        <div className={styles.slide} data-kind="section-title" data-with-logos={groups.length > 0 || undefined}>
           {c.kicker ? <p className={styles.kicker}>{c.kicker}</p> : null}
           <h1 className={styles.bigTitle}>{c.title}</h1>
           {c.subtitle ? <p className={styles.subtitle}>{c.subtitle}</p> : null}
+          {groups.length > 0 ? (
+            <>
+              {c.logos_title ? <p className={styles.logoWallTitle}>{c.logos_title}</p> : null}
+              <div className={styles.logoWall} data-count={groups.length}>
+                {groups.map((group, i) => (
+                  <div key={i} className={styles.logoGroup}>
+                    <h2 className={styles.logoGroupHeading}>{group.heading}</h2>
+                    <div className={styles.logoGrid}>
+                      {group.logos.map((logo, j) => (
+                        <div key={j} className={styles.logoTile} title={logo.name}>
+                          <img className={styles.logoImg} src={logo.src} alt={logo.name} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : null}
         </div>
       )
     }

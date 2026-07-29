@@ -1,0 +1,53 @@
+/* ── Download deck as PDF ─────────────────────────────────────────────────
+   The print deck is portalled to <body> and mounted only while the print
+   dialog is open, so it is never visible on screen. Printing then hides
+   every other top-level child of <body> and paginates the deck one slide per
+   sheet. The `.printing` marker keeps that page takeover from applying to an
+   ordinary Ctrl+P of the surrounding page. */
+
+.printDeck {
+  display: none;
+}
+
+@media print {
+  body.printing > *:not(.printDeck) {
+    display: none !important;
+  }
+
+  body.printing .printDeck {
+    display: block;
+    background: #fff;
+  }
+
+  body.printing .printSlide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    break-after: page;
+    page-break-after: always;
+    /* Deck backgrounds and DISC accents are meaningful, not decoration. */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Mirror the on-screen .stage: a 16:9 box fitted to whatever page box the
+     print pipeline actually hands us. Safari and the macOS system print path
+     ignore `@page size`, so a portrait sheet is always possible — this keeps
+     the slide upright and undistorted (letterboxed) instead of stretched into
+     a portrait box that the pipeline then rotates sideways. */
+  body.printing .printSlide > * {
+    flex: none;
+    aspect-ratio: 16 / 9;
+    width: min(100%, calc(100vh * 16 / 9));
+    max-height: 100%;
+    height: auto;
+  }
+
+  body.printing .printSlide:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}

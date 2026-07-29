@@ -32,9 +32,32 @@
       "content_json": {
         "kicker": "SELECT HR SOLUTIONS",
         "title": "Empowering Individuals Globally to Take Charge of Their Future",
-        "subtitle": "Recruitments · Career Life Coaching"
+        "subtitle": "Recruitments · Career Life Coaching",
+        "logos_title": "Hiring partner · Trusted by leading organizations",
+        "logo_groups": [
+          {
+            "heading": "Recruitment Consulting",
+            "logos": [
+              { "name": "H&R Block", "src": "/deck/logos/hr-block.png" },
+              { "name": "GWC", "src": "/deck/logos/gwc.png" },
+              { "name": "Nissan Digital", "src": "/deck/logos/nissan-digital.png" },
+              { "name": "NedAir Freight BV", "src": "/deck/logos/nedair.png" },
+              { "name": "Wells Fargo", "src": "/deck/logos/wells-fargo.png" },
+              { "name": "Armada", "src": "/deck/logos/armada.png" }
+            ]
+          },
+          {
+            "heading": "Corporate Training & People Development",
+            "logos": [
+              { "name": "ThinkPalm", "src": "/deck/logos/thinkpalm.png" },
+              { "name": "Reflections", "src": "/deck/logos/reflections.png" },
+              { "name": "Fakeeh Tech", "src": "/deck/logos/fakeeh-tech.png" }
+            ]
+          }
+        ]
       },
-      "linked_exercise_slugs": []
+      "linked_exercise_slugs": [],
+      "notes": "Hiring-partner / client credibility slide. Logos are grouped by line of business: recruitment consulting on the left, corporate training on the right."
     },
     {
       "slug": "opening-sam-koshy",
@@ -47,6 +70,19 @@
         "caption": "Author of Personal Strategic Planning™ · Founder of Compass Career Life Solutions, Canada"
       },
       "linked_exercise_slugs": []
+    },
+    {
+      "slug": "opening-bijo-abraham",
+      "kind": "image",
+      "chapter": "opening",
+      "order_index": 45,
+      "content_json": {
+        "title": "Bijo Abraham",
+        "src": "/deck/bijo-abraham.jpg",
+        "caption": "Career and Life Planning Coach · Founder of Select HR Solutions, India"
+      },
+      "linked_exercise_slugs": [],
+      "notes": "Facilitator introduction. Follows the Sam Koshy slide so the room sees the author and the facilitator back to back."
     },
     {
       "slug": "opening-cover",

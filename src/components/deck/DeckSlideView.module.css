@@ -134,6 +134,97 @@
   margin: clamp(10px, 2.5vh, 28px) 0 0;
 }
 
+/* ── section-title: client / partner logo wall ──────────── */
+
+/* When the slide carries logos it stops being a pure title card: the headline
+   gives up some size so the wall gets the room it needs. */
+.slide[data-kind='section-title'][data-with-logos] {
+  gap: clamp(8px, 1.8vh, 20px);
+  justify-content: center;
+}
+
+.slide[data-kind='section-title'][data-with-logos] .bigTitle {
+  font-size: clamp(1.1rem, 4vmin, 2.6rem);
+}
+
+.slide[data-kind='section-title'][data-with-logos] .subtitle {
+  font-size: clamp(0.8rem, 2.1vmin, 1.2rem);
+}
+
+.logoWallTitle {
+  font-size: clamp(0.65rem, 1.6vmin, 0.95rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin: clamp(2px, 1vh, 10px) 0 0;
+}
+
+.logoWall {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(8px, 2vmin, 24px);
+  width: 100%;
+  max-width: 1200px;
+  align-items: stretch;
+}
+
+.logoWall[data-count='1'] { grid-template-columns: minmax(0, 1fr); }
+.logoWall[data-count='3'] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.logoGroup {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 1.4vmin, 14px);
+  align-items: center;
+  height: 100%;
+  padding: clamp(6px, 1.6vmin, 18px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--deck-accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.logoGroupHeading {
+  margin: 0;
+  font-size: clamp(0.6rem, 1.5vmin, 0.9rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.logoGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  gap: clamp(5px, 1.4vmin, 14px);
+  flex: 1 1 auto;
+}
+
+/* Fixed tile box + object-fit: contain — the source logos are mixed aspect
+   ratios (square badges next to wide wordmarks) and would otherwise set their
+   own scale. */
+.logoTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(74px, 21vmin, 205px);
+  height: clamp(34px, 10vmin, 96px);
+  padding: clamp(3px, 0.9vmin, 9px);
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.logoImg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 /* ── quote ──────────────────────────────────────────────── */
 
 .quote {

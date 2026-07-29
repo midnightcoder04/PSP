@@ -219,32 +219,12 @@ describe('PresentationPage', () => {
     expect(screen.getByText('1 / 3')).toBeInTheDocument()
   })
 
-  it('mounts every slide and opens the print dialog when downloading a PDF', async () => {
-    const user = userEvent.setup()
-    const print = vi.fn()
-    vi.stubGlobal('print', print)
-    // jsdom has no rAF-driven paint; run the callback immediately.
-    const raf = vi
-      .spyOn(window, 'requestAnimationFrame')
-      .mockImplementation((cb) => {
-        cb(0)
-        return 1
-      })
-
-    try {
-      await renderPage()
-      await screen.findByText('Personal Strategic Planning™')
-
-      await user.click(screen.getByRole('button', { name: /pdf/i }))
-
-      expect(print).toHaveBeenCalled()
-      // Slide 3 is not the current slide, so it can only come from the print
-      // deck — every slide is mounted, not just the visible one.
-      expect(screen.getByText('MY VALUES')).toBeInTheDocument()
-    } finally {
-      raf.mockRestore()
-      vi.unstubAllGlobals()
-    }
+  // PDF export lives on the session page now, not in the presenter HUD; it is
+  // covered by DeckPdfButton.test.tsx.
+  it('offers no PDF download inside the presentation view', async () => {
+    await renderPage()
+    await screen.findByText('Personal Strategic Planning™')
+    expect(screen.queryByRole('button', { name: /pdf/i })).not.toBeInTheDocument()
   })
 
   it('shows an authorization notice to unflagged facilitators', async () => {

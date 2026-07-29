@@ -67,9 +67,15 @@
   margin: 0 0 var(--space-2);
 }
 
+/* Thumbnails render a real 1280×720 slide scaled down, so the scale factor and
+   the column width both derive from one number. It has to be a plain number:
+   `scale()` takes no length, and no browser resolves a length ÷ length inside
+   calc(), so container-query units cannot drive it. */
 .grid {
+  --thumb-scale: 0.16;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, calc(1280px * var(--thumb-scale)));
+  justify-content: space-between;
   gap: var(--space-3);
 }
 
@@ -87,8 +93,8 @@
 
 .thumbStageWrap {
   display: block;
-  aspect-ratio: 16 / 9;
-  width: 100%;
+  width: calc(1280px * var(--thumb-scale));
+  height: calc(720px * var(--thumb-scale));
   overflow: hidden;
   border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -105,20 +111,14 @@
   border-color: var(--color-border-strong);
 }
 
-/* Render the slide at its native 1280×720 and scale to the thumb width.
-   Scale factor is set via a CSS custom property from the wrap's width using
-   container query units: 100cqw / 1280px. */
+/* Render the slide at its native 1280×720, then scale it down to the thumb. */
 .thumbStage {
   display: block;
   width: 1280px;
   height: 720px;
   transform-origin: top left;
-  transform: scale(calc(100cqw / 1280));
+  transform: scale(var(--thumb-scale));
   pointer-events: none;
-}
-
-.thumbStageWrap {
-  container-type: inline-size;
 }
 
 .thumbLabel {

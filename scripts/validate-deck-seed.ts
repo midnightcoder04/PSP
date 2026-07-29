@@ -185,6 +185,35 @@ export function validateDeckSeed(
       }
     }
 
+    // optional client/partner logo wall (section-title slides)
+    if (c.logo_groups !== undefined) {
+      if (!Array.isArray(c.logo_groups) || c.logo_groups.length === 0) {
+        errors.push(`${label}: logo_groups must be a non-empty array`)
+      } else {
+        c.logo_groups.forEach((group, gi) => {
+          const g = group as Record<string, unknown>
+          if (typeof g.heading !== 'string' || g.heading.length === 0) {
+            errors.push(`${label}: logo_groups[${gi}].heading missing`)
+          }
+          if (!Array.isArray(g.logos) || g.logos.length === 0) {
+            errors.push(`${label}: logo_groups[${gi}].logos must be a non-empty array`)
+            return
+          }
+          g.logos.forEach((logo, li) => {
+            const l = logo as Record<string, unknown>
+            if (typeof l.name !== 'string' || l.name.length === 0) {
+              errors.push(`${label}: logo_groups[${gi}].logos[${li}].name missing`)
+            }
+            if (typeof l.src !== 'string' || l.src.length === 0) {
+              errors.push(`${label}: logo_groups[${gi}].logos[${li}].src missing`)
+            } else if (l.src.startsWith('/') && !existsSync(resolve(__dirname, '../public', l.src.slice(1)))) {
+              errors.push(`${label}: logo "${l.src}" not found under public/`)
+            }
+          })
+        })
+      }
+    }
+
     // image paths must exist under public/
     for (const key of ['image', 'src'] as const) {
       const v = c[key]

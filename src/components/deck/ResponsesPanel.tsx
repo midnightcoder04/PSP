@@ -5,7 +5,7 @@ import { usePresentationResponses, type LiveResponseRow } from '@/hooks/usePrese
 import { resolveCoreStyleFromResponses, type CoreStyleLetter } from '@/lib/coreStyle'
 import { deriveWatusiCounts, WATUSI_TIEBREAK_ORDER, type WatusiGroup } from '@/hooks/useWatusiCounts'
 import type {
-  DeckSlide,
+  PresentedSlide,
   Json,
   StructuredTextContent,
   StructuredTextResponse,
@@ -43,7 +43,7 @@ interface ExerciseMeta {
 
 interface ResponsesPanelProps {
   sessionId: string
-  slide: DeckSlide
+  slide: PresentedSlide
   hideNames: boolean
   onToggleHideNames: () => void
   onClose: () => void

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { BulkAddModal } from '@/components/admin/BulkAddModal'
 import { CoverOverrideModal } from '@/components/deck/CoverOverrideModal'
+import { DeckPdfButton } from '@/components/deck/DeckPdfButton'
 import { SessionSettingsCard } from '@/components/admin/SessionSettingsCard'
 import styles from './FacilitatorSessionDetailPage.module.css'
 
@@ -164,6 +165,7 @@ export default function FacilitatorSessionDetailPage() {
             <Button size="sm" variant="secondary" onClick={() => setShowCoverModal(true)}>
               Customize cover
             </Button>
+            <DeckPdfButton sessionId={id!} />
             <Button size="sm" onClick={() => navigate(`/facilitator/sessions/${id}/present`)}>
               Present
             </Button>

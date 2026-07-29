@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { Spinner } from '@/components/ui/Spinner'
 import { DeckSlideView } from '@/components/deck/DeckSlideView'
@@ -8,15 +7,8 @@ import { PresenterHud } from '@/components/deck/PresenterHud'
 import { ResponsesPanel } from '@/components/deck/ResponsesPanel'
 import { SlideMenu } from '@/components/deck/SlideMenu'
 import { TeamCollaborationSlide } from '@/components/deck/TeamCollaborationSlide'
-import { buildPresentedSlides } from '@/lib/presentDeck'
-import type {
-  DeckSlide,
-  PresentedSlide,
-  SessionCoverOverride,
-  SessionType,
-  TopicSegment,
-  TrainingTopic,
-} from '@/types/database'
+import { loadPresentedDeck } from '@/lib/loadPresentedDeck'
+import type { PresentedSlide, SessionCoverOverride } from '@/types/database'
 import styles from './PresentationPage.module.css'
 
 /** Names start hidden on every slide; the presenter reveals them per slide. */
@@ -40,9 +32,6 @@ export default function PresentationPage() {
   // by accident.
   const [hideNamesBySlide, setHideNamesBySlide] = useState<ReadonlyMap<string, boolean>>(new Map())
   const [isFullscreen, setIsFullscreen] = useState(false)
-  // While true the whole deck is mounted in a print-only container; see
-  // downloadPdf below. Reset once the browser's print dialog closes.
-  const [printing, setPrinting] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const authorized = profile?.can_present === true
@@ -54,37 +43,11 @@ export default function PresentationPage() {
     }
     let cancelled = false
     async function load() {
-      const [deckRes, sessionRes, overrideRes, topicLinkRes] = await Promise.all([
-        supabase.from('deck_slides').select('*').order('order_index', { ascending: true }),
-        supabase.from('sessions').select('title, session_type').eq('id', id).single(),
-        supabase.from('session_deck_overrides').select('cover_json').eq('session_id', id).maybeSingle(),
-        supabase.from('session_topics').select('training_topics(*)').eq('session_id', id),
-      ])
-
-      // Embedded to-one select: each link row carries its training_topics row.
-      const topics = (topicLinkRes.data ?? [])
-        .map((r) => {
-          const t = (r as { training_topics: TrainingTopic | TrainingTopic[] | null }).training_topics
-          return Array.isArray(t) ? t[0] : t
-        })
-        .filter((t): t is TrainingTopic => t != null)
-
-      let segments: TopicSegment[] = []
-      if (topics.length > 0) {
-        const segRes = await supabase
-          .from('topic_segments')
-          .select('*')
-          .in('topic_id', topics.map((t) => t.id))
-          .eq('is_active', true)
-        segments = (segRes.data ?? []) as TopicSegment[]
-      }
-
+      const deck = await loadPresentedDeck(id!)
       if (cancelled) return
-      const deckSlides = (deckRes.data ?? []) as DeckSlide[]
-      const sessionType = (sessionRes.data?.session_type ?? 'individual') as SessionType
-      setSlides(buildPresentedSlides(deckSlides, segments, topics, sessionType))
-      setSessionTitle(sessionRes.data?.title ?? '')
-      setCoverOverride((overrideRes.data?.cover_json as SessionCoverOverride) ?? null)
+      setSlides(deck.slides)
+      setSessionTitle(deck.sessionTitle)
+      setCoverOverride(deck.coverOverride)
       setLoading(false)
     }
     load()
@@ -95,7 +58,7 @@ export default function PresentationPage() {
   const total = slides.length
   const rawIndex = parseInt(searchParams.get('slide') ?? '1', 10)
   const index = Math.min(Math.max(Number.isNaN(rawIndex) ? 1 : rawIndex, 1), Math.max(total, 1)) - 1
-  const current: DeckSlide | undefined = slides[index]
+  const current: PresentedSlide | undefined = slides[index]
   const hasLinkedExercises = (current?.linked_exercise_slugs.length ?? 0) > 0
 
   const goTo = useCallback(
@@ -124,25 +87,6 @@ export default function PresentationPage() {
     document.addEventListener('fullscreenchange', onChange)
     return () => document.removeEventListener('fullscreenchange', onChange)
   }, [])
-
-  // ── Download as PDF ──────────────────────────────────────────────────────
-  // No PDF library: the deck is already 16:9 CSS, so the reliable route is to
-  // mount every slide in a print-only container and hand off to the browser's
-  // own "Save as PDF" destination. One slide per landscape page.
-  const downloadPdf = useCallback(() => setPrinting(true), [])
-
-  useEffect(() => {
-    if (!printing) return
-    // window.print() snapshots the document synchronously, so wait for React to
-    // paint the print container before opening the dialog.
-    const raf = requestAnimationFrame(() => window.print?.())
-    const onAfterPrint = () => setPrinting(false)
-    window.addEventListener('afterprint', onAfterPrint)
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('afterprint', onAfterPrint)
-    }
-  }, [printing])
 
   const toggleHideNames = useCallback(() => {
     if (!current) return
@@ -187,11 +131,6 @@ export default function PresentationPage() {
         case 'F':
           toggleFullscreen()
           break
-        case 'p':
-        case 'P':
-          e.preventDefault()
-          downloadPdf()
-          break
         case 'Escape':
           setMenuOpen(false)
           break
@@ -199,7 +138,7 @@ export default function PresentationPage() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [goNext, goPrev, hasLinkedExercises, toggleHideNames, toggleFullscreen, downloadPdf])
+  }, [goNext, goPrev, hasLinkedExercises, toggleHideNames, toggleFullscreen])
 
   const exitTo = `/facilitator/sessions/${id}`
 
@@ -243,7 +182,6 @@ export default function PresentationPage() {
   }
 
   return (
-    <>
     <div ref={containerRef} className={styles.container}>
       <div className={styles.stageArea}>
         <div className={styles.stage}>
@@ -281,7 +219,6 @@ export default function PresentationPage() {
         onToggleMenu={() => setMenuOpen((v) => !v)}
         onToggleResponses={() => setResponsesOpen((v) => !v)}
         onToggleFullscreen={toggleFullscreen}
-        onDownloadPdf={downloadPdf}
         onExit={() => navigate(exitTo)}
       />
 
@@ -295,23 +232,5 @@ export default function PresentationPage() {
         />
       ) : null}
     </div>
-
-    {/* Print-only mirror of the whole deck — one slide per landscape page.
-        Sits outside .container because .container is hidden when printing.
-        The team-collaboration slide renders as its static placeholder here;
-        live participant data is not part of a downloaded deck. */}
-    {printing ? (
-      <>
-        <style>{'@page { size: landscape; margin: 0; }'}</style>
-        <div className={styles.printDeck} aria-hidden="true">
-          {slides.map((slide) => (
-            <div key={slide.id} className={styles.printSlide}>
-              <DeckSlideView slide={slide} coverOverride={coverOverride} />
-            </div>
-          ))}
-        </div>
-      </>
-    ) : null}
-    </>
   )
 }

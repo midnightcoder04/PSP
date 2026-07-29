@@ -33,13 +33,6 @@ export const TEAM_PROFILE_SLUGS = [
   VALUES_SOURCE_SLUG,
 ]
 
-const DISC_NAMES: Record<CoreStyleLetter, string> = {
-  D: 'Dominance',
-  I: 'Influence',
-  S: 'Steadiness',
-  C: 'Compliance',
-}
-
 const WATUSI_LABELS: Record<WatusiGroup, string> = {
   w: 'Theoretical',
   a: 'Aesthetic',
