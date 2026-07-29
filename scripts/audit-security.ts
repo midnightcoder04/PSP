@@ -269,6 +269,68 @@ function buildRlsCells(): RlsCell[] {
       role: 'facilitator', expected: true,
       queryFn: (f) => tryOp(() => f.facilitator.client.from('progress').select('id').eq('participant_id', f.participant.user.id)),
     },
+    // profiles can_present self-escalation (migration 033 trigger)
+    {
+      table: 'profiles', description: 'UPDATE self can_present (escalation)', op: 'UPDATE',
+      role: 'facilitator', expected: false,
+      queryFn: (f) => tryOp(() => f.facilitator.client.from('profiles').update({ can_present: true }).eq('id', f.facilitator.user.id)),
+    },
+    {
+      table: 'profiles', description: 'UPDATE self can_present (escalation)', op: 'UPDATE',
+      role: 'participant', expected: false,
+      queryFn: (f) => tryOp(() => f.participant.client.from('profiles').update({ can_present: true }).eq('id', f.participant.user.id)),
+    },
+    // deck_slides presenter-gated SELECT (migration 034) — RLS deny = zero rows, not an error
+    {
+      table: 'deck_slides', description: 'SELECT without presenter flag (0 rows)', op: 'SELECT',
+      role: 'participant', expected: false,
+      queryFn: async (f) => {
+        const { data, error } = await f.participant.client.from('deck_slides').select('id').limit(1)
+        return !error && (data ?? []).length > 0
+      },
+    },
+    {
+      table: 'deck_slides', description: 'SELECT without presenter flag (0 rows)', op: 'SELECT',
+      role: 'facilitator', expected: false,
+      queryFn: async (f) => {
+        const { data, error } = await f.facilitator.client.from('deck_slides').select('id').limit(1)
+        return !error && (data ?? []).length > 0
+      },
+    },
+    // deck_slides writes are admin-only (migration 034)
+    {
+      table: 'deck_slides', description: 'UPDATE as non-admin (0 rows)', op: 'UPDATE',
+      role: 'facilitator', expected: false,
+      queryFn: async (f) => {
+        const { data, error } = await f.facilitator.client
+          .from('deck_slides')
+          .update({ notes: '__audit_probe' })
+          .neq('slug', '')
+          .select('id')
+        return !error && (data ?? []).length > 0
+      },
+    },
+    // get_session_live_responses gate (migration 035): presenter flag required
+    {
+      table: 'rpc:get_session_live_responses', description: 'call without presenter flag', op: 'SELECT',
+      role: 'facilitator', expected: false,
+      queryFn: (f) => tryOp(() =>
+        f.facilitator.client.rpc('get_session_live_responses', {
+          p_session_id: f.sessionId,
+          p_exercise_slugs: ['any-slug'],
+        })
+      ),
+    },
+    {
+      table: 'rpc:get_session_live_responses', description: 'call as participant', op: 'SELECT',
+      role: 'participant', expected: false,
+      queryFn: (f) => tryOp(() =>
+        f.participant.client.rpc('get_session_live_responses', {
+          p_session_id: f.sessionId,
+          p_exercise_slugs: ['any-slug'],
+        })
+      ),
+    },
   ]
 }
 

@@ -399,6 +399,285 @@ describe('rpc/get_resume_position', () => {
 })
 
 // ---------------------------------------------------------------------------
+// migration_033 — presenter flag (can_present + has_presenter_access)
+// ---------------------------------------------------------------------------
+
+describe('migration_033_presenter_flag', () => {
+  itRpc('facilitator cannot self-grant can_present (trigger raises PERMISSION_DENIED)', async () => {
+    const { error } = await F.facilitator.client
+      .from('profiles')
+      .update({ can_present: true })
+      .eq('id', F.facilitator.user.id)
+    expect(error).not.toBeNull()
+    expect(error!.message).toContain('can_present')
+  })
+
+  itRpc('admin can grant and revoke can_present on a facilitator', async () => {
+    const grant = await F.admin.client
+      .from('profiles')
+      .update({ can_present: true })
+      .eq('id', F.facilitator.user.id)
+      .select('can_present')
+      .single()
+    expect(grant.error, grant.error?.message).toBeNull()
+    expect(grant.data?.can_present).toBe(true)
+
+    const revoke = await F.admin.client
+      .from('profiles')
+      .update({ can_present: false })
+      .eq('id', F.facilitator.user.id)
+      .select('can_present')
+      .single()
+    expect(revoke.error, revoke.error?.message).toBeNull()
+    expect(revoke.data?.can_present).toBe(false)
+  })
+
+  itRpc('has_presenter_access: admin true, unflagged facilitator false, participant false', async () => {
+    const admin = await F.admin.client.rpc('has_presenter_access', { uid: F.admin.user.id })
+    expect(admin.error, admin.error?.message).toBeNull()
+    expect(admin.data).toBe(true)
+
+    const fac = await F.admin.client.rpc('has_presenter_access', { uid: F.facilitator.user.id })
+    expect(fac.error, fac.error?.message).toBeNull()
+    expect(fac.data).toBe(false)
+
+    const part = await F.admin.client.rpc('has_presenter_access', { uid: F.participant.user.id })
+    expect(part.error, part.error?.message).toBeNull()
+    expect(part.data).toBe(false)
+  })
+
+  itRpc('has_presenter_access flips to true once admin grants the flag', async () => {
+    await F.adminClient.from('profiles').update({ can_present: true }).eq('id', F.facilitator.user.id)
+    const { data, error } = await F.facilitator.client.rpc('has_presenter_access', {
+      uid: F.facilitator.user.id,
+    })
+    expect(error, error?.message).toBeNull()
+    expect(data).toBe(true)
+    await F.adminClient.from('profiles').update({ can_present: false }).eq('id', F.facilitator.user.id)
+  })
+
+  itRpc('anon calling has_presenter_access = error (EXECUTE revoked from anon)', async () => {
+    const anonClient = createClient(url, process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '', {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+    const { error } = await anonClient.rpc('has_presenter_access', { uid: F.admin.user.id })
+    expect(error).not.toBeNull()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// migration_034 — deck_slides + session_deck_overrides RLS
+// ---------------------------------------------------------------------------
+
+describe('migration_034_deck_rls', () => {
+  const PROBE_SLUG = '__rpc_test_slide'
+  const PROBE = {
+    slug: PROBE_SLUG,
+    kind: 'statement',
+    chapter: 'opening',
+    order_index: 999990,
+    content_json: { title: 'Probe', body: 'probe body' },
+    linked_exercise_slugs: [],
+  }
+
+  async function withProbeSlide(fn: () => Promise<void>) {
+    await F.adminClient.from('deck_slides').delete().eq('slug', PROBE_SLUG)
+    const { error } = await F.adminClient.from('deck_slides').insert(PROBE)
+    if (error) throw new Error(`probe slide insert failed: ${error.message}`)
+    try {
+      await fn()
+    } finally {
+      await F.adminClient.from('deck_slides').delete().eq('slug', PROBE_SLUG)
+    }
+  }
+
+  itRpc('deck_slides SELECT: participant and unflagged facilitator see nothing; flagged facilitator and admin see slides', async () => {
+    await withProbeSlide(async () => {
+      const part = await F.participant.client.from('deck_slides').select('slug').eq('slug', PROBE_SLUG)
+      expect(part.error, part.error?.message).toBeNull()
+      expect(part.data).toHaveLength(0)
+
+      const unflagged = await F.facilitator.client.from('deck_slides').select('slug').eq('slug', PROBE_SLUG)
+      expect(unflagged.error, unflagged.error?.message).toBeNull()
+      expect(unflagged.data).toHaveLength(0)
+
+      await F.adminClient.from('profiles').update({ can_present: true }).eq('id', F.facilitator.user.id)
+      try {
+        const flagged = await F.facilitator.client.from('deck_slides').select('slug').eq('slug', PROBE_SLUG)
+        expect(flagged.error, flagged.error?.message).toBeNull()
+        expect(flagged.data).toHaveLength(1)
+      } finally {
+        await F.adminClient.from('profiles').update({ can_present: false }).eq('id', F.facilitator.user.id)
+      }
+
+      const admin = await F.admin.client.from('deck_slides').select('slug').eq('slug', PROBE_SLUG)
+      expect(admin.error, admin.error?.message).toBeNull()
+      expect(admin.data).toHaveLength(1)
+    })
+  })
+
+  itRpc('deck_slides UPDATE: flagged facilitator blocked (0 rows), admin succeeds', async () => {
+    await withProbeSlide(async () => {
+      await F.adminClient.from('profiles').update({ can_present: true }).eq('id', F.facilitator.user.id)
+      try {
+        const facUpdate = await F.facilitator.client
+          .from('deck_slides')
+          .update({ content_json: { title: 'Hacked', body: 'x' } })
+          .eq('slug', PROBE_SLUG)
+          .select('slug')
+        expect(facUpdate.data ?? []).toHaveLength(0)
+      } finally {
+        await F.adminClient.from('profiles').update({ can_present: false }).eq('id', F.facilitator.user.id)
+      }
+
+      // Row unchanged after the facilitator's attempt
+      const check = await F.adminClient.from('deck_slides').select('content_json').eq('slug', PROBE_SLUG).single()
+      expect((check.data?.content_json as { title: string }).title).toBe('Probe')
+
+      const adminUpdate = await F.admin.client
+        .from('deck_slides')
+        .update({ content_json: { title: 'Edited', body: 'probe body' } })
+        .eq('slug', PROBE_SLUG)
+        .select('content_json')
+        .single()
+      expect(adminUpdate.error, adminUpdate.error?.message).toBeNull()
+      expect((adminUpdate.data?.content_json as { title: string }).title).toBe('Edited')
+    })
+  })
+
+  itRpc('session_deck_overrides: owning facilitator upserts, participant denied', async () => {
+    try {
+      const fac = await F.facilitator.client
+        .from('session_deck_overrides')
+        .upsert({ session_id: F.sessionId, cover_json: { title_line: 'Cohort X' } })
+        .select('cover_json')
+        .single()
+      expect(fac.error, fac.error?.message).toBeNull()
+      expect((fac.data?.cover_json as { title_line: string }).title_line).toBe('Cohort X')
+
+      const part = await F.participant.client
+        .from('session_deck_overrides')
+        .upsert({ session_id: F.sessionId, cover_json: { title_line: 'Hijacked' } })
+      expect(part.error).not.toBeNull()
+    } finally {
+      await F.adminClient.from('session_deck_overrides').delete().eq('session_id', F.sessionId)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// rpc/get_session_live_responses (migration 035)
+// ---------------------------------------------------------------------------
+
+describe('rpc/get_session_live_responses', () => {
+  async function anyExercise(): Promise<{ id: string; slug: string }> {
+    const { data, error } = await F.adminClient
+      .from('exercises')
+      .select('id, slug')
+      .limit(1)
+      .single()
+    if (error || !data) throw new Error(`exercise lookup failed: ${error?.message}`)
+    return data as { id: string; slug: string }
+  }
+
+  itRpc('unflagged owning facilitator gets Access denied', async () => {
+    const ex = await anyExercise()
+    const { error } = await F.facilitator.client.rpc('get_session_live_responses', {
+      p_session_id: F.sessionId,
+      p_exercise_slugs: [ex.slug],
+    })
+    expect(error).not.toBeNull()
+    expect(error!.message).toContain('Access denied')
+  })
+
+  itRpc('flagged owning facilitator gets rows, including enrolled-but-unanswered participants', async () => {
+    const ex = await anyExercise()
+    await F.adminClient.from('profiles').update({ can_present: true }).eq('id', F.facilitator.user.id)
+    try {
+      // Before any response exists: LEFT JOIN keeps the participant visible
+      const before = await F.facilitator.client.rpc('get_session_live_responses', {
+        p_session_id: F.sessionId,
+        p_exercise_slugs: [ex.slug],
+      })
+      expect(before.error, before.error?.message).toBeNull()
+      expect(before.data).toHaveLength(1)
+      expect(before.data[0].participant_id).toBe(F.participant.user.id)
+      expect(before.data[0].display_name).toBe('RPC Test Participant')
+      expect(before.data[0].exercise_slug).toBe(ex.slug)
+      expect(before.data[0].response_json).toBeNull()
+
+      // Participant saves write session_id = NULL — the RPC must still find the row
+      await F.adminClient.from('responses').insert({
+        participant_id: F.participant.user.id,
+        exercise_id: ex.id,
+        session_id: null,
+        response_json: { value: 'live answer' },
+        is_complete: true,
+      })
+      try {
+        const after = await F.facilitator.client.rpc('get_session_live_responses', {
+          p_session_id: F.sessionId,
+          p_exercise_slugs: [ex.slug],
+        })
+        expect(after.error, after.error?.message).toBeNull()
+        expect(after.data).toHaveLength(1)
+        expect(after.data[0].response_json).toEqual({ value: 'live answer' })
+        expect(after.data[0].is_complete).toBe(true)
+      } finally {
+        await F.adminClient
+          .from('responses')
+          .delete()
+          .eq('participant_id', F.participant.user.id)
+          .eq('exercise_id', ex.id)
+      }
+    } finally {
+      await F.adminClient.from('profiles').update({ can_present: false }).eq('id', F.facilitator.user.id)
+    }
+  })
+
+  itRpc('admin gets rows without the presenter flag', async () => {
+    const ex = await anyExercise()
+    const { data, error } = await F.admin.client.rpc('get_session_live_responses', {
+      p_session_id: F.sessionId,
+      p_exercise_slugs: [ex.slug],
+    })
+    expect(error, error?.message).toBeNull()
+    expect(data).toHaveLength(1)
+  })
+
+  itRpc('participant gets Access denied', async () => {
+    const ex = await anyExercise()
+    const { error } = await F.participant.client.rpc('get_session_live_responses', {
+      p_session_id: F.sessionId,
+      p_exercise_slugs: [ex.slug],
+    })
+    expect(error).not.toBeNull()
+    expect(error!.message).toContain('Access denied')
+  })
+
+  itRpc('user unrelated to the session gets Access denied', async () => {
+    const ex = await anyExercise()
+    const { error } = await F.inactive.client.rpc('get_session_live_responses', {
+      p_session_id: F.sessionId,
+      p_exercise_slugs: [ex.slug],
+    })
+    expect(error).not.toBeNull()
+    expect(error!.message).toContain('Access denied')
+  })
+
+  itRpc('anon gets an error (EXECUTE revoked from anon)', async () => {
+    const anonClient = createClient(url, process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? '', {
+      auth: { persistSession: false, autoRefreshToken: false },
+    })
+    const { error } = await anonClient.rpc('get_session_live_responses', {
+      p_session_id: F.sessionId,
+      p_exercise_slugs: ['anything'],
+    })
+    expect(error).not.toBeNull()
+  })
+})
+
+// ---------------------------------------------------------------------------
 // migration_010_post_apply — proacl assertions (T029)
 // [RED — passes once migration 010 is applied to hosted DB]
 // ---------------------------------------------------------------------------
@@ -408,6 +687,7 @@ describe('migration_010_post_apply', () => {
     'get_admin_overview',
     'get_session_stats',
     'get_resume_position',
+    'get_session_live_responses',
   ]
   const TRIGGER_ONLY = ['handle_new_user', 'update_progress_on_response']
   const HELPERS = [
@@ -416,6 +696,7 @@ describe('migration_010_post_apply', () => {
     'facilitates_session',
     'participant_in_session',
     'facilitator_has_participant',
+    'has_presenter_access',
   ]
   const ALL_IN_SCOPE = [...USER_CALLABLE_RPCS, ...TRIGGER_ONLY, ...HELPERS]
 

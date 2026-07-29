@@ -19,8 +19,19 @@ const mockProfiles = [
     email: 'bob@example.com',
     role: 'facilitator',
     is_active: true,
+    can_present: false,
     created_at: '2026-01-15T00:00:00Z',
     updated_at: '2026-01-15T00:00:00Z',
+  },
+  {
+    id: 'u4',
+    display_name: 'Fran Presenter',
+    email: 'fran@example.com',
+    role: 'facilitator',
+    is_active: true,
+    can_present: true,
+    created_at: '2026-01-20T00:00:00Z',
+    updated_at: '2026-01-20T00:00:00Z',
   },
   {
     id: 'u3',
@@ -83,7 +94,7 @@ describe('UsersPage', () => {
       expect(screen.getByText('admin')).toBeInTheDocument()
     })
 
-    expect(screen.getByText('facilitator')).toBeInTheDocument()
+    expect(screen.getAllByText('facilitator')).toHaveLength(2)
     expect(screen.getByText('participant')).toBeInTheDocument()
   })
 
@@ -120,7 +131,37 @@ describe('UsersPage', () => {
     )
 
     await waitFor(() => {
-      expect(screen.getByText(/3 users/i)).toBeInTheDocument()
+      expect(screen.getByText(/4 users/i)).toBeInTheDocument()
     })
+  })
+
+  it('shows Presenter badge only for facilitators with can_present', async () => {
+    render(
+      <MemoryRouter>
+        <UsersPage />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getByText('Fran Presenter')).toBeInTheDocument()
+    })
+
+    expect(screen.getAllByText('Presenter')).toHaveLength(1)
+  })
+
+  it('shows Grant presenter for unflagged facilitators and Revoke for flagged ones', async () => {
+    render(
+      <MemoryRouter>
+        <UsersPage />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => {
+      expect(screen.getAllByRole('button', { name: /grant presenter/i })).toHaveLength(1)
+    })
+
+    expect(screen.getAllByRole('button', { name: /revoke presenter/i })).toHaveLength(1)
+    // non-facilitators get no presenter action at all
+    expect(screen.getAllByRole('button', { name: /presenter/i })).toHaveLength(2)
   })
 })

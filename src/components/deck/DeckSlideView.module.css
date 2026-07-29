@@ -1,0 +1,627 @@
+/* DeckSlideView — renders one presentation slide, filling its container.
+   The parent (presenter stage or admin preview) owns the aspect ratio and
+   scaling; everything here uses container-relative + clamp() sizing so the
+   same markup works full-screen and as a scaled preview thumbnail. */
+
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 3.5vh, 36px);
+  padding: clamp(16px, 5vmin, 64px);
+  background: linear-gradient(160deg, var(--color-trust-light) 0%, var(--color-bg) 60%);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  text-align: center;
+  overflow: hidden;
+  /* DISC accent palette (matches the D.I.S.C. logo) */
+  --disc-d: #e23b4e;
+  --disc-i: #eab52c;
+  --disc-s: #2fb57c;
+  --disc-c: #29abe2;
+  --deck-accent: var(--color-trust);
+}
+
+/* ── Shared text styles ─────────────────────────────────── */
+
+.heading {
+  font-size: clamp(1.4rem, 4.5vmin, 3rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.bigTitle {
+  font-size: clamp(1.8rem, 7vmin, 4.5rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 2.8vmin, 1.6rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.kicker {
+  font-size: clamp(0.8rem, 2vmin, 1.1rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--deck-accent);
+  margin: 0;
+}
+
+.intro {
+  font-size: clamp(0.95rem, 2.4vmin, 1.4rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.caption {
+  font-size: clamp(0.8rem, 2vmin, 1.1rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ── cover ──────────────────────────────────────────────── */
+
+.slide[data-kind='cover'] {
+  flex-direction: row;
+  gap: clamp(24px, 6vmin, 72px);
+  text-align: left;
+}
+
+.coverImage {
+  max-height: 70%;
+  max-width: 38%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.coverText {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.5vh, 16px);
+  max-width: 55%;
+}
+
+.coverTitle {
+  font-size: clamp(1.8rem, 6.5vmin, 4.2rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-trust);
+  margin: 0;
+}
+
+.coverSubtitle {
+  font-size: clamp(1.1rem, 3vmin, 1.9rem);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.coverSession {
+  font-size: clamp(1.2rem, 3.4vmin, 2.2rem);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin: clamp(8px, 2vh, 20px) 0 0;
+}
+
+.coverSessionSub {
+  font-size: clamp(0.95rem, 2.4vmin, 1.5rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.coverMeta {
+  font-size: clamp(0.9rem, 2.2vmin, 1.35rem);
+  color: var(--color-warmth);
+  font-weight: var(--weight-medium);
+  margin: 0;
+}
+
+.coverOrg {
+  font-size: clamp(0.7rem, 1.7vmin, 0.95rem);
+  color: var(--color-text-faint);
+  margin: clamp(10px, 2.5vh, 28px) 0 0;
+}
+
+/* ── section-title: client / partner logo wall ──────────── */
+
+/* When the slide carries logos it stops being a pure title card: the headline
+   gives up some size so the wall gets the room it needs. */
+.slide[data-kind='section-title'][data-with-logos] {
+  gap: clamp(8px, 1.8vh, 20px);
+  justify-content: center;
+}
+
+.slide[data-kind='section-title'][data-with-logos] .bigTitle {
+  font-size: clamp(1.1rem, 4vmin, 2.6rem);
+}
+
+.slide[data-kind='section-title'][data-with-logos] .subtitle {
+  font-size: clamp(0.8rem, 2.1vmin, 1.2rem);
+}
+
+.logoWallTitle {
+  font-size: clamp(0.65rem, 1.6vmin, 0.95rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin: clamp(2px, 1vh, 10px) 0 0;
+}
+
+.logoWall {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(8px, 2vmin, 24px);
+  width: 100%;
+  max-width: 1200px;
+  align-items: stretch;
+}
+
+.logoWall[data-count='1'] { grid-template-columns: minmax(0, 1fr); }
+.logoWall[data-count='3'] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.logoGroup {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 1.4vmin, 14px);
+  align-items: center;
+  height: 100%;
+  padding: clamp(6px, 1.6vmin, 18px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--deck-accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.logoGroupHeading {
+  margin: 0;
+  font-size: clamp(0.6rem, 1.5vmin, 0.9rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.logoGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  gap: clamp(5px, 1.4vmin, 14px);
+  flex: 1 1 auto;
+}
+
+/* Fixed tile box + object-fit: contain — the source logos are mixed aspect
+   ratios (square badges next to wide wordmarks) and would otherwise set their
+   own scale. */
+.logoTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(74px, 21vmin, 205px);
+  height: clamp(34px, 10vmin, 96px);
+  padding: clamp(3px, 0.9vmin, 9px);
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.logoImg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ── quote ──────────────────────────────────────────────── */
+
+.quote {
+  max-width: 80%;
+  margin: 0;
+}
+
+.quote p {
+  font-size: clamp(1.5rem, 5.5vmin, 3.6rem);
+  font-weight: var(--weight-medium);
+  line-height: 1.35;
+  margin: 0 0 clamp(12px, 3vh, 32px);
+}
+
+.quote cite {
+  font-style: normal;
+  font-size: clamp(1rem, 2.6vmin, 1.6rem);
+  color: var(--color-text-muted);
+}
+
+/* ── statement ──────────────────────────────────────────── */
+
+.statementBody {
+  max-width: 75%;
+  font-size: clamp(1.05rem, 2.8vmin, 1.7rem);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+}
+
+.statementBody p { margin: 0 0 clamp(6px, 1.5vh, 14px); }
+.statementBody ol,
+.statementBody ul { text-align: left; margin: 0; padding-left: 1.4em; }
+
+/* ── bullets ────────────────────────────────────────────── */
+
+.bullets {
+  text-align: left;
+  max-width: min(85%, 1100px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.6vh, 16px);
+  font-size: clamp(0.95rem, 2.6vmin, 1.55rem);
+  line-height: var(--leading-normal);
+}
+
+.bullets[data-dense] {
+  font-size: clamp(0.85rem, 2.1vmin, 1.25rem);
+  gap: clamp(4px, 1vh, 10px);
+}
+
+.bullets li {
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.45em;
+  height: 0.45em;
+  border-radius: 50%;
+  background: var(--deck-accent);
+}
+
+/* ── two-col ────────────────────────────────────────────── */
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(16px, 4vmin, 48px);
+  width: 100%;
+  max-width: 1200px;
+  align-items: start;
+}
+
+.columns[data-count='3'] { grid-template-columns: repeat(3, 1fr); }
+.columns[data-count='4'] { grid-template-columns: repeat(4, 1fr); }
+.columns[data-count='6'] { grid-template-columns: repeat(3, 1fr); }
+
+.columns[data-count='6'] .column {
+  padding: clamp(8px, 2vmin, 16px);
+  gap: clamp(4px, 1vh, 10px);
+}
+
+.columns[data-count='6'] .columnHeading {
+  font-size: clamp(0.8rem, 1.8vmin, 1.15rem);
+}
+
+.columns[data-count='6'] .columnBullets {
+  font-size: clamp(0.68rem, 1.4vmin, 0.92rem);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 2vh, 18px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(12px, 3vmin, 32px);
+  min-height: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.columnImage {
+  max-height: clamp(80px, 22vh, 220px);
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.columnHeading {
+  font-size: clamp(1rem, 2.8vmin, 1.7rem);
+  font-weight: var(--weight-bold);
+  color: var(--deck-accent);
+  margin: 0;
+}
+
+.columnBullets {
+  text-align: left;
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: clamp(0.8rem, 2vmin, 1.15rem);
+  line-height: var(--leading-normal);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 0.8vh, 8px);
+}
+
+/* ── disc-profile ───────────────────────────────────────── */
+
+.slide[data-kind='disc-profile'] { gap: clamp(8px, 1.6vh, 18px); }
+
+.slide[data-kind='disc-profile'][data-style='D'] { --deck-accent: var(--disc-d); }
+.slide[data-kind='disc-profile'][data-style='I'] { --deck-accent: var(--disc-i); }
+.slide[data-kind='disc-profile'][data-style='S'] { --deck-accent: var(--disc-s); }
+.slide[data-kind='disc-profile'][data-style='C'] { --deck-accent: var(--disc-c); }
+
+.discHeader {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 3vmin, 32px);
+  text-align: left;
+}
+
+.discLetter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(40px, 7.5vmin, 76px);
+  height: clamp(40px, 7.5vmin, 76px);
+  border-radius: var(--radius-md);
+  background: var(--deck-accent);
+  color: #fff;
+  font-size: clamp(1.5rem, 4.5vmin, 2.8rem);
+  font-weight: var(--weight-bold);
+}
+
+.discSubtitle {
+  font-size: clamp(0.9rem, 2.3vmin, 1.4rem);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.discBody {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 2fr;
+  gap: clamp(12px, 3vmin, 40px);
+  width: 100%;
+  max-width: 1200px;
+  text-align: left;
+  align-items: start;
+}
+
+.discAdjectives {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.8vh, 8px);
+  font-size: clamp(0.85rem, 1.9vmin, 1.25rem);
+  font-weight: var(--weight-semibold);
+  color: var(--deck-accent);
+}
+
+.discStatements {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.6vh, 6px);
+  font-size: clamp(0.7rem, 1.5vmin, 1.02rem);
+  line-height: var(--leading-tight);
+}
+
+.discStatements li {
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.discStatements li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: var(--deck-accent);
+}
+
+.discEnvironment {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(8px, 2vmin, 22px);
+  width: 100%;
+  max-width: 1200px;
+  text-align: left;
+  align-items: start;
+}
+
+.discEnvCol {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.6vh, 6px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: clamp(6px, 1.4vmin, 14px);
+  box-shadow: var(--shadow-sm);
+}
+
+.discEnvHeading {
+  font-size: clamp(0.65rem, 1.4vmin, 0.92rem);
+  font-weight: var(--weight-semibold);
+  color: var(--deck-accent);
+  margin: 0;
+}
+
+.discEnvBullets {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: clamp(0.6rem, 1.2vmin, 0.8rem);
+  line-height: var(--leading-tight);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1px, 0.35vh, 4px);
+}
+
+/* ── comfort-zones ──────────────────────────────────────── */
+
+.slide[data-kind='comfort-zones'] { gap: clamp(10px, 2.4vh, 28px); }
+
+.slide[data-kind='comfort-zones'][data-style='D'] { --deck-accent: var(--disc-d); }
+.slide[data-kind='comfort-zones'][data-style='I'] { --deck-accent: var(--disc-i); }
+.slide[data-kind='comfort-zones'][data-style='S'] { --deck-accent: var(--disc-s); }
+.slide[data-kind='comfort-zones'][data-style='C'] { --deck-accent: var(--disc-c); }
+
+.comfortHeader {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2px, 0.8vh, 8px);
+  align-items: center;
+}
+
+.comfortGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 2.6vmin, 34px);
+  width: 100%;
+  max-width: 1200px;
+  align-items: stretch;
+}
+
+.comfortPair {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1.2vh, 14px);
+  align-items: center;
+  height: 100%;
+}
+
+/* auto | 1fr | auto — the letters keep their size and the diagram takes the
+   rest, so four columns always fit the stage. */
+.vennRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.vennLetter {
+  font-size: clamp(1.3rem, 4vmin, 2.9rem);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  color: var(--color-text);
+}
+
+/* The paired style is tinted with its own DISC colour so the audience can see
+   at a glance which two styles are being compared. */
+.comfortPair[data-other='D'] .vennLetter[data-side='other'] { color: var(--disc-d); }
+.comfortPair[data-other='I'] .vennLetter[data-side='other'] { color: var(--disc-i); }
+.comfortPair[data-other='S'] .vennLetter[data-side='other'] { color: var(--disc-s); }
+.comfortPair[data-other='C'] .vennLetter[data-side='other'] { color: var(--disc-c); }
+
+.vennLetter[data-side='self'] { color: var(--deck-accent); }
+
+/* Width follows the column; preserveAspectRatio keeps the circles round and
+   centred, so a fixed height just letterboxes on narrow columns. */
+.venn {
+  width: 100%;
+  height: clamp(56px, 17vmin, 170px);
+}
+
+/* Translucent fills: where the two circles meet, the colour doubles up and the
+   shared Comfort Zone reads as the darker lens. */
+.vennCircle {
+  fill: var(--deck-accent);
+  fill-opacity: 0.26;
+  stroke: var(--color-text);
+  stroke-width: 1.4;
+}
+
+.comfortText {
+  margin: 0;
+  flex: 1 1 auto; /* equal-height caption boxes across the four columns */
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--deck-accent);
+  border-radius: var(--radius-md);
+  padding: clamp(6px, 1.6vmin, 16px);
+  font-size: clamp(0.68rem, 1.55vmin, 1.05rem);
+  line-height: var(--leading-normal);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.comfortPair[data-other='D'] .comfortText { border-top-color: var(--disc-d); }
+.comfortPair[data-other='I'] .comfortText { border-top-color: var(--disc-i); }
+.comfortPair[data-other='S'] .comfortText { border-top-color: var(--disc-s); }
+.comfortPair[data-other='C'] .comfortText { border-top-color: var(--disc-c); }
+
+/* ── numbered-list ──────────────────────────────────────── */
+
+.numbered {
+  text-align: left;
+  max-width: min(85%, 1100px);
+  margin: 0;
+  padding-left: 1.6em;
+  font-size: clamp(0.95rem, 2.5vmin, 1.5rem);
+  line-height: var(--leading-normal);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(5px, 1.4vh, 14px);
+}
+
+.numbered[data-dense] {
+  font-size: clamp(0.85rem, 2.1vmin, 1.25rem);
+  gap: clamp(4px, 1vh, 10px);
+}
+
+.numbered li::marker {
+  color: var(--deck-accent);
+  font-weight: var(--weight-bold);
+}
+
+/* ── image ──────────────────────────────────────────────── */
+
+.mainImage {
+  max-width: min(90%, 1000px);
+  max-height: 62%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+/* ── contact ────────────────────────────────────────────── */
+
+.contactImage {
+  max-height: clamp(80px, 20vh, 200px);
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+
+.contactLines {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1.2vh, 12px);
+  font-size: clamp(1rem, 2.8vmin, 1.7rem);
+  color: var(--color-text-muted);
+}
+
+.contactLines p { margin: 0; }

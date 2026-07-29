@@ -122,6 +122,170 @@ export interface TableResponse {
   total_spent?: number
 }
 
+// ── Presentation deck (deck_slides.content_json, discriminated by row.kind) ──
+// All fields are plain strings / string arrays so the admin text-level editor
+// can edit them field-by-field (arrays as one-item-per-line textareas).
+
+export type DeckSlideKind =
+  | 'cover'
+  | 'section-title'
+  | 'quote'
+  | 'statement'
+  | 'bullets'
+  | 'two-col'
+  | 'disc-profile'
+  | 'comfort-zones'
+  | 'numbered-list'
+  | 'image'
+  | 'contact'
+
+export interface DeckCoverContent {
+  title: string
+  subtitle?: string
+  date_line?: string
+  facilitator_name?: string
+  org_line?: string
+  image?: string
+}
+
+// A band of client/partner logos, grouped by the line of business they belong
+// to. Each logo is a file under public/ plus the organization's name, which
+// doubles as the img alt text (several logos are wordmarks in other scripts).
+export interface DeckLogoGroup {
+  heading: string
+  logos: { name: string; src: string }[]
+}
+
+export interface DeckSectionTitleContent {
+  title: string
+  subtitle?: string
+  kicker?: string
+  logos_title?: string
+  logo_groups?: DeckLogoGroup[]
+}
+
+export interface DeckQuoteContent {
+  quote: string
+  attribution: string
+}
+
+export interface DeckStatementContent {
+  title: string
+  body: string // rendered through parseBlocks()
+}
+
+export interface DeckBulletsContent {
+  title: string
+  intro?: string
+  bullets: string[]
+}
+
+export interface DeckTwoColContent {
+  title: string
+  columns: { heading: string; bullets: string[]; image?: string }[]
+}
+
+export interface DeckDiscProfileContent {
+  style: 'D' | 'I' | 'S' | 'C'
+  title: string
+  subtitle?: string
+  adjectives: string[]
+  statements: string[]
+  youAre?: string[]
+  environment?: string[]
+}
+
+// One "Comfort Zones for HIGH x" slide: the style paired against each of the
+// four core styles, drawn as overlapping circles. `level` is the qualitative
+// size of the shared Comfort Zone (how much the two circles overlap) — kept as
+// a word, not a number, so the admin text editor stays text-level.
+export type ComfortZoneLevel = 'low' | 'moderate' | 'high' | 'very-high'
+
+export interface DeckComfortZonesContent {
+  style: 'D' | 'I' | 'S' | 'C'
+  title: string
+  subtitle?: string
+  caption?: string
+  pairs: { other: 'D' | 'I' | 'S' | 'C'; level: ComfortZoneLevel; text: string }[]
+}
+
+export interface DeckNumberedContent {
+  title: string
+  start?: number // first item number (for lists continued across slides)
+  items: string[]
+}
+
+export interface DeckImageContent {
+  title?: string
+  src: string
+  caption?: string
+}
+
+export interface DeckContactContent {
+  title: string
+  lines: string[]
+  image?: string
+}
+
+export type DeckSlideContent =
+  | DeckCoverContent
+  | DeckSectionTitleContent
+  | DeckQuoteContent
+  | DeckStatementContent
+  | DeckBulletsContent
+  | DeckTwoColContent
+  | DeckDiscProfileContent
+  | DeckComfortZonesContent
+  | DeckNumberedContent
+  | DeckImageContent
+  | DeckContactContent
+
+// session_deck_overrides.cover_json — per-session cover slide customization
+export interface SessionCoverOverride {
+  title_line?: string
+  subtitle?: string
+  date_line?: string
+  facilitator_name?: string
+}
+
+// ── Topic-aware presentation (007) ──────────────────────────────────────────
+// topic_segments.content_json shapes, discriminated by row.kind. These render
+// as synthetic presenter slides interleaved at course-chapter boundaries.
+
+export type TopicSegmentKind = 'discussion' | 'example' | 'suggestion'
+
+export interface DeckDiscussionContent {
+  title: string
+  questions: string[]
+}
+
+export interface DeckExampleContent {
+  title: string
+  body: string // rendered through parseBlocks()
+}
+
+export interface DeckSuggestionContent {
+  title: string
+  body: string // rendered through parseBlocks()
+}
+
+export type SessionType = 'team-based' | 'individual' | 'private-group'
+
+// Presenter-only slide kinds. Kept separate from DeckSlideKind (which mirrors
+// the deck_slides CHECK constraint) because these slides are synthesized in
+// memory by buildPresentedSlides() and are never persisted to deck_slides.
+export type PresentedSlideKind =
+  | DeckSlideKind
+  | TopicSegmentKind
+  | 'team-collaboration'
+
+// A DeckSlide widened to allow the synthetic kinds. Real DeckSlide rows are
+// assignable to this (their narrower kind is a subset), so DeckSlideView,
+// SlideMenu, etc. accept both.
+export interface PresentedSlide extends Omit<DeckSlide, 'kind'> {
+  kind: PresentedSlideKind
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -133,6 +297,7 @@ export interface Database {
           email: string
           is_active: boolean
           max_bulk_add: number
+          can_present: boolean
           created_at: string
           updated_at: string
         }
@@ -143,6 +308,7 @@ export interface Database {
           email: string
           is_active?: boolean
           max_bulk_add?: number
+          can_present?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -153,6 +319,7 @@ export interface Database {
           email?: string
           is_active?: boolean
           max_bulk_add?: number
+          can_present?: boolean
           updated_at?: string
         }
         Relationships: []
@@ -166,6 +333,7 @@ export interface Database {
           scheduled_start: string | null
           scheduled_end: string | null
           is_active: boolean
+          session_type: SessionType
           created_by: string
           created_at: string
           updated_at: string
@@ -178,6 +346,7 @@ export interface Database {
           scheduled_start?: string | null
           scheduled_end?: string | null
           is_active?: boolean
+          session_type?: SessionType
           created_by: string
           created_at?: string
           updated_at?: string
@@ -189,6 +358,7 @@ export interface Database {
           scheduled_start?: string | null
           scheduled_end?: string | null
           is_active?: boolean
+          session_type?: SessionType
           updated_at?: string
         }
         Relationships: [
@@ -511,6 +681,159 @@ export interface Database {
           }
         ]
       }
+      deck_slides: {
+        Row: {
+          id: string
+          slug: string
+          kind: DeckSlideKind
+          chapter: string
+          order_index: number
+          content_json: Json
+          linked_exercise_slugs: string[]
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          kind: DeckSlideKind
+          chapter: string
+          order_index: number
+          content_json: Json
+          linked_exercise_slugs?: string[]
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content_json?: Json
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      session_deck_overrides: {
+        Row: {
+          session_id: string
+          cover_json: Json
+          updated_at: string
+        }
+        Insert: {
+          session_id: string
+          cover_json: Json
+          updated_at?: string
+        }
+        Update: {
+          cover_json?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'session_deck_overrides_session_id_fkey'
+            columns: ['session_id']
+            isOneToOne: true
+            referencedRelation: 'sessions'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      training_topics: {
+        Row: {
+          id: string
+          slug: string
+          name: string
+          description: string | null
+          is_active: boolean
+          order_index: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          name: string
+          description?: string | null
+          is_active?: boolean
+          order_index?: number
+          updated_at?: string
+        }
+        Update: {
+          slug?: string
+          name?: string
+          description?: string | null
+          is_active?: boolean
+          order_index?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      session_topics: {
+        Row: {
+          session_id: string
+          topic_id: string
+        }
+        Insert: {
+          session_id: string
+          topic_id: string
+        }
+        Update: {
+          session_id?: string
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'session_topics_session_id_fkey'
+            columns: ['session_id']
+            isOneToOne: false
+            referencedRelation: 'sessions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'session_topics_topic_id_fkey'
+            columns: ['topic_id']
+            isOneToOne: false
+            referencedRelation: 'training_topics'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      topic_segments: {
+        Row: {
+          id: string
+          topic_id: string
+          chapter: string
+          kind: TopicSegmentKind
+          content_json: Json
+          order_index: number
+          is_active: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          topic_id: string
+          chapter: string
+          kind: TopicSegmentKind
+          content_json: Json
+          order_index?: number
+          is_active?: boolean
+          updated_at?: string
+        }
+        Update: {
+          chapter?: string
+          kind?: TopicSegmentKind
+          content_json?: Json
+          order_index?: number
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'topic_segments_topic_id_fkey'
+            columns: ['topic_id']
+            isOneToOne: false
+            referencedRelation: 'training_topics'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -541,6 +864,22 @@ export interface Database {
         Args: { p_token: string }
         Returns: string | null
       }
+      has_presenter_access: {
+        Args: { uid: string }
+        Returns: boolean
+      }
+      get_session_live_responses: {
+        Args: { p_session_id: string; p_exercise_slugs: string[] }
+        Returns: Array<{
+          participant_id: string
+          display_name: string
+          exercise_slug: string
+          exercise_type: string
+          response_json: Json | null
+          is_complete: boolean
+          updated_at: string | null
+        }>
+      }
     }
     Enums: {
       [_ in never]: never
@@ -560,6 +899,11 @@ export type Exercise = Tables<'exercises'>
 export type Response = Tables<'responses'>
 export type Progress = Tables<'progress'>
 export type Testimonial = Tables<'testimonials'>
+export type DeckSlide = Tables<'deck_slides'>
+export type SessionDeckOverride = Tables<'session_deck_overrides'>
+export type TrainingTopic = Tables<'training_topics'>
+export type SessionTopic = Tables<'session_topics'>
+export type TopicSegment = Tables<'topic_segments'>
 
 // SectionGroup is a logical entity derived from sections.group_slug + GROUP_META
 // (no separate DB table — see specs/004-content-restructure/research.md R1).

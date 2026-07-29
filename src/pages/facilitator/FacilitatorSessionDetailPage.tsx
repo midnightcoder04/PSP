@@ -1,12 +1,16 @@
 import { useEffect, useState, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/hooks/useAuth'
 import { useRealtimeSession } from '@/hooks/useRealtimeSession'
 import { PageShell } from '@/components/layout/PageShell'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 import { BulkAddModal } from '@/components/admin/BulkAddModal'
+import { CoverOverrideModal } from '@/components/deck/CoverOverrideModal'
+import { DeckPdfButton } from '@/components/deck/DeckPdfButton'
+import { SessionSettingsCard } from '@/components/admin/SessionSettingsCard'
 import styles from './FacilitatorSessionDetailPage.module.css'
 
 interface ParticipantRow {
@@ -85,11 +89,14 @@ function SectionStrip({ sections }: { sections: ParticipantRow['sections'] }) {
 
 export default function FacilitatorSessionDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { profile } = useAuth()
   const [session, setSession] = useState<SessionInfo | null>(null)
   const [participants, setParticipants] = useState<ParticipantRow[]>([])
   const [loading, setLoading] = useState(true)
   const [maxBulkAdd, setMaxBulkAdd] = useState(10)
   const [showBulkAdd, setShowBulkAdd] = useState(false)
+  const [showCoverModal, setShowCoverModal] = useState(false)
 
   const isArchived = session
     ? !session.is_active || (session.scheduled_end ? new Date(session.scheduled_end) < new Date() : false)
@@ -153,7 +160,31 @@ export default function FacilitatorSessionDetailPage() {
             Add members
           </Button>
         ) : null}
+        {profile?.can_present && !isArchived ? (
+          <span className={styles.presentActions}>
+            <Button size="sm" variant="secondary" onClick={() => setShowCoverModal(true)}>
+              Customize cover
+            </Button>
+            <DeckPdfButton sessionId={id!} />
+            <Button size="sm" onClick={() => navigate(`/facilitator/sessions/${id}/present`)}>
+              Present
+            </Button>
+          </span>
+        ) : null}
       </div>
+
+      {profile?.can_present && !isArchived && id ? (
+        <SessionSettingsCard sessionId={id} />
+      ) : null}
+
+      {showCoverModal ? (
+        <CoverOverrideModal
+          sessionId={id!}
+          sessionTitle={session?.title ?? ''}
+          onClose={() => setShowCoverModal(false)}
+          onSaved={() => setShowCoverModal(false)}
+        />
+      ) : null}
 
       {showBulkAdd ? (
         <BulkAddModal

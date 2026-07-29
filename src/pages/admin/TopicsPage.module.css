@@ -1,0 +1,200 @@
+.lede {
+  color: var(--color-text-muted);
+  max-width: 60ch;
+  margin: 0 0 var(--space-4, 16px);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8, 48px);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(200px, 260px) 1fr;
+  gap: var(--space-5, 24px);
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Topic list ── */
+.topicList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 12px);
+}
+
+.topicList ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.topicItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-surface, transparent);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.topicItem[data-selected] {
+  border-color: var(--color-trust);
+  background: var(--color-trust-subtle, rgba(0, 0, 0, 0.04));
+  font-weight: var(--weight-semibold);
+}
+
+/* ── Editor ── */
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+  min-width: 0;
+}
+
+.editorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.editorActions {
+  display: flex;
+  gap: 8px;
+}
+
+.slug {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: var(--weight-semibold);
+}
+
+.field input[type='text'],
+.field textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.hint {
+  font-weight: var(--weight-regular, 400);
+  color: var(--color-text-muted);
+}
+
+.activeToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+/* ── Segments ── */
+.segmentsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-3, 12px);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-4, 16px);
+}
+
+.segmentsTitle {
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.emptyNote {
+  color: var(--color-text-muted);
+}
+
+.segmentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+}
+
+.segmentCard {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 10px);
+  padding: var(--space-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 12px);
+}
+
+.segmentRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.selectField,
+.orderField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: var(--weight-semibold);
+}
+
+.selectField select,
+.orderField input {
+  padding: 6px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.orderField input {
+  width: 80px;
+}
+
+.segmentActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.segmentActions .activeToggle {
+  margin-right: auto;
+}

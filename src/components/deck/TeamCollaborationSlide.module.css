@@ -1,0 +1,165 @@
+/* TeamCollaborationSlide — a full-stage presenter slide showing limited
+   per-participant profiles for team-based sessions. Fills the 16:9 stage; the
+   card grid scrolls if the cohort is large. Sizing mirrors DeckSlideView. */
+
+.slide {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2vh, 20px);
+  padding: clamp(16px, 4.5vmin, 56px);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  --disc-D: #e23b4e;
+  --disc-I: #eab52c;
+  --disc-S: #2fb57c;
+  --disc-C: #29abe2;
+  --deck-accent: var(--color-trust);
+}
+
+.header {
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.kicker {
+  font-size: clamp(0.75rem, 1.8vmin, 1rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--deck-accent);
+  margin: 0;
+}
+
+.heading {
+  font-size: clamp(1.3rem, 4vmin, 2.6rem);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  margin: 0.1em 0 0;
+}
+
+.sub {
+  font-size: clamp(0.85rem, 2vmin, 1.2rem);
+  color: var(--color-text-muted);
+  margin: 0.2em 0 0;
+}
+
+.grid {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(180px, 22vmin, 280px), 1fr));
+  gap: clamp(8px, 1.6vmin, 18px);
+  overflow-y: auto;
+  align-content: start;
+  padding: 2px;
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 12px);
+  background: var(--color-surface, var(--color-bg));
+  padding: clamp(10px, 1.8vmin, 18px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vmin, 12px);
+}
+
+.name {
+  font-size: clamp(1rem, 2.2vmin, 1.35rem);
+  font-weight: var(--weight-bold);
+  margin: 0;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.8vmin, 10px);
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fact dt {
+  font-size: clamp(0.6rem, 1.3vmin, 0.75rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.fact dd {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.8vmin, 1.05rem);
+}
+
+.disc {
+  display: inline-flex;
+  align-items: center;
+  font-weight: var(--weight-semibold);
+  padding: 0.1em 0.5em;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--disc-accent, var(--color-trust));
+}
+.disc[data-style='D'] { --disc-accent: var(--disc-D); }
+.disc[data-style='I'] { --disc-accent: var(--disc-I); }
+.disc[data-style='S'] { --disc-accent: var(--disc-S); }
+.disc[data-style='C'] { --disc-accent: var(--disc-C); }
+
+/* Numbered top-3 list (attitudes). Counter markers sit inside the dd so the
+   ranks stay visible without stealing the card's horizontal space. */
+.ranked {
+  list-style: none;
+  counter-reset: rank;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ranked li {
+  counter-increment: rank;
+  display: flex;
+  gap: 0.4em;
+  line-height: var(--leading-snug, 1.35);
+}
+
+.ranked li::before {
+  content: counter(rank) '.';
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
+.values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.valueChip {
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.05em 0.55em;
+  font-size: clamp(0.75rem, 1.6vmin, 0.95rem);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.loading,
+.empty {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}

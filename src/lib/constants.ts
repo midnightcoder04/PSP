@@ -9,9 +9,12 @@ export const ROUTES = {
   ADMIN_SESSIONS: '/admin/sessions',
   ADMIN_SESSION_DETAIL: '/admin/sessions/:id',
   ADMIN_TESTIMONIALS: '/admin/testimonials',
+  ADMIN_DECK: '/admin/deck',
+  ADMIN_TOPICS: '/admin/topics',
   // Facilitator
   FACILITATOR: '/facilitator',
   FACILITATOR_SESSION_DETAIL: '/facilitator/sessions/:id',
+  FACILITATOR_SESSION_PRESENT: '/facilitator/sessions/:id/present',
   FACILITATOR_TESTIMONIALS: '/facilitator/testimonials',
   // Course (participant)
   COURSE: '/course',

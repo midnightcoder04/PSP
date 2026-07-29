@@ -13,9 +13,12 @@ const UsersPage                = lazy(() => import('@/pages/admin/UsersPage'))
 const SessionsPage             = lazy(() => import('@/pages/admin/SessionsPage'))
 const AdminSessionDetail       = lazy(() => import('@/pages/admin/AdminSessionDetailPage'))
 const AdminTestimonialsPage    = lazy(() => import('@/pages/admin/TestimonialsPage'))
+const DeckEditorPage           = lazy(() => import('@/pages/admin/DeckEditorPage'))
+const TopicsPage               = lazy(() => import('@/pages/admin/TopicsPage'))
 const FacilitatorDashboard     = lazy(() => import('@/pages/facilitator/FacilitatorDashboard'))
 const FacilitatorSession       = lazy(() => import('@/pages/facilitator/FacilitatorSessionDetailPage'))
 const FacilitatorTestimonials  = lazy(() => import('@/pages/facilitator/TestimonialsPage'))
+const PresentationPage         = lazy(() => import('@/pages/present/PresentationPage'))
 const CourseHome               = lazy(() => import('@/pages/course/CourseHome'))
 const SectionPage              = lazy(() => import('@/pages/course/SectionPage'))
 const CourseHistoryPage        = lazy(() => import('@/pages/course/CourseHistoryPage'))
@@ -57,6 +60,12 @@ export default function App() {
               <Route path="/admin/testimonials" element={
                 <AuthGuard requiredRole="admin"><AdminTestimonialsPage /></AuthGuard>
               } />
+              <Route path="/admin/deck" element={
+                <AuthGuard requiredRole="admin"><DeckEditorPage /></AuthGuard>
+              } />
+              <Route path="/admin/topics" element={
+                <AuthGuard requiredRole="admin"><TopicsPage /></AuthGuard>
+              } />
 
               {/* Facilitator */}
               <Route path="/facilitator" element={
@@ -64,6 +73,10 @@ export default function App() {
               } />
               <Route path="/facilitator/sessions/:id" element={
                 <AuthGuard requiredRole="facilitator"><FacilitatorSession /></AuthGuard>
+              } />
+              {/* Chromeless full-screen presenter (no PageShell) */}
+              <Route path="/facilitator/sessions/:id/present" element={
+                <AuthGuard requiredRole="facilitator"><PresentationPage /></AuthGuard>
               } />
               <Route path="/facilitator/testimonials" element={
                 <AuthGuard requiredRole="facilitator"><FacilitatorTestimonials /></AuthGuard>

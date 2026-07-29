@@ -1,0 +1,1135 @@
+{
+  "slides": [
+    {
+      "slug": "opening-franklin-quote",
+      "kind": "quote",
+      "chapter": "opening",
+      "order_index": 10,
+      "content_json": {
+        "quote": "If you fail to plan, you are planning to fail.",
+        "attribution": "Benjamin Franklin"
+      },
+      "linked_exercise_slugs": [],
+      "notes": "Walk-in slide. Let it sit while participants settle."
+    },
+    {
+      "slug": "opening-participant-note",
+      "kind": "image",
+      "chapter": "opening",
+      "order_index": 20,
+      "content_json": {
+        "title": "From a past participant",
+        "src": "/deck/testimonial-note.jpg",
+        "caption": "A handwritten note received after a PSP session."
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "opening-select-hr",
+      "kind": "section-title",
+      "chapter": "opening",
+      "order_index": 30,
+      "content_json": {
+        "kicker": "SELECT HR SOLUTIONS",
+        "title": "Empowering Individuals Globally to Take Charge of Their Future",
+        "subtitle": "Recruitments · Career Life Coaching",
+        "logos_title": "Hiring partner · Trusted by leading organizations",
+        "logo_groups": [
+          {
+            "heading": "Recruitment Consulting",
+            "logos": [
+              { "name": "H&R Block", "src": "/deck/logos/hr-block.png" },
+              { "name": "GWC", "src": "/deck/logos/gwc.png" },
+              { "name": "Nissan Digital", "src": "/deck/logos/nissan-digital.png" },
+              { "name": "NedAir Freight BV", "src": "/deck/logos/nedair.png" },
+              { "name": "Wells Fargo", "src": "/deck/logos/wells-fargo.png" },
+              { "name": "Armada", "src": "/deck/logos/armada.png" }
+            ]
+          },
+          {
+            "heading": "Corporate Training & People Development",
+            "logos": [
+              { "name": "ThinkPalm", "src": "/deck/logos/thinkpalm.png" },
+              { "name": "Reflections", "src": "/deck/logos/reflections.png" },
+              { "name": "Fakeeh Tech", "src": "/deck/logos/fakeeh-tech.png" }
+            ]
+          }
+        ]
+      },
+      "linked_exercise_slugs": [],
+      "notes": "Hiring-partner / client credibility slide. Logos are grouped by line of business: recruitment consulting on the left, corporate training on the right."
+    },
+    {
+      "slug": "opening-sam-koshy",
+      "kind": "image",
+      "chapter": "opening",
+      "order_index": 40,
+      "content_json": {
+        "title": "Sam Koshy",
+        "src": "/deck/sam-koshy.jpg",
+        "caption": "Author of Personal Strategic Planning™ · Founder of Compass Career Life Solutions, Canada"
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "opening-bijo-abraham",
+      "kind": "image",
+      "chapter": "opening",
+      "order_index": 45,
+      "content_json": {
+        "title": "Bijo Abraham",
+        "src": "/deck/bijo-abraham.jpg",
+        "caption": "Career and Life Planning Coach · Founder of Select HR Solutions, India"
+      },
+      "linked_exercise_slugs": [],
+      "notes": "Facilitator introduction. Follows the Sam Koshy slide so the room sees the author and the facilitator back to back."
+    },
+    {
+      "slug": "opening-cover",
+      "kind": "cover",
+      "chapter": "opening",
+      "order_index": 50,
+      "content_json": {
+        "title": "Personal Strategic Planning™",
+        "subtitle": "PSP™",
+        "org_line": "Adapted with permission from Sam Koshy · Compass Career Life Solutions",
+        "image": "/deck/psp-model.jpg"
+      },
+      "linked_exercise_slugs": [],
+      "notes": "Title slide. The session title, date and facilitator name can be customised per session from the session page."
+    },
+    {
+      "slug": "opening-expectation-setting",
+      "kind": "bullets",
+      "chapter": "opening",
+      "order_index": 60,
+      "content_json": {
+        "title": "Expectation Setting",
+        "bullets": [
+          "Trust your instincts: the first thought that comes to your mind is likely correct. Avoid overthinking.",
+          "Focus on your natural self: our goal is to discover who you are naturally, not how you are in specific situations.",
+          "Think holistically: don't just focus on one aspect; consider your complete self.",
+          "Balanced perspective: when given options, remember that you possess both qualities. The focus is on understanding which side is more dominant in you."
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-what-is",
+      "kind": "image",
+      "chapter": "personality",
+      "order_index": 70,
+      "content_json": {
+        "title": "What is personality?",
+        "src": "/deck/crowd.jpg"
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-disc",
+      "kind": "image",
+      "chapter": "personality",
+      "order_index": 80,
+      "content_json": {
+        "title": "The D.I.S.C. Model",
+        "src": "/deck/disc-logo.png",
+        "caption": "Dominance · Influence · Steadiness · Compliance"
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-introvert-extrovert",
+      "kind": "two-col",
+      "chapter": "personality",
+      "order_index": 90,
+      "content_json": {
+        "title": "What are you predominantly?",
+        "columns": [
+          {
+            "heading": "Introvert",
+            "bullets": [],
+            "image": "/deck/introvert.png"
+          },
+          {
+            "heading": "Extrovert",
+            "bullets": [],
+            "image": "/deck/extrovert.png"
+          }
+        ]
+      },
+      "linked_exercise_slugs": [
+        "core-style-q1-extroversion"
+      ]
+    },
+    {
+      "slug": "personality-people-task",
+      "kind": "two-col",
+      "chapter": "personality",
+      "order_index": 100,
+      "content_json": {
+        "title": "What are you predominantly?",
+        "columns": [
+          {
+            "heading": "People Oriented",
+            "bullets": [],
+            "image": "/deck/people-task-1.jpg"
+          },
+          {
+            "heading": "Task Oriented",
+            "bullets": [],
+            "image": "/deck/people-task-2.jpg"
+          }
+        ]
+      },
+      "linked_exercise_slugs": [
+        "core-style-q2-orientation"
+      ]
+    },
+    {
+      "slug": "personality-high-d",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 110,
+      "content_json": {
+        "style": "D",
+        "title": "HIGH D",
+        "subtitle": "Extroverted + Task Oriented",
+        "adjectives": [
+          "Ambitious",
+          "Forceful",
+          "Decisive",
+          "Direct",
+          "Independent",
+          "Challenging",
+          "Results oriented"
+        ],
+        "statements": [
+          "I have a desire to win",
+          "Argumentative",
+          "Fast paced",
+          "I tend to juggle a lot at once",
+          "I am quick to accept challenge",
+          "I usually interrupt and am impatient with long explanations",
+          "I tend to act or speak before thinking",
+          "I am not afraid of high risk",
+          "I tend to create fear in others",
+          "I tend to be impatient"
+        ],
+        "youAre": [
+          "Able to make decisions quickly",
+          "Willing to state unpopular opinions",
+          "Risk taking"
+        ],
+        "environment": [
+          "Freedom from controls, supervision and details",
+          "Evaluation based on results, not process or method",
+          "An innovative and futuristic oriented environment",
+          "Non-routine work with challenge and opportunity",
+          "A forum for them to express their ideas and viewpoints"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-comfort-zones-d",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 120,
+      "content_json": {
+        "style": "D",
+        "title": "Comfort Zones for HIGH D",
+        "subtitle": "How much room a High D has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "moderate",
+            "text": "Though both have the same approach toward life, their tendency to challenge and need to have their own way reduces their Comfort Zone."
+          },
+          {
+            "other": "I",
+            "level": "high",
+            "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
+          },
+          {
+            "other": "S",
+            "level": "low",
+            "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
+          },
+          {
+            "other": "C",
+            "level": "low",
+            "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
+          }
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-high-i",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 130,
+      "content_json": {
+        "style": "I",
+        "title": "HIGH I",
+        "subtitle": "Extroverted + People Oriented",
+        "adjectives": [
+          "Expressive",
+          "Enthusiastic",
+          "Friendly",
+          "Demonstrative",
+          "Talkative",
+          "Stimulating"
+        ],
+        "statements": [
+          "I have a good sense of humor",
+          "I treat everyone as a friend",
+          "I am fun loving",
+          "I am a creative problem solver",
+          "I am usually very optimistic",
+          "I tend to talk before thinking",
+          "I very often lose track of time",
+          "I prefer to back away from conflict",
+          "I tend to be disorganized",
+          "I am very trusting of others"
+        ],
+        "youAre": [
+          "A natural optimist",
+          "Trusting of others",
+          "Able to make others feel welcome and/or included"
+        ],
+        "environment": [
+          "Assignments with a high degree of people contacts",
+          "Tasks involving motivating groups and establishing a network of contacts",
+          "Democratic supervisor with whom they can associate",
+          "Freedom from control and detail",
+          "Freedom of movement",
+          "Multi-changing work tasks"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-comfort-zones-i",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 140,
+      "content_json": {
+        "style": "I",
+        "title": "Comfort Zones for HIGH I",
+        "subtitle": "How much room a High I has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "high",
+            "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
+          },
+          {
+            "other": "I",
+            "level": "very-high",
+            "text": "High Comfort Zone is maximized by their enjoyment of and need for personal interaction."
+          },
+          {
+            "other": "S",
+            "level": "moderate",
+            "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
+          },
+          {
+            "other": "C",
+            "level": "high",
+            "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
+          }
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-high-s",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 150,
+      "content_json": {
+        "style": "S",
+        "title": "HIGH S",
+        "subtitle": "Introverted + People Oriented",
+        "adjectives": [
+          "Methodical",
+          "Systematic",
+          "Reliable",
+          "Steady",
+          "Relaxed",
+          "Modest"
+        ],
+        "statements": [
+          "I need secure situations",
+          "I'm a good planner",
+          "I need closure",
+          "I'm a great listener",
+          "I am usually calm and stabilize others",
+          "I mask my emotions",
+          "I tend to be indirect to avoid conflict",
+          "I tend to be possessive of things",
+          "I tend to be too low risk",
+          "I tend to hold a grudge",
+          "I tend to adapt very quickly to others",
+          "I tend to resist changes"
+        ],
+        "youAre": [
+          "Have a tenacity for order",
+          "Possess a natural ability to organize tasks"
+        ],
+        "environment": [
+          "Jobs for which standards and methods are established",
+          "Environment where long standing relationships can be or are developed",
+          "Personal attention and recognition for tasks complete and well done",
+          "Stable and predictable environment",
+          "Environment that allows time for change",
+          "Environment where people can be dealt with on a personal, intimate basis"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-comfort-zones-s",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 160,
+      "content_json": {
+        "style": "S",
+        "title": "Comfort Zones for HIGH S",
+        "subtitle": "How much room a High S has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "low",
+            "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
+          },
+          {
+            "other": "I",
+            "level": "moderate",
+            "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
+          },
+          {
+            "other": "S",
+            "level": "very-high",
+            "text": "Similar opinions and their high tolerance and sociability create a very high Comfort Zone."
+          },
+          {
+            "other": "C",
+            "level": "high",
+            "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
+          }
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-high-c",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 170,
+      "content_json": {
+        "style": "C",
+        "title": "HIGH C",
+        "subtitle": "Introverted + Task Oriented",
+        "adjectives": [
+          "Analytical",
+          "Contemplative",
+          "Conservative",
+          "Exacting",
+          "Careful",
+          "Deliberate"
+        ],
+        "statements": [
+          "I like to organize and analyze",
+          "I work well alone",
+          "I have high expectations",
+          "I like to follow rules",
+          "I am self-competitive",
+          "I can solve complex problems",
+          "I live my life by rules of behaving",
+          "I tend to want as much data as possible",
+          "I tend to be hard on myself",
+          "I never take unnecessary chances",
+          "I tend to feel emotions are very irrational",
+          "I tend to see faults in others",
+          "I tend to analyze things to death"
+        ],
+        "youAre": [
+          "A natural systems developer",
+          "A good quality control person",
+          "Willing to dig for information"
+        ],
+        "environment": [
+          "Where critical thinking is needed and rewarded",
+          "Assignments can be followed through to completion",
+          "Technical, task-oriented work, specialized",
+          "Noise and people are at a minimum",
+          "Close relationship with a small group of people",
+          "Environment where quality and/or standards are important"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-comfort-zones-c",
+      "kind": "comfort-zones",
+      "chapter": "personality",
+      "order_index": 180,
+      "content_json": {
+        "style": "C",
+        "title": "Comfort Zones for HIGH C",
+        "subtitle": "How much room a High C has to work with each core style",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "pairs": [
+          {
+            "other": "D",
+            "level": "low",
+            "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
+          },
+          {
+            "other": "I",
+            "level": "high",
+            "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
+          },
+          {
+            "other": "S",
+            "level": "high",
+            "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
+          },
+          {
+            "other": "C",
+            "level": "high",
+            "text": "Respect for rules and established protocol and their desire to avoid conflict create a High Comfort Zone."
+          }
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-four-styles",
+      "kind": "two-col",
+      "chapter": "personality",
+      "order_index": 190,
+      "content_json": {
+        "title": "The Four Core Styles",
+        "columns": [
+          {
+            "heading": "HIGH D",
+            "bullets": [
+              "Ambitious",
+              "Forceful",
+              "Decisive",
+              "Direct",
+              "Independent",
+              "Challenging",
+              "Results oriented"
+            ]
+          },
+          {
+            "heading": "HIGH I",
+            "bullets": [
+              "Expressive",
+              "Enthusiastic",
+              "Friendly",
+              "Demonstrative",
+              "Talkative",
+              "Stimulating"
+            ]
+          },
+          {
+            "heading": "HIGH S",
+            "bullets": [
+              "Methodical",
+              "Systematic",
+              "Reliable",
+              "Steady",
+              "Relaxed",
+              "Modest"
+            ]
+          },
+          {
+            "heading": "HIGH C",
+            "bullets": [
+              "Analytical",
+              "Contemplative",
+              "Conservative",
+              "Exacting",
+              "Careful",
+              "Deliberate"
+            ]
+          }
+        ]
+      },
+      "linked_exercise_slugs": [
+        "core-style-q1-extroversion",
+        "core-style-q2-orientation"
+      ],
+      "notes": "Open the responses panel to show the room's core-style distribution."
+    },
+    {
+      "slug": "attitudes-what-are",
+      "kind": "image",
+      "chapter": "attitudes",
+      "order_index": 200,
+      "content_json": {
+        "title": "What are Attitudes?",
+        "src": "/deck/attitudes-mindfulness.svg"
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "attitudes-types-of-men",
+      "kind": "image",
+      "chapter": "attitudes",
+      "order_index": 210,
+      "content_json": {
+        "title": "Six Attitudes",
+        "src": "/deck/types-of-men.jpg",
+        "caption": "Based on Eduard Spranger, Types of Men (1928)"
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "attitudes-a",
+      "kind": "bullets",
+      "chapter": "attitudes",
+      "order_index": 220,
+      "content_json": {
+        "title": "A.",
+        "bullets": [
+          "I like solving problems.",
+          "I like objectivity in all areas of life.",
+          "I like identifying, differentiating, generalizing, systematizing.",
+          "I like intellectual process.",
+          "I like discovery, understanding, ordering.",
+          "I like pursuit of knowledge, identifying truth and untruth.",
+          "I like knowledge for the sake of knowing.",
+          "I hate inability to know, learn or discover.",
+          "I hate emotional, subjective experience without rational justification."
+        ]
+      },
+      "linked_exercise_slugs": [],
+      "notes": "Don't name the attitude yet — participants read and see which resonates."
+    },
+    {
+      "slug": "attitudes-b",
+      "kind": "bullets",
+      "chapter": "attitudes",
+      "order_index": 230,
+      "content_json": {
+        "title": "B.",
+        "bullets": [
+          "I like appreciation of form, harmony and beauty.",
+          "I like enjoyment of all the senses.",
+          "I like subjective experience.",
+          "I like understanding the feelings of myself and others.",
+          "I like self-realization, self-fulfillment and self-actualization.",
+          "I like creative expression.",
+          "I like appreciation of impressions.",
+          "I hate disturbances in form, beauty and harmony in myself, others and/or the environment.",
+          "I object to objective truth."
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "attitudes-c",
+      "kind": "bullets",
+      "chapter": "attitudes",
+      "order_index": 240,
+      "content_json": {
+        "title": "C.",
+        "bullets": [
+          "I like understanding the totality of life.",
+          "I like finding meaning in life.",
+          "I like pursuit of the divine in life.",
+          "I like following and dying for a cause.",
+          "I like living constantly according to a \"closed\" book.",
+          "I like converting others to my way of thinking.",
+          "I don't like people who oppose my beliefs."
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "attitudes-d",
+      "kind": "bullets",
+      "chapter": "attitudes",
+      "order_index": 250,
+      "content_json": {
+        "title": "D.",
+        "bullets": [
+          "I like practicality in all areas of my life.",
+          "I like surpassing others in the attainment of wealth.",
+          "I like using resources to accomplish results.",
+          "I like gaining a measurable return on all my investments.",
+          "I like creative application of resources.",
+          "I like producing goods, materials, services & marketing them for economic gain.",
+          "I like capitalism.",
+          "I like maximizing or conserving resources.",
+          "I don't like to see wasted resources, time, materials and/or services.",
+          "I hate investments with inadequate or no return."
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "attitudes-e",
+      "kind": "bullets",
+      "chapter": "attitudes",
+      "order_index": 260,
+      "content_json": {
+        "title": "E.",
+        "bullets": [
+          "I like investing in others.",
+          "I like selflessness.",
+          "I like generosity of time, talent and resources.",
+          "I like seeing and developing potential in others.",
+          "I like championing a worthy cause.",
+          "I don't like rampant individualism.",
+          "I hate decisions and actions which are insensitive to people's needs."
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "attitudes-f",
+      "kind": "bullets",
+      "chapter": "attitudes",
+      "order_index": 270,
+      "content_json": {
+        "title": "F.",
+        "bullets": [
+          "I like leading others.",
+          "I like achieving position.",
+          "I like advancing position and strategic alliances.",
+          "I like attaining and using power to accomplish purpose.",
+          "I like planning and carrying out a winning strategy.",
+          "I like tactics and positioning.",
+          "I hate actual or perceived threat of diminished power or position.",
+          "I hate inability to advance, lack of opportunity for individual advancement."
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "attitudes-revealed",
+      "kind": "two-col",
+      "chapter": "attitudes",
+      "order_index": 280,
+      "content_json": {
+        "title": "The Six Attitudes",
+        "columns": [
+          {
+            "heading": "A) The Theoretical Attitude",
+            "bullets": [
+              "I use my intellect to systematically understand and discover the truth. The discovery of Truth and Knowledge is my main motivation in life. I seek knowledge for its own sake."
+            ]
+          },
+          {
+            "heading": "B) The Aesthetic Attitude",
+            "bullets": [
+              "I enjoy and experience the beauty around me and find meaning and fulfilment within the experience of living. My main motivation is to experience the Inner Vision."
+            ]
+          },
+          {
+            "heading": "C) The Traditional Attitude",
+            "bullets": [
+              "I pursue and understand the highest meaning of life within an established system of beliefs. My main motivation is to search and find the highest value in life."
+            ]
+          },
+          {
+            "heading": "D) The Utilitarian Attitude",
+            "bullets": [
+              "I see most things in terms of their usefulness and practicality. My main motivation is to turn what I do and have into a useful purpose."
+            ]
+          },
+          {
+            "heading": "E) The Social Attitude",
+            "bullets": [
+              "I enjoy helping others and believe that all decisions should be sensitive to people's needs. My main goal in life is to do what I can to eliminate hate and conflict in the world."
+            ]
+          },
+          {
+            "heading": "F) The Individualistic Attitude",
+            "bullets": [
+              "I want to achieve the highest position possible and wield the greatest power in my chosen field and will do everything within my ability to reach these goals."
+            ]
+          }
+        ]
+      },
+      "linked_exercise_slugs": [
+        "identifying-attitudes",
+        "attitude-types-watusi"
+      ],
+      "notes": "Open the responses panel to show which attitudes the room identified with, and the W.A.T.U.S.I. spread."
+    },
+    {
+      "slug": "values-what-are",
+      "kind": "image",
+      "chapter": "values",
+      "order_index": 290,
+      "content_json": {
+        "title": "What are Values?",
+        "src": "/deck/values-preferences.svg"
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "values-shopping-1",
+      "kind": "numbered-list",
+      "chapter": "values",
+      "order_index": 300,
+      "content_json": {
+        "title": "Values Shopping Spree",
+        "start": 1,
+        "items": [
+          "A process guaranteed to rid the world of prejudice and racism.",
+          "An opportunity to help the sick and impoverished and allow them happier lives.",
+          "The charisma and resources necessary to become famous (movie star, sports hero, astronaut, author).",
+          "The chance to create and implement a sure-fire money-making idea.",
+          "A morning massage everyday and breakfast, lunch and dinner cooked by a world class chef.",
+          "Absolute enlightenment and understanding of myself.",
+          "Consistency throughout my life between thought, word and deed.",
+          "The opportunity to be my own boss.",
+          "As much money as Bill Gates (even more).",
+          "To be President of The World."
+        ]
+      },
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ]
+    },
+    {
+      "slug": "values-shopping-2",
+      "kind": "numbered-list",
+      "chapter": "values",
+      "order_index": 310,
+      "content_json": {
+        "title": "Values Shopping Spree",
+        "start": 11,
+        "items": [
+          "The perfect relationship.",
+          "My dream house with a breath-taking view, filled with my favorite things.",
+          "To be one of the most attractive people in the world.",
+          "To be perfectly healthy.",
+          "Peace of mind.",
+          "My own library filled with every publication I ever wanted to read.",
+          "Absolute union with the Almighty in thought and deed.",
+          "A world of equal justice and opportunity for everyone.",
+          "Enough money to fund an organization that truly helps everyone.",
+          "To win the Nobel Prize in my chosen field, and be praised everywhere in the world."
+        ]
+      },
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ]
+    },
+    {
+      "slug": "values-shopping-3",
+      "kind": "numbered-list",
+      "chapter": "values",
+      "order_index": 320,
+      "content_json": {
+        "title": "Values Shopping Spree",
+        "start": 21,
+        "items": [
+          "To master every skill needed to be the best in my job.",
+          "A genie at my beck and call, with unlimited power to satisfy my every wish so I can enjoy life to the fullest.",
+          "To be the wisest person ever to live.",
+          "A bottle of \"honesty gas\" large enough to cure the whole world of lying.",
+          "To be completely independent of anyone.",
+          "To own a Texas oil well.",
+          "To be a role model and guru to people throughout the world.",
+          "To perfectly express my love and caring.",
+          "A Super Pass that lets me into any concert, play, opera, art show or ballet and to travel anywhere I want by land, sea or air."
+        ]
+      },
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ]
+    },
+    {
+      "slug": "values-shopping-4",
+      "kind": "numbered-list",
+      "chapter": "values",
+      "order_index": 330,
+      "content_json": {
+        "title": "Values Shopping Spree",
+        "start": 30,
+        "items": [
+          "A complete make-over: hair, clothes, manicure, plastic surgery, time at a spa, whatever I want in order to look my best.",
+          "The perfect body.",
+          "Absolute self-esteem and the confidence to think and say what I feel.",
+          "To learn anything instantly and be able to recall it at a moment's notice.",
+          "Uninterrupted conversations with any spiritual leader(s) I want, past or present."
+        ]
+      },
+      "linked_exercise_slugs": [
+        "values-shopping-spree"
+      ],
+      "notes": "Open the responses panel to show what the room spent their $10,000 on."
+    },
+    {
+      "slug": "values-my-values",
+      "kind": "section-title",
+      "chapter": "values",
+      "order_index": 340,
+      "content_json": {
+        "title": "MY VALUES",
+        "subtitle": "Ranking what matters most"
+      },
+      "linked_exercise_slugs": [
+        "what-do-i-value"
+      ]
+    },
+    {
+      "slug": "values-my-top-values",
+      "kind": "section-title",
+      "chapter": "values",
+      "order_index": 350,
+      "content_json": {
+        "title": "MY VALUES",
+        "subtitle": "My top three values"
+      },
+      "linked_exercise_slugs": [
+        "top-three-values"
+      ]
+    },
+    {
+      "slug": "values-definitions-1",
+      "kind": "bullets",
+      "chapter": "values",
+      "order_index": 360,
+      "content_json": {
+        "title": "Value Definitions",
+        "bullets": [
+          "Justice — Moral rightness, honor, fairness",
+          "Humanitarianism — Devotion to the promotion of human welfare",
+          "Recognition — Acknowledgment of one's significance or importance",
+          "Achievement — Accomplishment",
+          "Pleasure — Enjoyment, satisfaction, satiation",
+          "Wisdom — Understanding of what is true, right or lasting",
+          "Honesty — Straightforwardness, integrity, consistency",
+          "Autonomy — Independence, self-containment",
+          "Economy — Abundance of material possessions, wealth",
+          "Power — Control, authority or influence",
+          "Love — Affection, warm attachment, caring",
+          "Aesthetics — Appreciation and enjoyment of beauty for beauty's sake"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "values-definitions-2",
+      "kind": "bullets",
+      "chapter": "values",
+      "order_index": 370,
+      "content_json": {
+        "title": "Value Definitions (continued)",
+        "bullets": [
+          "Physical Attractiveness — Concern for the appearance of one's body",
+          "Health — Concern for the health of one's body",
+          "Feeling of Well-Being — Freedom from anxiety, imbalance; peace of mind",
+          "Knowledge — Seeking of truth and/or information",
+          "Spiritual Well-Being — Communion with, obedience to, and activity on behalf of a Supreme Being"
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "roles-life-line",
+      "kind": "statement",
+      "chapter": "roles",
+      "order_index": 380,
+      "content_json": {
+        "title": "MY LIFE LINE",
+        "body": "\"What you think and what you believe are what will come true for you. Your thoughts create your life. Once you accept this you can start to deliberately create what you want in your life.\"\n— Louise Hay"
+      },
+      "linked_exercise_slugs": [
+        "life-line-exercise"
+      ]
+    },
+    {
+      "slug": "roles-and-demands",
+      "kind": "statement",
+      "chapter": "roles",
+      "order_index": 390,
+      "content_json": {
+        "title": "ROLES & THEIR DEMANDS",
+        "body": "Write 10 roles that you play or want to play.\nPrioritize them."
+      },
+      "linked_exercise_slugs": [
+        "who-am-i-now"
+      ]
+    },
+    {
+      "slug": "roles-past-inventory",
+      "kind": "section-title",
+      "chapter": "roles",
+      "order_index": 400,
+      "content_json": {
+        "title": "PAST INVENTORY"
+      },
+      "linked_exercise_slugs": [
+        "past-experience-inventory"
+      ]
+    },
+    {
+      "slug": "roles-contract",
+      "kind": "section-title",
+      "chapter": "roles",
+      "order_index": 410,
+      "content_json": {
+        "title": "A CONTRACT WITH MYSELF"
+      },
+      "linked_exercise_slugs": [
+        "contract-with-myself"
+      ]
+    },
+    {
+      "slug": "roles-mission-statement",
+      "kind": "section-title",
+      "chapter": "roles",
+      "order_index": 420,
+      "content_json": {
+        "title": "MY MISSION STATEMENT"
+      },
+      "linked_exercise_slugs": [
+        "mission-statement"
+      ]
+    },
+    {
+      "slug": "skills-transferable",
+      "kind": "section-title",
+      "chapter": "skills",
+      "order_index": 430,
+      "content_json": {
+        "title": "MY TRANSFERABLE SKILLS"
+      },
+      "linked_exercise_slugs": [
+        "transferable-skills-with-individuals",
+        "transferable-skills-with-groups",
+        "transferable-skills-information"
+      ]
+    },
+    {
+      "slug": "skills-favorites",
+      "kind": "numbered-list",
+      "chapter": "skills",
+      "order_index": 440,
+      "content_json": {
+        "title": "My Favorite & Strongest Skills",
+        "start": 1,
+        "items": [
+          "My favorite and strongest skill",
+          "My second favorite and strongest skill",
+          "My third",
+          "My fourth",
+          "My fifth",
+          "My sixth"
+        ]
+      },
+      "linked_exercise_slugs": [
+        "favorite-strongest-skills"
+      ]
+    },
+    {
+      "slug": "goals-goal-setting",
+      "kind": "section-title",
+      "chapter": "goals",
+      "order_index": 450,
+      "content_json": {
+        "title": "GOAL SETTING"
+      },
+      "linked_exercise_slugs": [
+        "life-goal-inventory",
+        "goal-priorities"
+      ]
+    },
+    {
+      "slug": "goals-cross-matrix",
+      "kind": "section-title",
+      "chapter": "goals",
+      "order_index": 460,
+      "content_json": {
+        "title": "CROSS MATRIX"
+      },
+      "linked_exercise_slugs": [
+        "cross-impact-matrix"
+      ]
+    },
+    {
+      "slug": "goals-visualisation",
+      "kind": "two-col",
+      "chapter": "goals",
+      "order_index": 470,
+      "content_json": {
+        "title": "VISUALISATION",
+        "columns": [
+          {
+            "heading": "Left Brain",
+            "bullets": [
+              "logic",
+              "sequencing",
+              "linear thinking",
+              "mathematics",
+              "facts",
+              "thinking in words"
+            ]
+          },
+          {
+            "heading": "Right Brain",
+            "bullets": [
+              "imagination",
+              "holistic thinking",
+              "intuition",
+              "arts",
+              "rhythm",
+              "nonverbal cues",
+              "feelings visualization",
+              "daydreaming"
+            ]
+          }
+        ]
+      },
+      "linked_exercise_slugs": [
+        "visualization-journal"
+      ]
+    },
+    {
+      "slug": "goals-strategic-plan",
+      "kind": "section-title",
+      "chapter": "goals",
+      "order_index": 480,
+      "content_json": {
+        "title": "STRATEGIC PLAN"
+      },
+      "linked_exercise_slugs": [
+        "removing-obstacles",
+        "achieving-goal-actions",
+        "declaration-of-self-esteem"
+      ]
+    },
+    {
+      "slug": "closing-thank-you",
+      "kind": "contact",
+      "chapter": "closing",
+      "order_index": 490,
+      "content_json": {
+        "title": "THANK YOU",
+        "lines": [
+          "Reach us @ share@risewithpsp.com",
+          "Website: www.risewithpsp.com",
+          "Mob: 9999379738"
+        ],
+        "image": "/deck/select-hr-logo.jpg"
+      },
+      "linked_exercise_slugs": []
+    }
+  ]
+}
