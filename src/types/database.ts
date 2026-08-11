@@ -135,9 +135,11 @@ export type DeckSlideKind =
   | 'two-col'
   | 'disc-profile'
   | 'comfort-zones'
+  | 'comfort-zones-pair'
   | 'numbered-list'
   | 'image'
   | 'contact'
+  | 'attitude-conflict-matrix'
 
 export interface DeckCoverContent {
   title: string
@@ -159,6 +161,8 @@ export interface DeckLogoGroup {
 export interface DeckSectionTitleContent {
   title: string
   subtitle?: string
+  /** Small subscript under the subtitle — e.g. an ideological tagline. */
+  tagline?: string
   kicker?: string
   logos_title?: string
   logo_groups?: DeckLogoGroup[]
@@ -213,6 +217,8 @@ export interface DeckNumberedContent {
   title: string
   start?: number // first item number (for lists continued across slides)
   items: string[]
+  /** Optional illustration shown beside the list (Values Shopping Spree). */
+  image?: string
 }
 
 export interface DeckImageContent {
@@ -227,6 +233,31 @@ export interface DeckContactContent {
   image?: string
 }
 
+// Two comfort-zone sections side by side on one slide (e.g. HIGH D + HIGH I).
+export interface DeckComfortZonesPairContent {
+  caption?: string
+  left: DeckComfortZonesContent
+  right: DeckComfortZonesContent
+}
+
+// Attitude Conflict Matrix — a 6×6 symmetric grid showing how each WATUSI
+// attitude pair interacts. `caption` is sourced from Spranger / TTI.
+export type WatusiLetter = 'W' | 'A' | 'T' | 'U' | 'S' | 'I'
+
+export interface DeckAttitudeConflictContent {
+  title: string
+  subtitle?: string
+  caption?: string
+  /** Labels for the six attitude letters, in W-A-T-U-S-I order. */
+  labels: Record<WatusiLetter, string>
+  /**
+   * 6×6 flat array of cell texts, row-major order (row 0 = W row).
+   * Index = row * 6 + col. Diagonal cells are the "same attitude" descriptions.
+   * The matrix is symmetric; upper-triangle values are canonical.
+   */
+  cells: string[]
+}
+
 export type DeckSlideContent =
   | DeckCoverContent
   | DeckSectionTitleContent
@@ -236,9 +267,11 @@ export type DeckSlideContent =
   | DeckTwoColContent
   | DeckDiscProfileContent
   | DeckComfortZonesContent
+  | DeckComfortZonesPairContent
   | DeckNumberedContent
   | DeckImageContent
   | DeckContactContent
+  | DeckAttitudeConflictContent
 
 // session_deck_overrides.cover_json — per-session cover slide customization
 export interface SessionCoverOverride {
@@ -334,6 +367,7 @@ export interface Database {
           scheduled_end: string | null
           is_active: boolean
           session_type: SessionType
+          restrict_to_values: boolean
           created_by: string
           created_at: string
           updated_at: string
@@ -347,6 +381,7 @@ export interface Database {
           scheduled_end?: string | null
           is_active?: boolean
           session_type?: SessionType
+          restrict_to_values?: boolean
           created_by: string
           created_at?: string
           updated_at?: string
@@ -359,6 +394,7 @@ export interface Database {
           scheduled_end?: string | null
           is_active?: boolean
           session_type?: SessionType
+          restrict_to_values?: boolean
           updated_at?: string
         }
         Relationships: [

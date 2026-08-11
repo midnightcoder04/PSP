@@ -21,6 +21,7 @@ interface SessionSettingsCardProps {
  */
 export function SessionSettingsCard({ sessionId }: SessionSettingsCardProps) {
   const [sessionType, setSessionType] = useState<SessionType>('individual')
+  const [restrictToValues, setRestrictToValues] = useState(false)
   const [topics, setTopics] = useState<TrainingTopic[]>([])
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
@@ -30,12 +31,13 @@ export function SessionSettingsCard({ sessionId }: SessionSettingsCardProps) {
   useEffect(() => {
     let cancelled = false
     Promise.all([
-      supabase.from('sessions').select('session_type').eq('id', sessionId).single(),
+      supabase.from('sessions').select('session_type, restrict_to_values').eq('id', sessionId).single(),
       supabase.from('training_topics').select('*').eq('is_active', true).order('order_index', { ascending: true }),
       supabase.from('session_topics').select('topic_id').eq('session_id', sessionId),
     ]).then(([sessionRes, topicsRes, linkRes]) => {
       if (cancelled) return
       setSessionType((sessionRes?.data?.session_type ?? 'individual') as SessionType)
+      setRestrictToValues(sessionRes?.data?.restrict_to_values ?? false)
       setTopics((topicsRes?.data ?? []) as TrainingTopic[])
       setSelected(new Set((linkRes?.data ?? []).map((r) => (r as { topic_id: string }).topic_id)))
       setLoading(false)
@@ -57,7 +59,7 @@ export function SessionSettingsCard({ sessionId }: SessionSettingsCardProps) {
     setStatus(null)
     const { error: typeErr } = await supabase
       .from('sessions')
-      .update({ session_type: sessionType })
+      .update({ session_type: sessionType, restrict_to_values: restrictToValues })
       .eq('id', sessionId)
     if (typeErr) { setSaving(false); setStatus(`Save failed: ${typeErr.message}`); return }
 
@@ -99,6 +101,24 @@ export function SessionSettingsCard({ sessionId }: SessionSettingsCardProps) {
         </select>
         {sessionType === 'team-based' ? (
           <p className={styles.hint}>Shows the team-collaboration slide with limited participant profiles.</p>
+        ) : null}
+      </div>
+
+      <div className={styles.field}>
+        <span className={styles.legend}>Content restriction</span>
+        <label className={styles.topic}>
+          <input
+            type="checkbox"
+            checked={restrictToValues}
+            onChange={(e) => setRestrictToValues(e.target.checked)}
+          />
+          Limit to Personality, Attitudes &amp; Values
+        </label>
+        {restrictToValues ? (
+          <p className={styles.hint}>
+            Ends the course and deck after Values and asks participants for
+            feedback instead of continuing to Roles &amp; Their Demands.
+          </p>
         ) : null}
       </div>
 

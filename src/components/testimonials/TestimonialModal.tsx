@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { resolveActiveSessionId } from '@/lib/resolveActiveSession'
 import type { Testimonial } from '@/types/database'
 import styles from './TestimonialModal.module.css'
 
@@ -36,16 +37,7 @@ export function TestimonialModal({ open, participantId, onClose }: TestimonialMo
       // Best-effort: resolve most recent active enrollment → session_id.
       // If no enrollment exists (self-directed participant) we continue with
       // session_id = null so they can still leave a testimonial.
-      const { data: enrollment } = await supabase
-        .from('enrollments')
-        .select('session_id')
-        .eq('participant_id', participantId)
-        .eq('is_active', true)
-        .order('enrolled_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-
-      const sid = enrollment?.session_id ?? null
+      const sid = await resolveActiveSessionId(participantId)
       setSessionId(sid)
 
       // Look for an existing testimonial for this participant + session combo

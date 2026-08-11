@@ -71,4 +71,28 @@ describe('computeSectionLocks', () => {
     const locks = computeSectionLocks(sections, new Map())
     expect(locks[1].prereqTitle).toBe('Personality')
   })
+
+  describe('restrictAfterSlug', () => {
+    it('leaves everything unrestricted when omitted', () => {
+      const locks = computeSectionLocks(sections, new Map())
+      expect(locks.every((l) => !l.restricted)).toBe(true)
+    })
+
+    it('force-locks sections after the restriction point, even with progress', () => {
+      const map = new Map<string, Progress>([
+        ['sec-personality', progress('sec-personality', '2026-05-01T00:00:00Z')],
+        ['sec-attitudes', progress('sec-attitudes', '2026-05-01T00:00:00Z')],
+      ])
+      const locks = computeSectionLocks(sections, map, 'attitudes')
+      expect(locks[0].isLocked).toBe(false)
+      expect(locks[1].isLocked).toBe(false)
+      expect(locks[2].isLocked).toBe(true)
+      expect(locks[2].restricted).toBe(true)
+    })
+
+    it('does not restrict the section at or before the cutoff', () => {
+      const locks = computeSectionLocks(sections, new Map(), 'values')
+      expect(locks[2].restricted).toBeUndefined()
+    })
+  })
 })
