@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { useSlideState } from '@/hooks/useSlideState'
+import { useSessionRestriction } from '@/hooks/useSessionRestriction'
 import { LocalResponseUpdateContext, type LocalResponseUpdater } from '@/hooks/useExerciseSave'
 import { PageShell } from '@/components/layout/PageShell'
 import { ProgressRing } from '@/components/ui/ProgressRing'
@@ -51,6 +52,8 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   const [goalNames, setGoalNames] = useState<string[]>([])
 
   const sessionId = null // session context wires in a later iteration
+
+  const { restrictToValues, loading: restrictionLoading } = useSessionRestriction(profile?.id)
 
   useEffect(() => {
     if (!sectionSlug || !profile?.id) return
@@ -139,6 +142,16 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
     load()
   }, [sectionSlug, profile?.id, navigate])
 
+  // Defense in depth: a session with the content restriction enabled hides
+  // sections past Values on /course, but a participant could still type the
+  // URL directly. Bounce them back once the restriction flag has resolved.
+  useEffect(() => {
+    if (restrictionLoading || !restrictToValues || !sectionSlug) return
+    const cutoffIdx = SECTION_SLUGS.indexOf('values')
+    const currentIdx = SECTION_SLUGS.indexOf(sectionSlug as (typeof SECTION_SLUGS)[number])
+    if (currentIdx > cutoffIdx) navigate(ROUTES.COURSE, { replace: true })
+  }, [restrictionLoading, restrictToValues, sectionSlug, navigate])
+
   // Synchronously mirror exercise saves into the local responses map so the
   // slide gate (which reads from `responses`) flips to is_complete=true
   // immediately when the participant clicks an option, without waiting for
@@ -197,10 +210,15 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
   const nextSlug = nextSectionSlug(sectionSlug)
   const prevSlug = prevSectionSlug(sectionSlug)
   const isLastSection = nextSlug === null
+  // A restricted session ends its content at Values — treat that section's
+  // closing slide like a terminus (feedback prompt on /course), not a
+  // hand-off into Roles & Their Demands.
+  const restrictedEnd = restrictToValues && sectionSlug === 'values'
 
   // Boundary-aware nav: at the intro slide, Previous crosses back to the prior
   // section. At the closing slide, Next advances to the next section (or to
-  // the course-complete page on the final section).
+  // the course-complete page on the final section, or back to /course when
+  // this session's content is restricted to end here).
   const handlePrev = useCallback(() => {
     if (isAtIntro) {
       if (prevSlug) navigate(`/course/${prevSlug}`)
@@ -211,12 +229,13 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
 
   const handleNext = useCallback(() => {
     if (isAtClosing) {
-      if (isLastSection) navigate(ROUTES.COURSE_COMPLETE)
+      if (restrictedEnd) navigate(ROUTES.COURSE)
+      else if (isLastSection) navigate(ROUTES.COURSE_COMPLETE)
       else if (nextSlug) navigate(`/course/${nextSlug}`)
       return
     }
     goNext()
-  }, [isAtClosing, isLastSection, nextSlug, navigate, goNext])
+  }, [isAtClosing, restrictedEnd, isLastSection, nextSlug, navigate, goNext])
 
   const effectiveCanGoPrev = canGoPrev || (isAtIntro && !!prevSlug)
   const effectiveCanGoNext = canGoNext
@@ -637,7 +656,7 @@ export default function SectionPage({ readOnly = false }: SectionPageProps) {
           <SectionClosingSlide
             framing={section?.framing}
             nextSectionSlug={nextSlug}
-            isLastSection={isLastSection}
+            isLastSection={isLastSection || restrictedEnd}
           />
         </section>
       </div>

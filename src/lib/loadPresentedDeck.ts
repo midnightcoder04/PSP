@@ -24,7 +24,7 @@ export interface PresentedDeck {
 export async function loadPresentedDeck(sessionId: string): Promise<PresentedDeck> {
   const [deckRes, sessionRes, overrideRes, topicLinkRes] = await Promise.all([
     supabase.from('deck_slides').select('*').order('order_index', { ascending: true }),
-    supabase.from('sessions').select('title, session_type').eq('id', sessionId).single(),
+    supabase.from('sessions').select('title, session_type, restrict_to_values').eq('id', sessionId).single(),
     supabase.from('session_deck_overrides').select('cover_json').eq('session_id', sessionId).maybeSingle(),
     supabase.from('session_topics').select('training_topics(*)').eq('session_id', sessionId),
   ])
@@ -49,9 +49,10 @@ export async function loadPresentedDeck(sessionId: string): Promise<PresentedDec
 
   const deckSlides = (deckRes.data ?? []) as DeckSlide[]
   const sessionType = (sessionRes.data?.session_type ?? 'individual') as SessionType
+  const restrictToValues = sessionRes.data?.restrict_to_values ?? false
 
   return {
-    slides: buildPresentedSlides(deckSlides, segments, topics, sessionType),
+    slides: buildPresentedSlides(deckSlides, segments, topics, sessionType, restrictToValues),
     sessionTitle: sessionRes.data?.title ?? '',
     coverOverride: (overrideRes.data?.cover_json as SessionCoverOverride) ?? null,
   }

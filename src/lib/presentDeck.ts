@@ -38,6 +38,15 @@ export const CHAPTER_ORDER = [
  */
 export const TEAM_COLLAB_CHAPTER = 'values'
 
+/**
+ * When a session's `restrict_to_values` flag is set, the deck is truncated
+ * to end after this chapter (inclusive) — Personality → Attitudes → Values —
+ * and everything from Roles & Their Demands onward is dropped. Kept as its
+ * own named constant even though it currently equals TEAM_COLLAB_CHAPTER —
+ * the two describe unrelated concerns and may diverge later.
+ */
+export const RESTRICTED_CONTENT_CHAPTER = 'values'
+
 function segmentToSlide(seg: TopicSegment): PresentedSlide {
   return {
     id: seg.id,
@@ -70,7 +79,8 @@ export function buildPresentedSlides(
   deckSlides: DeckSlide[],
   segments: TopicSegment[],
   topics: TrainingTopic[],
-  sessionType: SessionType
+  sessionType: SessionType,
+  restrictToValues = false
 ): PresentedSlide[] {
   const topicOrder = new Map(topics.map((t) => [t.id, t.order_index]))
 
@@ -128,5 +138,11 @@ export function buildPresentedSlides(
   // Team-based session whose deck has no Values chapter: still show the slide.
   if (wantTeamCollab && !teamCollabPlaced) out.push(teamCollabSlide())
 
-  return out
+  if (!restrictToValues) return out
+
+  const cutoff = CHAPTER_ORDER.indexOf(RESTRICTED_CONTENT_CHAPTER)
+  return out.filter((s) => {
+    const idx = CHAPTER_ORDER.indexOf(s.chapter as (typeof CHAPTER_ORDER)[number])
+    return idx === -1 || idx <= cutoff
+  })
 }

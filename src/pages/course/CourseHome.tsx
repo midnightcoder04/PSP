@@ -5,14 +5,18 @@ import { useAuth } from '@/hooks/useAuth'
 import { useProgress } from '@/hooks/useProgress'
 import { useSectionLock } from '@/hooks/useSectionLock'
 import { useSectionGroups } from '@/hooks/useSectionGroups'
+import { useSessionRestriction } from '@/hooks/useSessionRestriction'
 import { PageShell } from '@/components/layout/PageShell'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { LockIcon } from '@/components/ui/LockIcon'
 import { GroupBand } from '@/components/section/GroupBand'
+import { TestimonialModal } from '@/components/testimonials/TestimonialModal'
 import type { Section, Progress } from '@/types/database'
 import styles from './CourseHome.module.css'
+
+const RESTRICTION_CUTOFF_SLUG = 'values'
 
 export default function CourseHome() {
   const { profile } = useAuth()
@@ -20,10 +24,13 @@ export default function CourseHome() {
   const [sections, setSections] = useState<Section[]>([])
   const [sectionsLoading, setSectionsLoading] = useState(true)
   const [resumeSlug, setResumeSlug] = useState<string | null>(null)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   const { progress, loading: progressLoading } = useProgress({
     participantId: profile?.id ?? '',
   })
+
+  const { restrictToValues } = useSessionRestriction(profile?.id)
 
   useEffect(() => {
     if (!profile?.id) return
@@ -43,7 +50,11 @@ export default function CourseHome() {
     return m
   }, [progress])
 
-  const locks = useSectionLock({ sections, progressMap })
+  const locks = useSectionLock({
+    sections,
+    progressMap,
+    restrictAfterSlug: restrictToValues ? RESTRICTION_CUTOFF_SLUG : null,
+  })
   const groups = useSectionGroups(sections)
   // locks is ordered by section.order_index; map section.id → lock entry so we can
   // re-render lock state inside each group's section list without breaking the
@@ -78,15 +89,28 @@ export default function CourseHome() {
     : null
   const hasAnyProgress = progress.some((p) => p.completed_exercises > 0)
 
+  // Under a content restriction, only sections up to and including the
+  // cutoff are reachable — divide the overall ring over those so it reads
+  // 100% on completion instead of capping around a third.
+  const reachableSections = restrictToValues
+    ? sections.filter((s) => !locks.find((l) => l.section.id === s.id)?.restricted)
+    : sections
+
   const overallPct =
-    sections.length > 0
+    reachableSections.length > 0
       ? Math.round(
-          progress.reduce(
-            (sum, p) => sum + (p.completed_exercises / Math.max(p.total_exercises, 1)) * 100,
-            0
-          ) / sections.length
+          progress
+            .filter((p) => reachableSections.some((s) => s.id === p.section_id))
+            .reduce((sum, p) => sum + (p.completed_exercises / Math.max(p.total_exercises, 1)) * 100, 0) /
+            reachableSections.length
         )
       : 0
+
+  const valuesSection = sections.find((s) => s.slug === RESTRICTION_CUTOFF_SLUG)
+  const valuesCompleted = valuesSection
+    ? progressMap.get(valuesSection.id)?.section_completed_at != null
+    : false
+  const showFeedbackBanner = restrictToValues && valuesCompleted
 
   if (sectionsLoading || progressLoading) {
     return (
@@ -113,7 +137,15 @@ export default function CourseHome() {
         </div>
       </div>
 
-      {resumeSlug && (
+      {showFeedbackBanner && (
+        <div className={styles.continueRow}>
+          <button type="button" className={styles.continueBtn} onClick={() => setFeedbackOpen(true)}>
+            You've completed this session — share your feedback →
+          </button>
+        </div>
+      )}
+
+      {!showFeedbackBanner && resumeSlug && (
         <div className={styles.continueRow}>
           <button
             type="button"
@@ -132,15 +164,18 @@ export default function CourseHome() {
             {group.sections.map((section) => {
               const lockEntry = lockBySectionId.get(section.id)
               if (!lockEntry) return null
-              const { isLocked, prereqTitle } = lockEntry
+              const { isLocked, prereqTitle, restricted } = lockEntry
               const prog = progressMap.get(section.id)
               const completed = prog?.completed_exercises ?? 0
               const total = prog?.total_exercises ?? 0
               const pct = total > 0 ? Math.round((completed / total) * 100) : 0
               const isDone = prog?.section_completed_at != null
 
+              const lockedMessage = restricted
+                ? 'This session ends after Values'
+                : `Locked — complete ${prereqTitle} first`
               const ariaLabel = isLocked
-                ? `Locked — complete ${prereqTitle} first`
+                ? lockedMessage
                 : `${section.title} — ${pct}% complete`
 
               if (isLocked) {
@@ -149,10 +184,11 @@ export default function CourseHome() {
                     key={section.id}
                     className={`${styles.card} ${styles.cardLocked}`}
                     data-locked="true"
+                    data-restricted={restricted ? 'true' : undefined}
                     role="listitem"
                     aria-label={ariaLabel}
                     tabIndex={0}
-                    title={`Complete ${prereqTitle} first`}
+                    title={lockedMessage}
                   >
                     <div className={styles.cardTop}>
                       <LockIcon size={24} aria-label="Locked" />
@@ -161,9 +197,7 @@ export default function CourseHome() {
                     {section.subtitle && (
                       <p className={styles.cardSubtitle}>{section.subtitle}</p>
                     )}
-                    <p className={styles.cardProgress}>
-                      Locked — complete {prereqTitle} first
-                    </p>
+                    <p className={styles.cardProgress}>{lockedMessage}</p>
                   </div>
                 )
               }
@@ -199,6 +233,14 @@ export default function CourseHome() {
         Personal Strategic Planning™ — © Sam Koshy / Compass Career Life Solutions, Canada. All rights reserved.
         Workshop facilitated by Bijo Abraham (Career &amp; Life Strategist), Rise with PSP™.
       </p>
+
+      {profile && (
+        <TestimonialModal
+          open={feedbackOpen}
+          participantId={profile.id}
+          onClose={() => setFeedbackOpen(false)}
+        />
+      )}
     </PageShell>
   )
 }
