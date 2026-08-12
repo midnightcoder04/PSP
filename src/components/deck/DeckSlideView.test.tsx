@@ -77,6 +77,7 @@ describe('DeckSlideView', () => {
       <DeckSlideView
         slide={makeSlide('section-title', {
           title: 'Empowering Individuals Globally',
+          tagline: 'Built for growth',
           logos_title: 'Hiring partner · Trusted by leading organizations',
           logo_groups: [
             {
@@ -164,42 +165,31 @@ describe('DeckSlideView', () => {
     )
     expect(screen.getByText('D')).toBeInTheDocument()
     expect(screen.getByText('HIGH D')).toBeInTheDocument()
+    expect(screen.getByText('Characteristics')).toBeInTheDocument()
     expect(screen.getByText('Ambitious')).toBeInTheDocument()
     expect(screen.getByText(/desire to win/i)).toBeInTheDocument()
   })
 
-  it('renders the merged you-are/ideal-environment sections on a disc-profile slide when present', () => {
+  it('renders the page-2 disc-profile slide ("you are" + ideal environment) with no characteristics section', () => {
     render(
       <DeckSlideView
         slide={makeSlide('disc-profile', {
           style: 'D',
           title: 'HIGH D',
           subtitle: 'Extroverted + Task Oriented',
-          adjectives: ['Ambitious'],
-          statements: ['I have a desire to win'],
+          adjectives: [],
+          statements: [],
           youAre: ['Able to make decisions quickly'],
           environment: ['Freedom from controls, supervision and details'],
         })}
       />
     )
-    expect(screen.getByText(/If you are a HIGH D, you are…/i)).toBeInTheDocument()
+    expect(screen.getByText('HIGH D')).toBeInTheDocument()
+    expect(screen.getByText('If you are a HIGH D, you are…')).toBeInTheDocument()
     expect(screen.getByText('Able to make decisions quickly')).toBeInTheDocument()
-    expect(screen.getByText(/Ideal Environment for the HIGH D/i)).toBeInTheDocument()
-    expect(screen.getByText(/Freedom from controls, supervision and details/i)).toBeInTheDocument()
-  })
-
-  it('omits the you-are/ideal-environment sections on a disc-profile slide when absent', () => {
-    render(
-      <DeckSlideView
-        slide={makeSlide('disc-profile', {
-          style: 'I',
-          title: 'HIGH I',
-          adjectives: ['Expressive'],
-          statements: ['I have a good sense of humor'],
-        })}
-      />
-    )
-    expect(screen.queryByText(/Ideal Environment/i)).not.toBeInTheDocument()
+    expect(screen.getByText('Ideal Environment for the HIGH D')).toBeInTheDocument()
+    expect(screen.getByText('Freedom from controls, supervision and details')).toBeInTheDocument()
+    expect(screen.queryByText('Characteristics')).not.toBeInTheDocument()
   })
 
   it('renders a comfort-zones slide with one Venn pair per core style', () => {
@@ -225,6 +215,32 @@ describe('DeckSlideView', () => {
     expect(screen.getAllByRole('img')).toHaveLength(4)
     expect(screen.getByLabelText('High Comfort Zone')).toBeInTheDocument()
     expect(screen.getAllByLabelText('Low Comfort Zone')).toHaveLength(2)
+  })
+
+  it('renders a comfort-zones-pair slide showing two side-by-side grids', () => {
+    render(
+      <DeckSlideView
+        slide={makeSlide('comfort-zones-pair', {
+          caption: 'Adapted with permission from TTI',
+          left: {
+            style: 'D',
+            title: 'Comfort Zones — HIGH D',
+            pairs: [{ other: 'I', level: 'high', text: 'Both are extroverted.' }],
+          },
+          right: {
+            style: 'I',
+            title: 'Comfort Zones — HIGH I',
+            pairs: [{ other: 'D', level: 'high', text: 'I likes D.' }],
+          },
+        })}
+      />
+    )
+    expect(screen.getByText('Comfort Zones — HIGH D')).toBeInTheDocument()
+    expect(screen.getByText('Comfort Zones — HIGH I')).toBeInTheDocument()
+    expect(screen.getByText(/Both are extroverted/)).toBeInTheDocument()
+    expect(screen.getByText(/I likes D/)).toBeInTheDocument()
+    expect(screen.getByText(/Adapted with permission/)).toBeInTheDocument()
+    expect(screen.getAllByRole('img')).toHaveLength(2)
   })
 
   it('draws a wider Venn overlap for a higher Comfort Zone level', () => {

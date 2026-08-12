@@ -18,8 +18,8 @@ describe('deck-slides.json seed', () => {
     expect(errors, errors.join('\n')).toEqual([])
   })
 
-  it('contains the full 50-slide deck', () => {
-    expect(deck.slides).toHaveLength(50)
+  it('contains the full 52-slide deck', () => {
+    expect(deck.slides).toHaveLength(52)
   })
 
   it('has exactly one cover slide and one contact slide', () => {
@@ -28,30 +28,41 @@ describe('deck-slides.json seed', () => {
     expect(kinds.filter((k: string) => k === 'contact')).toHaveLength(1)
   })
 
-  it('has all four DISC profile slides', () => {
-    const styles = deck.slides
-      .filter((s: { kind: string }) => s.kind === 'disc-profile')
-      .map((s: { content_json: { style: string } }) => s.content_json.style)
+  it('has a page-1 (characteristics) and page-2 (you-are/environment) disc-profile slide per style', () => {
+    type DiscProfileSlide = { kind: string; content_json: { style: string; adjectives: string[]; youAre?: string[] } }
+    const profiles = deck.slides.filter((s: DiscProfileSlide) => s.kind === 'disc-profile') as DiscProfileSlide[]
+
+    const page1Styles = profiles
+      .filter((s) => s.content_json.adjectives.length > 0)
+      .map((s) => s.content_json.style)
       .sort()
-    expect(styles).toEqual(['C', 'D', 'I', 'S'])
+    expect(page1Styles).toEqual(['C', 'D', 'I', 'S'])
+
+    const page2Styles = profiles
+      .filter((s) => (s.content_json.youAre?.length ?? 0) > 0)
+      .map((s) => s.content_json.style)
+      .sort()
+    expect(page2Styles).toEqual(['C', 'D', 'I', 'S'])
   })
 
-  it('has a comfort-zones slide for each core style, right after its profile slide', () => {
+  it('has comfort-zone-pair slides after all 4 personality profiles, covering all styles', () => {
     const byOrder = [...deck.slides].sort(
       (a: { order_index: number }, b: { order_index: number }) => a.order_index - b.order_index
     )
-    for (const style of ['D', 'I', 'S', 'C']) {
-      const profileAt = byOrder.findIndex(
-        (s: { kind: string; content_json: { style?: string } }) =>
-          s.kind === 'disc-profile' && s.content_json.style === style
-      )
-      const next = byOrder[profileAt + 1]
-      expect(next.kind).toBe('comfort-zones')
-      expect(next.content_json.style).toBe(style)
-      // Every core style is covered, in D-I-S-C order.
-      expect(next.content_json.pairs.map((p: { other: string }) => p.other)).toEqual([
-        'D', 'I', 'S', 'C',
-      ])
+    // All four disc-profile slides must appear before any comfort-zones-pair.
+    const lastProfileIdx = Math.max(
+      ...byOrder
+        .filter((s: { kind: string }) => s.kind === 'disc-profile')
+        .map((_: unknown, _idx: number) => byOrder.findIndex((s: { kind: string; content_json: { style?: string } }) => s.kind === 'disc-profile'))
+    )
+    const pairSlides = byOrder.filter((s: { kind: string }) => s.kind === 'comfort-zones-pair')
+    // There should be exactly 2 comfort-zones-pair slides (D+I and S+C).
+    expect(pairSlides).toHaveLength(2)
+    // Each pair slide must contain left and right objects with pairs covering D, I, S, C.
+    for (const slide of pairSlides) {
+      const { left, right } = slide.content_json as { left: { pairs: { other: string }[] }; right: { pairs: { other: string }[] } }
+      expect(left.pairs.map((p: { other: string }) => p.other)).toEqual(['D', 'I', 'S', 'C'])
+      expect(right.pairs.map((p: { other: string }) => p.other)).toEqual(['D', 'I', 'S', 'C'])
     }
   })
 })
