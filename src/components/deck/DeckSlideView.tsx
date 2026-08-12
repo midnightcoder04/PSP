@@ -9,6 +9,7 @@ import type {
   DeckTwoColContent,
   DeckDiscProfileContent,
   DeckComfortZonesContent,
+  DeckComfortZonesPairContent,
   ComfortZoneLevel,
   DeckNumberedContent,
   DeckImageContent,
@@ -17,6 +18,8 @@ import type {
   DeckExampleContent,
   DeckSuggestionContent,
   SessionCoverOverride,
+  DeckAttitudeConflictContent,
+  WatusiLetter,
 } from '@/types/database'
 import styles from './DeckSlideView.module.css'
 
@@ -135,6 +138,7 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
           {c.kicker ? <p className={styles.kicker}>{c.kicker}</p> : null}
           <h1 className={styles.bigTitle}>{c.title}</h1>
           {c.subtitle ? <p className={styles.subtitle}>{c.subtitle}</p> : null}
+          {c.tagline ? <p className={styles.tagline}>{c.tagline}</p> : null}
           {groups.length > 0 ? (
             <>
               {c.logos_title ? <p className={styles.logoWallTitle}>{c.logos_title}</p> : null}
@@ -225,6 +229,7 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
       const c = content as DeckDiscProfileContent
       return (
         <div className={styles.slide} data-kind="disc-profile" data-style={c.style}>
+          {/* Header: coloured letter badge + title + subtitle */}
           <div className={styles.discHeader}>
             <span className={styles.discLetter}>{c.style}</span>
             <div>
@@ -232,36 +237,50 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
               {c.subtitle ? <p className={styles.discSubtitle}>{c.subtitle}</p> : null}
             </div>
           </div>
-          <div className={styles.discBody}>
-            <ul className={styles.discAdjectives}>
-              {c.adjectives.map((a, i) => (
-                <li key={i}>{a}</li>
-              ))}
-            </ul>
-            <ul className={styles.discStatements}>
-              {c.statements.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
-            </ul>
-          </div>
+
+          {/* Section 1: Adjectives as coloured chips */}
+          {c.adjectives.length > 0 ? (
+            <div className={styles.discChipsSection}>
+              <p className={styles.discSectionLabel}>Characteristics</p>
+              <ul className={styles.discChips}>
+                {c.adjectives.map((a, i) => (
+                  <li key={i}>{a}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {/* Section 2: Self-statements in a 2-column bullet grid */}
+          {c.statements.length > 0 ? (
+            <div className={styles.discStatementsSection}>
+              <p className={styles.discSectionLabel}>You may recognise yourself in these statements</p>
+              <ul className={styles.discStatements}>
+                {c.statements.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {/* Section 3 (page 2 of the style spread): "you are" + ideal environment */}
           {(c.youAre?.length || c.environment?.length) ? (
-            <div className={styles.discEnvironment}>
+            <div className={styles.discDetailGrid}>
               {c.youAre?.length ? (
-                <div className={styles.discEnvCol}>
-                  <h2 className={styles.discEnvHeading}>{`If you are a ${c.title}, you are…`}</h2>
-                  <ul className={styles.discEnvBullets}>
-                    {c.youAre.map((b, i) => (
-                      <li key={i}>{b}</li>
+                <div className={styles.discDetailCol}>
+                  <p className={styles.discSectionLabel}>If you are a HIGH {c.style}, you are…</p>
+                  <ul className={styles.columnBullets}>
+                    {c.youAre.map((y, i) => (
+                      <li key={i}>{y}</li>
                     ))}
                   </ul>
                 </div>
               ) : null}
               {c.environment?.length ? (
-                <div className={styles.discEnvCol}>
-                  <h2 className={styles.discEnvHeading}>{`Ideal Environment for the ${c.title}`}</h2>
-                  <ul className={styles.discEnvBullets}>
-                    {c.environment.map((b, i) => (
-                      <li key={i}>{b}</li>
+                <div className={styles.discDetailCol}>
+                  <p className={styles.discSectionLabel}>Ideal Environment for the HIGH {c.style}</p>
+                  <ul className={styles.columnBullets}>
+                    {c.environment.map((e, i) => (
+                      <li key={i}>{e}</li>
                     ))}
                   </ul>
                 </div>
@@ -297,9 +316,77 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
       )
     }
 
+    case 'comfort-zones-pair': {
+      const c = content as DeckComfortZonesPairContent
+      const renderPanel = (side: DeckComfortZonesContent) => (
+        <div className={styles.comfortPairPanel}>
+          <h2
+            className={styles.comfortPairPanelTitle}
+            style={{
+              color: side.style === 'D' ? 'var(--disc-d)'
+                   : side.style === 'I' ? 'var(--disc-i)'
+                   : side.style === 'S' ? 'var(--disc-s)'
+                   : 'var(--disc-c)',
+              borderBottomColor: side.style === 'D' ? 'var(--disc-d)'
+                               : side.style === 'I' ? 'var(--disc-i)'
+                               : side.style === 'S' ? 'var(--disc-s)'
+                               : 'var(--disc-c)',
+            }}
+          >
+            {side.title}
+          </h2>
+          <div
+            className={styles.comfortGrid}
+            style={{ '--deck-accent': side.style === 'D' ? 'var(--disc-d)'
+                                     : side.style === 'I' ? 'var(--disc-i)'
+                                     : side.style === 'S' ? 'var(--disc-s)'
+                                     : 'var(--disc-c)' } as React.CSSProperties}
+          >
+            {(side.pairs ?? []).map((pair, i) => (
+              <div key={i} className={styles.comfortPair} data-other={pair.other}>
+                <div className={styles.vennRow}>
+                  <span className={styles.vennLetter} data-side="self">{side.style}</span>
+                  <ComfortVenn level={pair.level} />
+                  <span className={styles.vennLetter} data-side="other">{pair.other}</span>
+                </div>
+                <p className={styles.comfortText}>{pair.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+      return (
+        <div className={styles.slide} data-kind="comfort-zones-pair">
+          <h1 className={styles.heading}>Comfort Zones</h1>
+          <div className={styles.comfortPairRow}>
+            {renderPanel(c.left)}
+            {renderPanel(c.right)}
+          </div>
+          {c.caption ? <p className={styles.caption}>{c.caption}</p> : null}
+        </div>
+      )
+    }
+
     case 'numbered-list': {
       const c = content as DeckNumberedContent
       const start = c.start ?? 1
+      if (c.image) {
+        return (
+          <div className={styles.slide} data-kind="numbered-list" data-has-image="true">
+            <div className={styles.numberedSideImage}>
+              <img src={c.image} alt="" />
+            </div>
+            <div className={styles.numberedContent}>
+              <h1 className={styles.heading}>{c.title}</h1>
+              <ol className={styles.numbered} start={start} data-dense={c.items.length > 6 || undefined}>
+                {c.items.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        )
+      }
       return (
         <div className={styles.slide} data-kind="numbered-list">
           <h1 className={styles.heading}>{c.title}</h1>
@@ -334,6 +421,61 @@ export function DeckSlideView({ slide, coverOverride }: DeckSlideViewProps) {
               <p key={i}>{line}</p>
             ))}
           </div>
+        </div>
+      )
+    }
+
+    // ── Attitude Conflict Matrix ───────────────────────────────────────────
+    case 'attitude-conflict-matrix': {
+      const c = content as DeckAttitudeConflictContent
+      const letters: WatusiLetter[] = ['W', 'A', 'T', 'U', 'S', 'I']
+      return (
+        <div className={styles.slide} data-kind="attitude-conflict-matrix">
+          <h1 className={styles.heading}>{c.title}</h1>
+          {c.subtitle ? <p className={styles.subtitle}>{c.subtitle}</p> : null}
+          <div className={styles.conflictMatrixWrap}>
+            <table className={styles.conflictMatrix} aria-label={c.title}>
+              <thead>
+                <tr>
+                  {/* corner spacer */}
+                  <th scope="col" />
+                  {letters.map((col) => (
+                    <th key={col} scope="col" data-letter={col}>
+                      {col}
+                      <br />
+                      <span style={{ fontWeight: 'normal', fontSize: '0.8em' }}>{c.labels[col]}</span>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {letters.map((rowLetter, ri) => (
+                  <tr key={rowLetter}>
+                    <td data-row={rowLetter}>
+                      {rowLetter}
+                      <br />
+                      <span style={{ fontWeight: 'normal', fontSize: '0.8em' }}>{c.labels[rowLetter]}</span>
+                    </td>
+                    {letters.map((colLetter, ci) => {
+                      const isDiag = ri === ci
+                      const isMirror = ci < ri // lower-triangle mirrors upper
+                      const cellText = c.cells[ri * 6 + ci] ?? ''
+                      return (
+                        <td
+                          key={colLetter}
+                          data-diagonal={isDiag || undefined}
+                          data-mirror={isMirror || undefined}
+                        >
+                          {cellText}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {c.caption ? <p className={styles.caption}>{c.caption}</p> : null}
         </div>
       )
     }

@@ -58,6 +58,14 @@
   margin: 0;
 }
 
+.tagline {
+  font-size: clamp(0.7rem, 1.7vmin, 0.95rem);
+  font-style: italic;
+  color: var(--color-text-faint);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
 .intro {
   font-size: clamp(0.95rem, 2.4vmin, 1.4rem);
   color: var(--color-text-muted);
@@ -359,9 +367,14 @@
   gap: clamp(3px, 0.8vh, 8px);
 }
 
-/* ── disc-profile ───────────────────────────────────────── */
+/* ── disc-profile (redesigned: chips + statements) ──────── */
 
-.slide[data-kind='disc-profile'] { gap: clamp(8px, 1.6vh, 18px); }
+.slide[data-kind='disc-profile'] {
+  gap: clamp(8px, 1.6vh, 18px);
+  align-items: flex-start;
+  text-align: left;
+  padding: clamp(20px, 4vmin, 56px);
+}
 
 .slide[data-kind='disc-profile'][data-style='D'] { --deck-accent: var(--disc-d); }
 .slide[data-kind='disc-profile'][data-style='I'] { --deck-accent: var(--disc-i); }
@@ -372,20 +385,20 @@
   display: flex;
   align-items: center;
   gap: clamp(12px, 3vmin, 32px);
-  text-align: left;
 }
 
 .discLetter {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(40px, 7.5vmin, 76px);
-  height: clamp(40px, 7.5vmin, 76px);
+  width: clamp(44px, 8vmin, 88px);
+  height: clamp(44px, 8vmin, 88px);
   border-radius: var(--radius-md);
   background: var(--deck-accent);
   color: #fff;
-  font-size: clamp(1.5rem, 4.5vmin, 2.8rem);
+  font-size: clamp(1.6rem, 5vmin, 3rem);
   font-weight: var(--weight-bold);
+  flex-shrink: 0;
 }
 
 .discSubtitle {
@@ -394,36 +407,55 @@
   margin: 0;
 }
 
-.discBody {
-  display: grid;
-  grid-template-columns: minmax(160px, 1fr) 2fr;
-  gap: clamp(12px, 3vmin, 40px);
+/* ─ Adjective chips strip ─────────────────────────────── */
+
+.discChipsSection {
   width: 100%;
-  max-width: 1200px;
-  text-align: left;
-  align-items: start;
 }
 
-.discAdjectives {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(2px, 0.8vh, 8px);
-  font-size: clamp(0.85rem, 1.9vmin, 1.25rem);
+.discSectionLabel {
+  font-size: clamp(0.65rem, 1.4vmin, 0.88rem);
   font-weight: var(--weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--deck-accent);
+  margin: 0 0 clamp(4px, 1vh, 10px);
+}
+
+.discChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(5px, 1.2vmin, 12px);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.discChips li {
+  background: color-mix(in srgb, var(--deck-accent) 14%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--deck-accent) 40%, transparent);
+  color: var(--deck-accent);
+  font-size: clamp(0.8rem, 2vmin, 1.2rem);
+  font-weight: var(--weight-semibold);
+  border-radius: 999px;
+  padding: clamp(3px, 0.7vh, 7px) clamp(10px, 2.2vmin, 22px);
+  white-space: nowrap;
+}
+
+/* ─ Self-statements list ───────────────────────────── */
+
+.discStatementsSection {
+  width: 100%;
 }
 
 .discStatements {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(2px, 0.6vh, 6px) clamp(16px, 3vmin, 36px);
   margin: 0;
   padding: 0;
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(2px, 0.6vh, 6px);
-  font-size: clamp(0.7rem, 1.5vmin, 1.02rem);
+  font-size: clamp(0.78rem, 1.7vmin, 1.06rem);
   line-height: var(--leading-tight);
 }
 
@@ -436,52 +468,83 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 0.5em;
-  width: 0.4em;
-  height: 0.4em;
+  top: 0.52em;
+  width: 0.38em;
+  height: 0.38em;
   border-radius: 50%;
   background: var(--deck-accent);
+  opacity: 0.65;
 }
 
-.discEnvironment {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(8px, 2vmin, 22px);
+/* ─ "You are" + Ideal Environment (page 2 of the style spread) ─ */
+
+.discDetailGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 4vmin, 48px);
   width: 100%;
-  max-width: 1200px;
-  text-align: left;
+}
+
+.discDetailCol {
+  flex: 1 1 240px;
+}
+
+.discDetailCol .columnBullets {
+  padding-left: 1.2em;
+}
+
+
+/* ── comfort-zones-pair (two styles side by side) ─────── */
+
+.slide[data-kind='comfort-zones-pair'] {
+  gap: clamp(8px, 1.6vh, 16px);
+  padding: clamp(12px, 3vmin, 36px);
+  justify-content: flex-start;
+}
+
+.comfortPairRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 3vmin, 36px);
+  width: 100%;
+  max-width: 1300px;
   align-items: start;
+  flex: 1 1 auto;
 }
 
-.discEnvCol {
+.comfortPairPanel {
   display: flex;
   flex-direction: column;
-  gap: clamp(2px, 0.6vh, 6px);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: clamp(6px, 1.4vmin, 14px);
-  box-shadow: var(--shadow-sm);
+  gap: clamp(6px, 1.4vh, 14px);
 }
 
-.discEnvHeading {
-  font-size: clamp(0.65rem, 1.4vmin, 0.92rem);
-  font-weight: var(--weight-semibold);
-  color: var(--deck-accent);
+.comfortPairPanelTitle {
+  font-size: clamp(0.9rem, 2.2vmin, 1.4rem);
+  font-weight: var(--weight-bold);
   margin: 0;
+  padding-bottom: clamp(3px, 0.7vh, 7px);
+  border-bottom: 2px solid var(--deck-accent);
 }
 
-.discEnvBullets {
-  margin: 0;
-  padding-left: 1.1em;
-  font-size: clamp(0.6rem, 1.2vmin, 0.8rem);
-  line-height: var(--leading-tight);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1px, 0.35vh, 4px);
+/* Reuse .comfortGrid but 2-column within each panel */
+.comfortPairPanel .comfortGrid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(6px, 1.4vmin, 18px);
 }
 
-/* ── comfort-zones ──────────────────────────────────────── */
+.comfortPairPanel .comfortText {
+  font-size: clamp(0.6rem, 1.3vmin, 0.86rem);
+}
+
+.comfortPairPanel .venn {
+  height: clamp(40px, 10vmin, 110px);
+}
+
+.comfortPairPanel .vennLetter {
+  font-size: clamp(1rem, 2.8vmin, 2rem);
+}
+
+
 
 .slide[data-kind='comfort-zones'] { gap: clamp(10px, 2.4vh, 28px); }
 
@@ -597,6 +660,134 @@
 .numbered li::marker {
   color: var(--deck-accent);
   font-weight: var(--weight-bold);
+}
+
+/* ── numbered-list with image (Values Shopping Spree) ────── */
+
+.slide[data-kind='numbered-list'][data-has-image] {
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(24px, 5vmin, 60px);
+  text-align: left;
+}
+
+.slide[data-kind='numbered-list'][data-has-image] .heading {
+  text-align: left;
+}
+
+.numberedSideImage {
+  flex: 0 0 auto;
+  width: clamp(140px, 22vmin, 260px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numberedSideImage img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  opacity: 0.92;
+}
+
+.numberedContent {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2.5vh, 24px);
+  min-width: 0;
+}
+
+/* ── attitude-conflict-matrix ───────────────────────────── */
+
+.slide[data-kind='attitude-conflict-matrix'] {
+  gap: clamp(8px, 1.6vh, 18px);
+  justify-content: flex-start;
+  padding-top: clamp(12px, 3vh, 36px);
+}
+
+/* Attitude colour palette (WATUSI) */
+.slide[data-kind='attitude-conflict-matrix'] {
+  --watusi-w: #6366f1; /* Theoretical   — indigo  */
+  --watusi-a: #ec4899; /* Aesthetic      — pink    */
+  --watusi-t: #f59e0b; /* Traditional    — amber   */
+  --watusi-u: #10b981; /* Utilitarian    — emerald */
+  --watusi-s: #3b82f6; /* Social         — blue    */
+  --watusi-i: #ef4444; /* Individualistic— red     */
+}
+
+.conflictMatrixWrap {
+  width: 100%;
+  max-width: 1200px;
+  overflow: auto; /* graceful on smaller previews */
+}
+
+.conflictMatrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.48rem, 1.1vmin, 0.75rem);
+  table-layout: fixed;
+}
+
+/* Header row + header column cells */
+.conflictMatrix th {
+  font-weight: var(--weight-bold);
+  font-size: clamp(0.6rem, 1.35vmin, 0.92rem);
+  padding: clamp(2px, 0.7vmin, 6px) clamp(3px, 0.8vmin, 8px);
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+}
+
+.conflictMatrix td {
+  padding: clamp(3px, 0.8vmin, 7px) clamp(3px, 0.9vmin, 8px);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  vertical-align: top;
+  line-height: var(--leading-tight);
+  font-size: clamp(0.48rem, 1.05vmin, 0.72rem);
+}
+
+/* Corner spacer */
+.conflictMatrix th:first-child {
+  background: transparent;
+  border: none;
+}
+
+/* Per-letter header colouring */
+.conflictMatrix th[data-letter='W'] { background: color-mix(in srgb, var(--watusi-w) 18%, transparent); color: var(--watusi-w); }
+.conflictMatrix th[data-letter='A'] { background: color-mix(in srgb, var(--watusi-a) 18%, transparent); color: var(--watusi-a); }
+.conflictMatrix th[data-letter='T'] { background: color-mix(in srgb, var(--watusi-t) 18%, transparent); color: var(--watusi-t); }
+.conflictMatrix th[data-letter='U'] { background: color-mix(in srgb, var(--watusi-u) 18%, transparent); color: var(--watusi-u); }
+.conflictMatrix th[data-letter='S'] { background: color-mix(in srgb, var(--watusi-s) 18%, transparent); color: var(--watusi-s); }
+.conflictMatrix th[data-letter='I'] { background: color-mix(in srgb, var(--watusi-i) 18%, transparent); color: var(--watusi-i); }
+
+/* Row-header column */
+.conflictMatrix td:first-child {
+  font-weight: var(--weight-bold);
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.conflictMatrix td[data-row='W']:first-child { color: var(--watusi-w); }
+.conflictMatrix td[data-row='A']:first-child { color: var(--watusi-a); }
+.conflictMatrix td[data-row='T']:first-child { color: var(--watusi-t); }
+.conflictMatrix td[data-row='U']:first-child { color: var(--watusi-u); }
+.conflictMatrix td[data-row='S']:first-child { color: var(--watusi-s); }
+.conflictMatrix td[data-row='I']:first-child { color: var(--watusi-i); }
+
+/* Diagonal cells — "same attitude" — shaded */
+.conflictMatrix td[data-diagonal] {
+  background: color-mix(in srgb, var(--color-surface) 60%, var(--color-trust-light));
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* Upper-triangle cells are mirrored (dimmed, italic) to indicate symmetry */
+.conflictMatrix td[data-mirror] {
+  color: var(--color-text-faint);
+  background: color-mix(in srgb, var(--color-bg) 80%, transparent);
 }
 
 /* ── image ──────────────────────────────────────────────── */

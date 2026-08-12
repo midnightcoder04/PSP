@@ -33,25 +33,53 @@
         "kicker": "SELECT HR SOLUTIONS",
         "title": "Empowering Individuals Globally to Take Charge of Their Future",
         "subtitle": "Recruitments · Career Life Coaching",
+        "tagline": "In Search of Heart",
         "logos_title": "Hiring partner · Trusted by leading organizations",
         "logo_groups": [
           {
             "heading": "Recruitment Consulting",
             "logos": [
-              { "name": "H&R Block", "src": "/deck/logos/hr-block.png" },
-              { "name": "GWC", "src": "/deck/logos/gwc.png" },
-              { "name": "Nissan Digital", "src": "/deck/logos/nissan-digital.png" },
-              { "name": "NedAir Freight BV", "src": "/deck/logos/nedair.png" },
-              { "name": "Wells Fargo", "src": "/deck/logos/wells-fargo.png" },
-              { "name": "Armada", "src": "/deck/logos/armada.png" }
+              {
+                "name": "H&R Block",
+                "src": "/deck/logos/hr-block.png"
+              },
+              {
+                "name": "GWC",
+                "src": "/deck/logos/gwc.png"
+              },
+              {
+                "name": "Nissan Digital",
+                "src": "/deck/logos/nissan-digital.png"
+              },
+              {
+                "name": "NedAir Freight BV",
+                "src": "/deck/logos/nedair.png"
+              },
+              {
+                "name": "Wells Fargo",
+                "src": "/deck/logos/wells-fargo.png"
+              },
+              {
+                "name": "Armada",
+                "src": "/deck/logos/armada.png"
+              }
             ]
           },
           {
             "heading": "Corporate Training & People Development",
             "logos": [
-              { "name": "ThinkPalm", "src": "/deck/logos/thinkpalm.png" },
-              { "name": "Reflections", "src": "/deck/logos/reflections.png" },
-              { "name": "Fakeeh Tech", "src": "/deck/logos/fakeeh-tech.png" }
+              {
+                "name": "ThinkPalm",
+                "src": "/deck/logos/thinkpalm.png"
+              },
+              {
+                "name": "Reflections",
+                "src": "/deck/logos/reflections.png"
+              },
+              {
+                "name": "Fakeeh Tech",
+                "src": "/deck/logos/fakeeh-tech.png"
+              }
             ]
           }
         ]
@@ -133,7 +161,7 @@
       "content_json": {
         "title": "The D.I.S.C. Model",
         "src": "/deck/disc-logo.png",
-        "caption": "Dominance · Influence · Steadiness · Compliance"
+        "caption": "Dominance · Influence · Steadiness · Compliance\nDeveloped by Bill J. Bonnstetter · Target Training International (TTI) · Phoenix, Arizona"
       },
       "linked_exercise_slugs": []
     },
@@ -214,7 +242,21 @@
           "I am not afraid of high risk",
           "I tend to create fear in others",
           "I tend to be impatient"
-        ],
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-high-d-detail",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 115,
+      "content_json": {
+        "style": "D",
+        "title": "HIGH D",
+        "subtitle": "Extroverted + Task Oriented",
+        "adjectives": [],
+        "statements": [],
         "youAre": [
           "Able to make decisions quickly",
           "Willing to state unpopular opinions",
@@ -231,45 +273,10 @@
       "linked_exercise_slugs": []
     },
     {
-      "slug": "personality-comfort-zones-d",
-      "kind": "comfort-zones",
-      "chapter": "personality",
-      "order_index": 120,
-      "content_json": {
-        "style": "D",
-        "title": "Comfort Zones for HIGH D",
-        "subtitle": "How much room a High D has to work with each core style",
-        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
-        "pairs": [
-          {
-            "other": "D",
-            "level": "moderate",
-            "text": "Though both have the same approach toward life, their tendency to challenge and need to have their own way reduces their Comfort Zone."
-          },
-          {
-            "other": "I",
-            "level": "high",
-            "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
-          },
-          {
-            "other": "S",
-            "level": "low",
-            "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
-          },
-          {
-            "other": "C",
-            "level": "low",
-            "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
-          }
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
       "slug": "personality-high-i",
       "kind": "disc-profile",
       "chapter": "personality",
-      "order_index": 130,
+      "order_index": 120,
       "content_json": {
         "style": "I",
         "title": "HIGH I",
@@ -293,7 +300,21 @@
           "I prefer to back away from conflict",
           "I tend to be disorganized",
           "I am very trusting of others"
-        ],
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-high-i-detail",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 125,
+      "content_json": {
+        "style": "I",
+        "title": "HIGH I",
+        "subtitle": "Extroverted + People Oriented",
+        "adjectives": [],
+        "statements": [],
         "youAre": [
           "A natural optimist",
           "Trusting of others",
@@ -311,45 +332,10 @@
       "linked_exercise_slugs": []
     },
     {
-      "slug": "personality-comfort-zones-i",
-      "kind": "comfort-zones",
-      "chapter": "personality",
-      "order_index": 140,
-      "content_json": {
-        "style": "I",
-        "title": "Comfort Zones for HIGH I",
-        "subtitle": "How much room a High I has to work with each core style",
-        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
-        "pairs": [
-          {
-            "other": "D",
-            "level": "high",
-            "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
-          },
-          {
-            "other": "I",
-            "level": "very-high",
-            "text": "High Comfort Zone is maximized by their enjoyment of and need for personal interaction."
-          },
-          {
-            "other": "S",
-            "level": "moderate",
-            "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
-          },
-          {
-            "other": "C",
-            "level": "high",
-            "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
-          }
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
       "slug": "personality-high-s",
       "kind": "disc-profile",
       "chapter": "personality",
-      "order_index": 150,
+      "order_index": 130,
       "content_json": {
         "style": "S",
         "title": "HIGH S",
@@ -375,7 +361,21 @@
           "I tend to hold a grudge",
           "I tend to adapt very quickly to others",
           "I tend to resist changes"
-        ],
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-high-s-detail",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 135,
+      "content_json": {
+        "style": "S",
+        "title": "HIGH S",
+        "subtitle": "Introverted + People Oriented",
+        "adjectives": [],
+        "statements": [],
         "youAre": [
           "Have a tenacity for order",
           "Possess a natural ability to organize tasks"
@@ -392,45 +392,10 @@
       "linked_exercise_slugs": []
     },
     {
-      "slug": "personality-comfort-zones-s",
-      "kind": "comfort-zones",
-      "chapter": "personality",
-      "order_index": 160,
-      "content_json": {
-        "style": "S",
-        "title": "Comfort Zones for HIGH S",
-        "subtitle": "How much room a High S has to work with each core style",
-        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
-        "pairs": [
-          {
-            "other": "D",
-            "level": "low",
-            "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
-          },
-          {
-            "other": "I",
-            "level": "moderate",
-            "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
-          },
-          {
-            "other": "S",
-            "level": "very-high",
-            "text": "Similar opinions and their high tolerance and sociability create a very high Comfort Zone."
-          },
-          {
-            "other": "C",
-            "level": "high",
-            "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
-          }
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
       "slug": "personality-high-c",
       "kind": "disc-profile",
       "chapter": "personality",
-      "order_index": 170,
+      "order_index": 140,
       "content_json": {
         "style": "C",
         "title": "HIGH C",
@@ -457,7 +422,21 @@
           "I tend to feel emotions are very irrational",
           "I tend to see faults in others",
           "I tend to analyze things to death"
-        ],
+        ]
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-high-c-detail",
+      "kind": "disc-profile",
+      "chapter": "personality",
+      "order_index": 145,
+      "content_json": {
+        "style": "C",
+        "title": "HIGH C",
+        "subtitle": "Introverted + Task Oriented",
+        "adjectives": [],
+        "statements": [],
         "youAre": [
           "A natural systems developer",
           "A good quality control person",
@@ -475,37 +454,126 @@
       "linked_exercise_slugs": []
     },
     {
-      "slug": "personality-comfort-zones-c",
-      "kind": "comfort-zones",
+      "slug": "personality-comfort-zones-di",
+      "kind": "comfort-zones-pair",
       "chapter": "personality",
-      "order_index": 180,
+      "order_index": 150,
       "content_json": {
-        "style": "C",
-        "title": "Comfort Zones for HIGH C",
-        "subtitle": "How much room a High C has to work with each core style",
         "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
-        "pairs": [
-          {
-            "other": "D",
-            "level": "low",
-            "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
-          },
-          {
-            "other": "I",
-            "level": "high",
-            "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
-          },
-          {
-            "other": "S",
-            "level": "high",
-            "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
-          },
-          {
-            "other": "C",
-            "level": "high",
-            "text": "Respect for rules and established protocol and their desire to avoid conflict create a High Comfort Zone."
-          }
-        ]
+        "left": {
+          "style": "D",
+          "title": "Comfort Zones — HIGH D",
+          "pairs": [
+            {
+              "other": "D",
+              "level": "moderate",
+              "text": "Though both have the same approach toward life, their tendency to challenge and need to have their own way reduces their Comfort Zone."
+            },
+            {
+              "other": "I",
+              "level": "high",
+              "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
+            },
+            {
+              "other": "S",
+              "level": "low",
+              "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
+            },
+            {
+              "other": "C",
+              "level": "low",
+              "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
+            }
+          ]
+        },
+        "right": {
+          "style": "I",
+          "title": "Comfort Zones — HIGH I",
+          "pairs": [
+            {
+              "other": "D",
+              "level": "high",
+              "text": "Both are extroverted. I's verbal skills and people orientation allow a wider Comfort Zone for interaction."
+            },
+            {
+              "other": "I",
+              "level": "very-high",
+              "text": "High Comfort Zone is maximized by their enjoyment of and need for personal interaction."
+            },
+            {
+              "other": "S",
+              "level": "moderate",
+              "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
+            },
+            {
+              "other": "C",
+              "level": "high",
+              "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
+            }
+          ]
+        }
+      },
+      "linked_exercise_slugs": []
+    },
+    {
+      "slug": "personality-comfort-zones-sc",
+      "kind": "comfort-zones-pair",
+      "chapter": "personality",
+      "order_index": 160,
+      "content_json": {
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International",
+        "left": {
+          "style": "S",
+          "title": "Comfort Zones — HIGH S",
+          "pairs": [
+            {
+              "other": "D",
+              "level": "low",
+              "text": "Low Comfort Zone due to dissimilar personalities. S's tendency to back down from D's strong assertive style frustrates both parties."
+            },
+            {
+              "other": "I",
+              "level": "moderate",
+              "text": "Though both are people oriented, S's social conscience may irritate I, and S may perceive I as unfeeling."
+            },
+            {
+              "other": "S",
+              "level": "very-high",
+              "text": "Similar opinions and their high tolerance and sociability create a very high Comfort Zone."
+            },
+            {
+              "other": "C",
+              "level": "high",
+              "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
+            }
+          ]
+        },
+        "right": {
+          "style": "C",
+          "title": "Comfort Zones — HIGH C",
+          "pairs": [
+            {
+              "other": "D",
+              "level": "low",
+              "text": "D's need for immediate results clashes with C's drive to analyse and test the water first."
+            },
+            {
+              "other": "I",
+              "level": "high",
+              "text": "I's people skills and their high trust threshold relaxes C's need to establish rationale for trust."
+            },
+            {
+              "other": "S",
+              "level": "high",
+              "text": "S's high respect for others and tolerance of differences allow them to approach C without alarming C's introverted response."
+            },
+            {
+              "other": "C",
+              "level": "high",
+              "text": "Respect for rules and established protocol and their desire to avoid conflict create a High Comfort Zone."
+            }
+          ]
+        }
       },
       "linked_exercise_slugs": []
     },
@@ -513,9 +581,10 @@
       "slug": "personality-four-styles",
       "kind": "two-col",
       "chapter": "personality",
-      "order_index": 190,
+      "order_index": 170,
       "content_json": {
         "title": "The Four Core Styles",
+        "subtitle": "Reference guide — the full profile for each style",
         "columns": [
           {
             "heading": "HIGH D",
@@ -526,7 +595,17 @@
               "Direct",
               "Independent",
               "Challenging",
-              "Results oriented"
+              "Results oriented",
+              "I have a desire to win",
+              "Argumentative",
+              "Fast paced",
+              "I tend to juggle a lot at once",
+              "I am quick to accept challenge",
+              "I usually interrupt and am impatient with long explanations",
+              "I tend to act or speak before thinking",
+              "I am not afraid of high risk",
+              "I tend to create fear in others",
+              "I tend to be impatient"
             ]
           },
           {
@@ -537,7 +616,17 @@
               "Friendly",
               "Demonstrative",
               "Talkative",
-              "Stimulating"
+              "Stimulating",
+              "I have a good sense of humor",
+              "I treat everyone as a friend",
+              "I am fun loving",
+              "I am a creative problem solver",
+              "I am usually very optimistic",
+              "I tend to talk before thinking",
+              "I very often lose track of time",
+              "I prefer to back away from conflict",
+              "I tend to be disorganized",
+              "I am very trusting of others"
             ]
           },
           {
@@ -548,7 +637,19 @@
               "Reliable",
               "Steady",
               "Relaxed",
-              "Modest"
+              "Modest",
+              "I need secure situations",
+              "I'm a good planner",
+              "I need closure",
+              "I'm a great listener",
+              "I am usually calm and stabilize others",
+              "I mask my emotions",
+              "I tend to be indirect to avoid conflict",
+              "I tend to be possessive of things",
+              "I tend to be too low risk",
+              "I tend to hold a grudge",
+              "I tend to adapt very quickly to others",
+              "I tend to resist changes"
             ]
           },
           {
@@ -559,7 +660,20 @@
               "Conservative",
               "Exacting",
               "Careful",
-              "Deliberate"
+              "Deliberate",
+              "I like to organize and analyze",
+              "I work well alone",
+              "I have high expectations",
+              "I like to follow rules",
+              "I am self-competitive",
+              "I can solve complex problems",
+              "I live my life by rules of behaving",
+              "I tend to want as much data as possible",
+              "I tend to be hard on myself",
+              "I never take unnecessary chances",
+              "I tend to feel emotions are very irrational",
+              "I tend to see faults in others",
+              "I tend to analyze things to death"
             ]
           }
         ]
@@ -717,10 +831,69 @@
       "linked_exercise_slugs": []
     },
     {
+      "slug": "attitudes-conflict-matrix",
+      "kind": "attitude-conflict-matrix",
+      "chapter": "attitudes",
+      "order_index": 280,
+      "content_json": {
+        "title": "Attitude Conflict Matrix",
+        "subtitle": "How each pair of attitudes interacts — darkened areas indicate value conflicts",
+        "caption": "Adapted with permission from How To Read and Understand People © 1988 Target Training International · Based on Eduard Spranger, Types of Men (1928)",
+        "labels": {
+          "W": "Theoretical",
+          "A": "Aesthetic",
+          "T": "Traditional",
+          "U": "Utilitarian",
+          "S": "Social",
+          "I": "Individualistic"
+        },
+        "cells": [
+          "Objective discussion and search for truth through gaining information.",
+          "Objective truth clashes with subjective aesthetic view.",
+          "Cognition does not create values. Everything must be explained rationally. Faith is rejected as unprovable.",
+          "Search for truth may conflict with utility. Theoretical is not concerned with the practical.",
+          "Self and knowledge may clash with other-oriented viewpoint.",
+          "Discovery of truth may be crucial to establishing position.",
+          "Objective truth clashes with subjective aesthetic view.",
+          "Focus is on subjective form, harmony and beauty.",
+          "The beauty side of the totality of life is embraced, but the negative aspects of many religions is rejected.",
+          "The useful may be hurtful to the beautiful. Utility may oppose form and beauty.",
+          "Social is the focus on others. Aesthetic is more focused on individual fulfillment.",
+          "Form and Harmony may block position. Yet position as expressed by beauty and form, owning beautiful things.",
+          "Cognition does not create values. Everything must be explained rationally. Faith is rejected as unprovable.",
+          "The beauty side of the totality of life is embraced, but the negative aspects of many religions is rejected.",
+          "When agreed, the result is unity of purpose. When opposed, watch out!",
+          "Tradition may view utilitarian focus as good or evil. Could go either way.",
+          "Reverence for each individual unifies both attitudes.",
+          "Totality of life. A religious viewpoint is a tool to guide people.",
+          "Search for truth may conflict with utility. Theoretical is not concerned with the practical.",
+          "The useful may be hurtful to the beautiful. Utility may oppose form and beauty.",
+          "Tradition may view utilitarian focus as good or evil. Could go either way.",
+          "Utilitarianism in all areas of life may be competing with pursuit of gain.",
+          "Preservation of self first is opposed to empathy with others.",
+          "Wealth is power. Utility leads to control.",
+          "Self and knowledge may clash with other-oriented viewpoint.",
+          "Social is the focus on others. Aesthetic is more focused on individual fulfillment.",
+          "Reverence for each individual unifies both attitudes.",
+          "Preservation of self first is opposed to empathy with others.",
+          "Both focus on others and efforts are combined to achieve progress.",
+          "Focus on others opposes self positioning; focus on others is necessary for self positioning.",
+          "Discovery of truth may be crucial to establishing position.",
+          "Form and Harmony may block position. Yet position as expressed by beauty and form, owning beautiful things.",
+          "Totality of life. A religious viewpoint is a tool to guide people.",
+          "Wealth is power. Utility leads to control.",
+          "Focus on others opposes self positioning; focus on others is necessary for self positioning.",
+          "Jockeying for position. Ultra Competitive!"
+        ]
+      },
+      "linked_exercise_slugs": [],
+      "notes": "Facilitate a discussion: which conflict resonates most with participants? Use the matrix to spark insight about internal tensions between their top two attitudes."
+    },
+    {
       "slug": "attitudes-revealed",
       "kind": "two-col",
       "chapter": "attitudes",
-      "order_index": 280,
+      "order_index": 275,
       "content_json": {
         "title": "The Six Attitudes",
         "columns": [
@@ -786,6 +959,7 @@
       "order_index": 300,
       "content_json": {
         "title": "Values Shopping Spree",
+        "image": "/deck/values-shop.png",
         "start": 1,
         "items": [
           "A process guaranteed to rid the world of prejudice and racism.",
@@ -811,6 +985,7 @@
       "order_index": 310,
       "content_json": {
         "title": "Values Shopping Spree",
+        "image": "/deck/values-shop.png",
         "start": 11,
         "items": [
           "The perfect relationship.",
@@ -836,6 +1011,7 @@
       "order_index": 320,
       "content_json": {
         "title": "Values Shopping Spree",
+        "image": "/deck/values-shop.png",
         "start": 21,
         "items": [
           "To master every skill needed to be the best in my job.",
@@ -860,6 +1036,7 @@
       "order_index": 330,
       "content_json": {
         "title": "Values Shopping Spree",
+        "image": "/deck/values-shop.png",
         "start": 30,
         "items": [
           "A complete make-over: hair, clothes, manicure, plastic surgery, time at a spa, whatever I want in order to look my best.",
@@ -901,42 +1078,41 @@
       ]
     },
     {
-      "slug": "values-definitions-1",
-      "kind": "bullets",
+      "slug": "values-definitions",
+      "kind": "two-col",
       "chapter": "values",
       "order_index": 360,
       "content_json": {
         "title": "Value Definitions",
-        "bullets": [
-          "Justice — Moral rightness, honor, fairness",
-          "Humanitarianism — Devotion to the promotion of human welfare",
-          "Recognition — Acknowledgment of one's significance or importance",
-          "Achievement — Accomplishment",
-          "Pleasure — Enjoyment, satisfaction, satiation",
-          "Wisdom — Understanding of what is true, right or lasting",
-          "Honesty — Straightforwardness, integrity, consistency",
-          "Autonomy — Independence, self-containment",
-          "Economy — Abundance of material possessions, wealth",
-          "Power — Control, authority or influence",
-          "Love — Affection, warm attachment, caring",
-          "Aesthetics — Appreciation and enjoyment of beauty for beauty's sake"
-        ]
-      },
-      "linked_exercise_slugs": []
-    },
-    {
-      "slug": "values-definitions-2",
-      "kind": "bullets",
-      "chapter": "values",
-      "order_index": 370,
-      "content_json": {
-        "title": "Value Definitions (continued)",
-        "bullets": [
-          "Physical Attractiveness — Concern for the appearance of one's body",
-          "Health — Concern for the health of one's body",
-          "Feeling of Well-Being — Freedom from anxiety, imbalance; peace of mind",
-          "Knowledge — Seeking of truth and/or information",
-          "Spiritual Well-Being — Communion with, obedience to, and activity on behalf of a Supreme Being"
+        "subtitle": "Reference — all 17 values at a glance",
+        "columns": [
+          {
+            "heading": "",
+            "bullets": [
+              "Justice — Moral rightness, honor, fairness",
+              "Humanitarianism — Devotion to the promotion of human welfare",
+              "Recognition — Acknowledgment of one's significance or importance",
+              "Achievement — Accomplishment",
+              "Pleasure — Enjoyment, satisfaction, satiation",
+              "Wisdom — Understanding of what is true, right or lasting",
+              "Honesty — Straightforwardness, integrity, consistency",
+              "Autonomy — Independence, self-containment",
+              "Economy — Abundance of material possessions, wealth"
+            ]
+          },
+          {
+            "heading": "",
+            "bullets": [
+              "Power — Control, authority or influence",
+              "Love — Affection, warm attachment, caring",
+              "Aesthetics — Appreciation and enjoyment of beauty for beauty's sake",
+              "Physical Attractiveness — Concern for the appearance of one's body",
+              "Health — Concern for the health of one's body",
+              "Feeling of Well-Being — Freedom from anxiety, imbalance; peace of mind",
+              "Knowledge — Seeking of truth and/or information",
+              "Spiritual Well-Being — Communion with, obedience to, and activity on behalf of a Supreme Being"
+            ]
+          }
         ]
       },
       "linked_exercise_slugs": []

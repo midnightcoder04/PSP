@@ -26,9 +26,11 @@ const DECK_KINDS = new Set([
   'two-col',
   'disc-profile',
   'comfort-zones',
+  'comfort-zones-pair',
   'numbered-list',
   'image',
   'contact',
+  'attitude-conflict-matrix',
 ])
 
 const DECK_CHAPTERS = new Set([
@@ -59,9 +61,11 @@ const REQUIRED_STRINGS: Record<string, string[]> = {
   'two-col': ['title'],
   'disc-profile': ['style', 'title'],
   'comfort-zones': ['style', 'title'],
+  'comfort-zones-pair': [], // validated via nested left/right objects
   'numbered-list': ['title'],
   image: ['src'],
   contact: ['title'],
+  'attitude-conflict-matrix': ['title'],
 }
 
 interface DeckSlideSeed {
