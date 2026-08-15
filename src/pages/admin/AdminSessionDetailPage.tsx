@@ -117,12 +117,10 @@ export default function AdminSessionDetailPage() {
   async function toggleArchive() {
     if (!id || !session) return
     setTogglingArchive(true)
-    const nextActive = !session.is_active
-    // When unarchiving, push scheduled_end a week into the future so the
-    // date-based check in isSessionArchived() stops treating it as archived.
-    // When archiving, keep the existing scheduled_end so the end date is
-    // preserved for reporting / display.
-    const newEnd = nextActive
+    const wasManuallyArchived = !session.is_active
+    const wasDateArchived = !!session.scheduled_end && new Date(session.scheduled_end) < new Date()
+    const nextActive = wasManuallyArchived ? true : session.is_active
+    const newEnd = wasDateArchived
       ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
       : session.scheduled_end
     await supabase.from('sessions').update({ is_active: nextActive, scheduled_end: newEnd }).eq('id', id)
@@ -161,7 +159,7 @@ export default function AdminSessionDetailPage() {
           loading={togglingArchive}
           onClick={toggleArchive}
         >
-          {session?.is_active ? 'Archive session' : 'Unarchive session'}
+          {archived ? 'Unarchive session' : 'Archive session'}
         </Button>
       </div>
 
