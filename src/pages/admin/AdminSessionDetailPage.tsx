@@ -117,7 +117,13 @@ export default function AdminSessionDetailPage() {
   async function toggleArchive() {
     if (!id || !session) return
     setTogglingArchive(true)
-    await supabase.from('sessions').update({ is_active: !session.is_active }).eq('id', id)
+    const nextActive = !session.is_active
+    await supabase.from('sessions').update({
+      is_active: nextActive,
+      // When unarchiving, also clear scheduled_end so the date-based check
+      // in isSessionArchived() doesn't keep showing the session as archived.
+      scheduled_end: nextActive ? null : session.scheduled_end,
+    }).eq('id', id)
     setTogglingArchive(false)
     load()
   }
