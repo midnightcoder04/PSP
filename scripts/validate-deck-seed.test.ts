@@ -50,7 +50,7 @@ describe('deck-slides.json seed', () => {
       (a: { order_index: number }, b: { order_index: number }) => a.order_index - b.order_index
     )
     // All four disc-profile slides must appear before any comfort-zones-pair.
-    const lastProfileIdx = Math.max(
+    const _lastProfileIdx = Math.max(
       ...byOrder
         .filter((s: { kind: string }) => s.kind === 'disc-profile')
         .map((_: unknown, _idx: number) => byOrder.findIndex((s: { kind: string; content_json: { style?: string } }) => s.kind === 'disc-profile'))
