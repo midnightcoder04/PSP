@@ -16,6 +16,7 @@ interface RequestBody {
   email: string
   display_name: string
   password: string
+  phone: string
 }
 
 Deno.serve(async (req: Request) => {
@@ -29,9 +30,16 @@ Deno.serve(async (req: Request) => {
   const adminClient = createClient(supabaseUrl, serviceRoleKey)
 
   const body: RequestBody = await req.json()
-  const { token, email, display_name, password } = body
+  const { token, email, display_name, password, phone } = body
+  const strippedPhone = phone?.replace(/\s+/g, '') ?? ''
 
-  if (!token || !email || !password || password.length < 8) {
+  if (
+    !token ||
+    !email ||
+    !password ||
+    password.length < 8 ||
+    !/^\+\d{7,15}$/.test(strippedPhone)
+  ) {
     return new Response(JSON.stringify({ error: 'MISSING_OR_INVALID_FIELDS' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -100,10 +108,15 @@ Deno.serve(async (req: Request) => {
 
   const userId = created.user.id
 
-  // Set participant role and display name
+  // Set participant role, display name, and phone
   await adminClient
     .from('profiles')
-    .update({ role: 'participant', display_name: trimmedName, updated_at: new Date().toISOString() })
+    .update({
+      role: 'participant',
+      display_name: trimmedName,
+      phone: strippedPhone,
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', userId)
 
   // Enroll in the session

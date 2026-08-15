@@ -1,32 +1,181 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
+import { Spinner } from '@/components/ui/Spinner'
+import { useAuth } from '@/hooks/useAuth'
 import { ROUTES } from '@/lib/constants'
+import { getRoleHome } from '@/lib/roleHome'
+import { isValidPhone } from '@/lib/validation'
 import styles from './LoginPage.module.css'
 
+// Dual-mode page, keyed on whether a Supabase session is already present:
+//   - No session: the original "request a reset link" form.
+//   - Session present: "set a new password" form — reached either by an
+//     account forced here by AuthGuard (must_reset_password, a temp
+//     password set by a facilitator/admin) or by clicking the emailed
+//     recovery link (detectSessionInUrl auto-establishes a session and
+//     fires a PASSWORD_RECOVERY event). Phone is asked only if not already
+//     on file, covering the forced-first-login case without re-asking
+//     existing users who already have one.
 export default function ResetPasswordPage() {
-  const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [sent, setSent] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { session, profile, loading, refreshProfile } = useAuth()
+  const navigate = useNavigate()
 
-  async function handleSubmit(e: FormEvent) {
+  // Request-link mode (no session)
+  const [email, setEmail] = useState('')
+  const [requestLoading, setRequestLoading] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [requestError, setRequestError] = useState<string | null>(null)
+
+  // Set-password mode (session present)
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [phone, setPhone] = useState('+91')
+  const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (profile?.phone) setPhone(profile.phone)
+  }, [profile?.phone])
+
+  async function handleRequestLink(e: FormEvent) {
     e.preventDefault()
-    setLoading(true)
-    setError(null)
+    setRequestLoading(true)
+    setRequestError(null)
 
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     })
 
-    setLoading(false)
+    setRequestLoading(false)
     if (resetError) {
-      setError(resetError.message)
+      setRequestError(resetError.message)
     } else {
       setSent(true)
     }
+  }
+
+  async function handleSetPassword(e: FormEvent) {
+    e.preventDefault()
+    setFormError(null)
+
+    if (newPassword.length < 8) {
+      setFormError('Password must be at least 8 characters.')
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setFormError('Passwords do not match.')
+      return
+    }
+
+    const phoneRequired = !profile?.phone
+    if (phoneRequired && !phone.trim()) {
+      setFormError('Phone number is required.')
+      return
+    }
+    if (phone.trim() && !isValidPhone(phone)) {
+      setFormError('Please enter a valid phone number (e.g. +91 98765 43210).')
+      return
+    }
+
+    setSubmitting(true)
+
+    const { error: pwErr } = await supabase.auth.updateUser({ password: newPassword })
+    if (pwErr) {
+      setSubmitting(false)
+      setFormError(pwErr.message)
+      return
+    }
+
+    const strippedPhone = phone.replace(/\s+/g, '')
+
+    await supabase
+      .from('profiles')
+      .update({
+        phone: strippedPhone || profile?.phone || null,
+        must_reset_password: false,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', session!.user.id)
+
+    await refreshProfile()
+    setSubmitting(false)
+    navigate(getRoleHome(profile?.role ?? 'participant'), { replace: true })
+  }
+
+  if (loading || (!!session && !profile)) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Spinner size="lg" />
+      </div>
+    )
+  }
+
+  if (session && profile) {
+    const phoneRequired = !profile.phone
+
+    return (
+      <div className={styles.page}>
+        <div className={styles.card}>
+          <div className={styles.header}>
+            <span className={styles.logo}>PSP™</span>
+            <h1 className={styles.title}>Set your password</h1>
+            <p className={styles.subtitle}>Choose a new password to finish setting up your account</p>
+          </div>
+
+          <form onSubmit={handleSetPassword} className={styles.form} noValidate>
+            {formError && <div className={styles.errorBanner} role="alert">{formError}</div>}
+
+            <div className={styles.field}>
+              <label htmlFor="new-password" className={styles.label}>New password (≥ 8 characters)</label>
+              <input
+                id="new-password"
+                type="password"
+                autoComplete="new-password"
+                required
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className={styles.input}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="confirm-password" className={styles.label}>Confirm password</label>
+              <input
+                id="confirm-password"
+                type="password"
+                autoComplete="new-password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={styles.input}
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label htmlFor="phone" className={styles.label}>
+                Phone number{phoneRequired ? '' : ' (optional)'}
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                required={phoneRequired}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className={styles.input}
+                placeholder="+91 98765 43210"
+              />
+            </div>
+
+            <Button type="submit" loading={submitting} className={styles.submitBtn}>
+              Save &amp; continue
+            </Button>
+          </form>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -46,8 +195,8 @@ export default function ResetPasswordPage() {
             <Link to={ROUTES.LOGIN} style={{ color: 'var(--color-trust)' }}>Back to sign in</Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className={styles.form} noValidate>
-            {error && <div className={styles.errorBanner} role="alert">{error}</div>}
+          <form onSubmit={handleRequestLink} className={styles.form} noValidate>
+            {requestError && <div className={styles.errorBanner} role="alert">{requestError}</div>}
             <div className={styles.field}>
               <label htmlFor="email" className={styles.label}>Email</label>
               <input
@@ -61,7 +210,7 @@ export default function ResetPasswordPage() {
                 placeholder="you@example.com"
               />
             </div>
-            <Button type="submit" loading={loading} className={styles.submitBtn}>
+            <Button type="submit" loading={requestLoading} className={styles.submitBtn}>
               Send reset link
             </Button>
           </form>

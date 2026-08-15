@@ -167,10 +167,17 @@ Deno.serve(async (req: Request) => {
 
     const userId = created.user.id
 
-    // Ensure role = participant and set display_name (trigger creates the row)
+    // Ensure role = participant and set display_name (trigger creates the row).
+    // must_reset_password forces this temp-password account through the
+    // password-reset page (which also collects phone) on first login.
     await adminClient
       .from('profiles')
-      .update({ role: 'participant', display_name: displayName, updated_at: new Date().toISOString() })
+      .update({
+        role: 'participant',
+        display_name: displayName,
+        must_reset_password: true,
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', userId)
 
     // Enroll in session if requested

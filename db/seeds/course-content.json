@@ -899,8 +899,8 @@
           "is_scored": false,
           "attribution": null,
           "content_json": {
-            "prompt": "Reflect on the following Attitude Power Points and write how your top two attitudes show up in your daily life, career choices, and relationships:\n\n1. An attitude is a way of valuing life — a world view, a paradigm of thought and action.\n2. Most of a person's choices throughout life are guided by the hierarchy of their attitudes and needs satisfactions.\n3. Attitudes determine our purpose and direction in life, stimulating us to action.\n4. Attitudes are relatively constant throughout life and will usually change only in relation to a Significant Emotional Event.\n5. Behaviour (D.I.S.C.) is the methodology for fulfilling the passions driven by our attitudes.\n6. Attitudes tend to interact with one another.\n\nHow do your top two attitude types interact? Do they support or conflict with each other?",
-            "placeholder": "My top two attitudes are ___ and ___. I notice them showing up in my life when...",
+            "prompt": "Reflect on the following Attitude Power Points and write how your top three attitudes show up in your daily life, career choices, and relationships:\n\n1. An attitude is a way of valuing life — a world view, a paradigm of thought and action.\n2. Most of a person's choices throughout life are guided by the hierarchy of their attitudes and needs satisfactions.\n3. Attitudes determine our purpose and direction in life, stimulating us to action.\n4. Attitudes are relatively constant throughout life and will usually change only in relation to a Significant Emotional Event.\n5. Behaviour (D.I.S.C.) is the methodology for fulfilling the passions driven by our attitudes.\n6. Attitudes tend to interact with one another.\n\nHow do your top three attitude types interact? Do they support or conflict with each other?",
+            "placeholder": "My top three attitudes are ___, ___, and ___. I notice them showing up in my life when...",
             "min_length": 50,
             "max_length": 2000
           }

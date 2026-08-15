@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
 import { ROUTES } from '@/lib/constants'
+import { getRoleHome } from '@/lib/roleHome'
 import styles from './LoginPage.module.css'
 
 export default function LoginPage() {
@@ -37,8 +38,7 @@ export default function LoginPage() {
         .single()
 
       const role = profile?.role ?? 'participant'
-      const roleHome = role === 'admin' ? ROUTES.ADMIN : role === 'facilitator' ? ROUTES.FACILITATOR : ROUTES.COURSE
-      navigate(from ?? roleHome, { replace: true })
+      navigate(from ?? getRoleHome(role), { replace: true })
     }
   }
 

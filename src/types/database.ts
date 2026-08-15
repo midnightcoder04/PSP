@@ -328,9 +328,11 @@ export interface Database {
           role: 'admin' | 'facilitator' | 'participant'
           display_name: string
           email: string
+          phone: string | null
           is_active: boolean
           max_bulk_add: number
           can_present: boolean
+          must_reset_password: boolean
           created_at: string
           updated_at: string
         }
@@ -339,9 +341,11 @@ export interface Database {
           role?: 'admin' | 'facilitator' | 'participant'
           display_name: string
           email: string
+          phone?: string | null
           is_active?: boolean
           max_bulk_add?: number
           can_present?: boolean
+          must_reset_password?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -350,9 +354,11 @@ export interface Database {
           role?: 'admin' | 'facilitator' | 'participant'
           display_name?: string
           email?: string
+          phone?: string | null
           is_active?: boolean
           max_bulk_add?: number
           can_present?: boolean
+          must_reset_password?: boolean
           updated_at?: string
         }
         Relationships: []

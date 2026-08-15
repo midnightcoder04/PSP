@@ -34,6 +34,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 
 interface AuthContextValue extends AuthState {
   signOut: () => Promise<void>
+  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -49,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = useCallback(async (userId: string) => {
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, role, display_name, email, is_active, max_bulk_add, can_present, created_at, updated_at')
+      .select('id, role, display_name, email, phone, is_active, max_bulk_add, can_present, must_reset_password, created_at, updated_at')
       .eq('id', userId)
       .single()
 
@@ -73,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       dispatch({ type: 'SET_SESSION', session, user: session?.user ?? null })
-      if (event === 'SIGNED_IN' && session?.user) {
+      if ((event === 'SIGNED_IN' || event === 'PASSWORD_RECOVERY') && session?.user) {
         fetchProfile(session.user.id)
       } else if (event === 'SIGNED_OUT') {
         dispatch({ type: 'SIGN_OUT' })
@@ -88,8 +89,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'SIGN_OUT' })
   }, [])
 
+  // Re-fetches the current user's profile without a full sign-out/sign-in —
+  // used after ResetPasswordPage updates phone/must_reset_password so the
+  // rest of the app (AuthGuard included) sees the change immediately.
+  const refreshProfile = useCallback(async () => {
+    if (state.user) await fetchProfile(state.user.id)
+  }, [state.user, fetchProfile])
+
   return (
-    <AuthContext.Provider value={{ ...state, signOut }}>
+    <AuthContext.Provider value={{ ...state, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,13 +1,10 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
+import { isValidEmail } from '@/lib/validation'
 import styles from './UserCreateModal.module.css'
 
 type Role = 'admin' | 'facilitator' | 'participant'
-
-function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-}
 
 interface UserCreateModalProps {
   onClose: () => void

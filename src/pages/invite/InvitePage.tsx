@@ -3,13 +3,10 @@ import { useParams, Link } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
+import { isValidEmail, isValidPhone } from '@/lib/validation'
 import styles from './InvitePage.module.css'
 
 type InviteStatus = 'loading' | 'valid' | 'invalid' | 'success'
-
-function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-}
 
 interface InviteInfo {
   session_id: string
@@ -26,6 +23,7 @@ export default function InvitePage() {
 
   const [email, setEmail] = useState('')
   const [displayName, setDisplayName] = useState('')
+  const [phone, setPhone] = useState('+91')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -81,6 +79,14 @@ export default function InvitePage() {
       setFormError('Please enter a valid email address.')
       return
     }
+    if (!phone.trim()) {
+      setFormError('Phone number is required.')
+      return
+    }
+    if (!isValidPhone(phone)) {
+      setFormError('Please enter a valid phone number (e.g. +91 98765 43210).')
+      return
+    }
     if (password.length < 8) {
       setFormError('Password must be at least 8 characters.')
       return
@@ -92,8 +98,16 @@ export default function InvitePage() {
 
     setSubmitting(true)
 
+    const strippedPhone = phone.replace(/\s+/g, '')
+
     const { data, error: fnErr } = await supabase.functions.invoke('claim-invite', {
-      body: { token, email: email.trim().toLowerCase(), display_name: displayName.trim(), password },
+      body: {
+        token,
+        email: email.trim().toLowerCase(),
+        display_name: displayName.trim(),
+        phone: strippedPhone,
+        password,
+      },
     })
 
     setSubmitting(false)
@@ -192,6 +206,20 @@ export default function InvitePage() {
             <p className={styles.error}>Please enter a valid email address.</p>
           ) : null}
 
+          <label className={styles.fieldLabel} htmlFor="inv-phone">Phone number</label>
+          <input
+            id="inv-phone"
+            type="tel"
+            className={styles.input}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+91 98765 43210"
+            required
+          />
+          {phone.trim() && !isValidPhone(phone) ? (
+            <p className={styles.error}>Enter a valid phone number: + followed by 7–15 digits.</p>
+          ) : null}
+
           <label className={styles.fieldLabel} htmlFor="inv-pass">Password (≥ 8 characters)</label>
           <input
             id="inv-pass"
@@ -216,7 +244,7 @@ export default function InvitePage() {
 
           {formError ? <p className={styles.error}>{formError}</p> : null}
 
-          <Button type="submit" loading={submitting} disabled={submitting || !isValidEmail(email.trim())}>
+          <Button type="submit" loading={submitting} disabled={submitting || !isValidEmail(email.trim()) || !isValidPhone(phone)}>
             Create account &amp; enroll
           </Button>
         </form>
