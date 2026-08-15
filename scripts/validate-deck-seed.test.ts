@@ -49,12 +49,6 @@ describe('deck-slides.json seed', () => {
     const byOrder = [...deck.slides].sort(
       (a: { order_index: number }, b: { order_index: number }) => a.order_index - b.order_index
     )
-    // All four disc-profile slides must appear before any comfort-zones-pair.
-    const _lastProfileIdx = Math.max(
-      ...byOrder
-        .filter((s: { kind: string }) => s.kind === 'disc-profile')
-        .map((_: unknown, _idx: number) => byOrder.findIndex((s: { kind: string; content_json: { style?: string } }) => s.kind === 'disc-profile'))
-    )
     const pairSlides = byOrder.filter((s: { kind: string }) => s.kind === 'comfort-zones-pair')
     // There should be exactly 2 comfort-zones-pair slides (D+I and S+C).
     expect(pairSlides).toHaveLength(2)
